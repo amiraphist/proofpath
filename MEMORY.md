@@ -21,3 +21,15 @@ The live browser exposes separate input/output port buttons for every node and s
 ## Final Interaction Test
 
 After resetting the clean session, `Apply safe repair` inserted the Policy Check node before Verified End, and `Run simulation` returned `SYSTEM VERIFIED`, `Repair accepted. The graph now fails safely.`, progress `1 / 25`, and score `97`. The incident tape showed topology validation, policy pass, human approval, simulated tool commit, and audit close.
+
+## Player-First Reproduction
+
+Testing the published domain is blocked by Manus authentication, so the unauthenticated preview was used for the player-path test. From a clean Stage 01, the player sees an already-populated graph and clicks Run. The game returns `RUN BLOCKED — A route can repeat or still contains a broken edge.` with score 42, but the UI does not identify the broken edge, does not visually isolate the failing route, and does not explain the next concrete action. This is the core reason the game feels non-playable despite the controls existing.
+
+The visible objective says `Insert a human approval before any money moves`, while the graph already contains a Human Approval node. The Fix shortcut is visible, but the intended player workflow is ambiguous: there is no clear indication whether to move nodes, reconnect the red edge, add Policy Check, or press Apply safe repair.
+
+## Re-test Result After Player Fix
+
+The revised first-stage player path was executed from a clean reload. Initial Run now explains the exact issue: `Broken route detected. Reconnect the red edge, then run again.` The visible objective also tells the player to insert a Policy Check before approval and run the safe payout route.
+
+Clicking `Apply safe repair` now rebuilds the graph from `stage.buildSequence`, removes the duplicated agent, inserts the Policy Check in the correct order, and recreates all valid edges. Running afterward returns `SYSTEM VERIFIED`, score `100`, and the incident tape confirms topology, policy, human, tool, and end checks. Clicking `Next stage` advances to Stage 02 / 25.

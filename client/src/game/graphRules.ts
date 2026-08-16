@@ -43,7 +43,7 @@ export function validateGraph(stage: Stage, mode: GameMode, nodes: GraphNode[], 
     };
   }
 
-  const reason = !hasStart ? "The graph needs a clear trigger." : !hasEnd ? "The graph has no verified end state." : missingApproval ? "A human approval boundary is missing." : duplicate ? "A route can repeat or still contains a broken edge." : "The graph is missing a required safety step.";
+  const reason = !hasStart ? "The graph needs a clear trigger." : !hasEnd ? "The graph has no verified end state." : missingApproval ? "A human approval boundary is missing." : duplicate ? "Broken route detected. Reconnect the red edge, then run again." : "The graph is missing a required safety step.";
   return {
     ok: false,
     score: Math.max(18, 54 - nodes.length * 2),

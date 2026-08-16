@@ -55,9 +55,16 @@ export function useGameSession() {
 
   const repair = () => {
     setSession((current) => {
-      const edges = current.edges.map((edge, index) => ({ ...edge, state: index === 1 ? "valid" as const : edge.state }));
-      const nodes = current.nodes.some((node) => node.type === "condition") ? current.nodes : (() => { const repairNode = { id: "condition-repair", type: "condition" as NodeType, x: 55, y: 36 }; const endIndex = current.nodes.findIndex((node) => node.type === "end"); return endIndex >= 0 ? [...current.nodes.slice(0, endIndex), repairNode, ...current.nodes.slice(endIndex)] : [...current.nodes, repairNode]; })();
-      return { ...current, edges, nodes, result: null };
+      const gap = stage.buildSequence.length > 1 ? 82 / (stage.buildSequence.length - 1) : 82;
+      const used = new Set<string>();
+      const nodes = stage.buildSequence.map((type, index) => {
+        const existing = current.nodes.find((node) => node.type === type && !used.has(node.id));
+        const id = existing?.id ?? `${type}-repair-${index}`;
+        used.add(id);
+        return { id, type, x: 9 + index * gap, y: 43 + (index % 2 === 0 ? -5 : 7) };
+      });
+      const edges = nodes.slice(0, -1).map((node, index) => ({ id: `edge-repaired-${index}`, from: node.id, to: nodes[index + 1].id, state: "valid" as const }));
+      return { ...current, edges, nodes, selectedNodeId: null, result: null };
     });
   };
 

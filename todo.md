@@ -20,3 +20,12 @@
 - [ ] Test Build mode by creating and running a valid graph.
 - [ ] Test Fix mode by repairing a broken edge and running the simulation.
 - [ ] Re-run type-check, build, and representative interaction screenshots.
+
+## Player-Path Regression
+
+- [ ] Start Stage 01 from a clean reset and follow the visible objective as a first-time player.
+- [ ] Verify whether the default Fix graph can be repaired using only the controls exposed in the UI.
+- [ ] Verify whether Build mode exposes a complete, understandable path to a successful run.
+- [ ] Ensure the validator matches the graph the player can actually construct.
+- [ ] Ensure a successful run visibly unlocks or advances to the next stage.
+- [ ] Test the complete player path again after the logic fix.
