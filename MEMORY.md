@@ -67,3 +67,11 @@ A further spacing adjustment places added cards across the target route width ra
 ## Friendly Sounds and Paper Path Verification
 
 The final Paper Playground view now uses the terms PAPER PATH, PENCIL CASE, blue pen dots, Message enters, and Safe result. The header includes a sound toggle. The first Build mission is visually empty by design, with a clear objective and a visible card palette. A clean Stage 02 test added Read the message and Check the details, connected their ports, and passed Test my idea with SYSTEM VERIFIED and score 100. Node deletion worked from the always-visible close button. `pnpm check` and production build passed after the sound and interaction changes.
+
+## Agentic Payments Rebuild Verification
+
+The official Ledger product page confirms the product spelling **Ledger Nano™ Gen5**, a 2.8-inch touchscreen, and transaction-detail verification. GraphOps uses this only as a simulated secure-signer teaching card and does not claim an integration, affiliation, or real payment capability.
+
+The new Build 01 payment mission was played through the UI: AI Agent → Check payment → Owner approval → Ledger Nano™ Gen5 → Send payment. The route completed with `PAYMENT PLAN VERIFIED` and score 100. The payment-specific stage card, distinct palette, hardware signer card, and 10-stage curriculum are rendering in the preview.
+
+Fix 01 was also played from a clean stage selection. The initial state visibly had a fake second AI Agent in place of Check payment, matching the revised Prompt Injection alert and objective. Apply safe repair restored Check payment, and Test my idea completed with `PAYMENT PLAN VERIFIED`, score 100, and the message `Nice repair — the blue pen line is safe again.`

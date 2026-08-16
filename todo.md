@@ -74,3 +74,15 @@
 - [ ] Add a quiet wobble/error sound for invalid connections and a short warm success jingle.
 - [ ] Keep every sound under a comfortable volume and gate sound effects behind a user setting.
 - [ ] Test sounds on node click, connection start, connection completion, invalid target, delete, reset, and success.
+
+## Agentic Payments: 10-Stage Rebuild
+
+- [ ] Verify the official name and visual treatment of the requested hardware wallet before mentioning a brand or model.
+- [ ] Reduce the curriculum to exactly 10 payment-only missions: 5 Build and 5 Fix-after-attack.
+- [ ] Add a distinct AI Agent node and ensure it appears only when the specific mission needs it.
+- [ ] Add a hardware-wallet signing node with a generic fallback if an official product name cannot be verified.
+- [ ] Give every mission a stage-specific palette, objective, attack story, success route, and failure explanation.
+- [ ] Build five end-to-end payment flows: reward, reimbursement, vendor invoice, subscription renewal, and group payout.
+- [ ] Build five repair scenarios: prompt injection, recipient swap, duplicate payment, approval bypass, and malicious tool response.
+- [ ] Make the Fix mode visually show what was attacked and what the player must restore.
+- [ ] Play every Build and Fix mission from a clean reset and confirm that the route, validator, score, and next-stage transition agree.

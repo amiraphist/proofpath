@@ -79,7 +79,7 @@ export function validateGraph(stage: Stage, mode: GameMode, nodes: GraphNode[], 
     : duplicate
       ? "Two blue lines do the same job. Keep one clean path."
       : !nodeSetMatch
-        ? `This story needs: ${stage.buildSequence.map((type) => type === "agent" ? "Read" : type === "condition" ? "Check" : type === "approval" ? "Ask" : type === "tool" ? "Do" : type === "retry" ? "Retry" : "Stop").join(" → ")}.`
+        ? `This story needs: ${stage.buildSequence.map((type) => type === "agent" ? "AI Agent" : type === "condition" ? "Check" : type === "approval" ? "Owner approval" : type === "wallet" ? "Ledger signer" : type === "tool" ? "Send payment" : type === "receipt" ? "Save receipt" : type === "dedupe" ? "Block duplicates" : type === "retry" ? "Retry" : "Stop").join(" → ")}.`
         : !routeMatch
           ? "The cards are in the wrong order. Follow the blue dots."
           : "One small piece is missing. Read the mission card again.";
