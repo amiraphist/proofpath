@@ -33,3 +33,11 @@ The visible objective says `Insert a human approval before any money moves`, whi
 The revised first-stage player path was executed from a clean reload. Initial Run now explains the exact issue: `Broken route detected. Reconnect the red edge, then run again.` The visible objective also tells the player to insert a Policy Check before approval and run the safe payout route.
 
 Clicking `Apply safe repair` now rebuilds the graph from `stage.buildSequence`, removes the duplicated agent, inserts the Policy Check in the correct order, and recreates all valid edges. Running afterward returns `SYSTEM VERIFIED`, score `100`, and the incident tape confirms topology, policy, human, tool, and end checks. Clicking `Next stage` advances to Stage 02 / 25.
+
+## Paper Lab Redesign Player Test
+
+The app was redesigned from Neon Glass Circuit to Paper Lab: white graph paper, pale blue grid, black hand-drawn node cards, blue pen connectors, friendly English copy, and 16 stages total. Stages 01–08 are Build; 09–16 are Fix.
+
+Player test: Stage 01 started with Start and Finish. The player added Agent from the palette, connected Start output to Agent input and Agent output to Finish input, then ran the graph. An initial validator bug incorrectly checked the last array node for Finish; this was fixed to check node presence. After reload, Build 01 returned `SYSTEM VERIFIED`, score 100, and `Next stage` appeared.
+
+Player test: Stage 09 was selected through the stage menu. `Apply safe repair` inserted the missing Check and rebuilt the route. Run returned `SYSTEM VERIFIED`, score 100, and `Nice repair. The route is safe.`

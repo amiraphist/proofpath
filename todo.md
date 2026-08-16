@@ -29,3 +29,14 @@
 - [ ] Ensure the validator matches the graph the player can actually construct.
 - [ ] Ensure a successful run visibly unlocks or advances to the next stage.
 - [ ] Test the complete player path again after the logic fix.
+
+## Paper Lab Redesign
+
+- [ ] Replace the dark neon command deck with a white paper-and-blue-grid classroom canvas.
+- [ ] Use hand-drawn black node outlines, playful imperfect geometry, blue pen connectors, and simple paper shadows.
+- [ ] Remove unnecessary HUD density, glow, technical jargon, and complex control surfaces.
+- [ ] Rework the game into exactly 16 English stages: 8 Build and 8 Fix.
+- [ ] Make each stage teach one LangGraph idea with one clear goal and one visible success condition.
+- [ ] Add a friendly onboarding cue suitable for a 15-year-old learner.
+- [ ] Keep the graph interaction simple: add, drag, connect, undo/reset, and run.
+- [ ] Test the first Build and first Fix stage as a new player before delivery.

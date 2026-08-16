@@ -6,12 +6,12 @@ import { stages, type GameMode, type NodeType } from "./stages";
 import type { GameSession, GraphNode, SessionResult } from "./types";
 
 export function useGameSession() {
-  const [mode, setMode] = useState<GameMode>("fix");
+  const [mode, setMode] = useState<GameMode>(stages[0].mode);
   const [stageIndex, setStageIndex] = useState(0);
   const [session, setSession] = useState<GameSession>(() => {
     const stage = stages[0];
-    const graph = makeInitialGraph(stage, "fix");
-    return { mode: "fix", stageId: stage.id, ...graph, selectedNodeId: null, result: null, attempts: 0, completed: false };
+    const graph = makeInitialGraph(stage, stage.mode);
+    return { mode: stage.mode, stageId: stage.id, ...graph, selectedNodeId: null, result: null, attempts: 0, completed: false };
   });
 
   const stage = stages[stageIndex];
@@ -26,7 +26,7 @@ export function useGameSession() {
   };
 
   const selectMode = (nextMode: GameMode) => reset(nextMode, stageIndex);
-  const selectStage = (nextStage: number) => reset(mode, Math.min(stages.length - 1, Math.max(0, nextStage)));
+  const selectStage = (nextStage: number) => { const safeIndex = Math.min(stages.length - 1, Math.max(0, nextStage)); reset(stages[safeIndex].mode, safeIndex); };
 
   const selectNode = (nodeId: string | null) => setSession((current) => ({ ...current, selectedNodeId: current.selectedNodeId === nodeId ? null : nodeId }));
 
