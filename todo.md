@@ -8,3 +8,15 @@
 - [ ] Add responsive mobile layouts for Telegram viewport sizes without truncating English labels.
 - [ ] Add accessible English tooltips and keyboard/focus states for graph nodes and controls.
 - [ ] Verify there are no Persian, placeholder, or mixed-language strings before delivery.
+
+## Interaction Fix Pass
+
+- [ ] Reproduce and document why graph nodes cannot currently be dragged.
+- [ ] Add pointer and touch dragging with clamped node positions.
+- [ ] Add visible input/output ports and a clear connection gesture.
+- [ ] Add connection preview, valid-target highlighting, and invalid-connection feedback.
+- [ ] Make node palette visible, scrollable, and usable on desktop and mobile.
+- [ ] Add a short English interaction hint explaining drag, connect, and remove.
+- [ ] Test Build mode by creating and running a valid graph.
+- [ ] Test Fix mode by repairing a broken edge and running the simulation.
+- [ ] Re-run type-check, build, and representative interaction screenshots.

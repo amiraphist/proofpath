@@ -30,6 +30,17 @@ export function useGameSession() {
 
   const selectNode = (nodeId: string | null) => setSession((current) => ({ ...current, selectedNodeId: current.selectedNodeId === nodeId ? null : nodeId }));
 
+  const moveNode = (nodeId: string, x: number, y: number) => setSession((current) => ({ ...current, nodes: current.nodes.map((node) => node.id === nodeId ? { ...node, x, y } : node), result: null }));
+
+  const connectNodes = (from: string, to: string) => setSession((current) => {
+    if (from === to) return current;
+    const existing = current.edges.find((edge) => edge.from === from && edge.to === to);
+    if (existing) return { ...current, edges: current.edges.map((edge) => edge.id === existing.id ? { ...edge, state: "valid" as const } : edge), result: null };
+    const broken = current.edges.find((edge) => edge.state === "broken");
+    if (broken) return { ...current, edges: current.edges.map((edge) => edge.id === broken.id ? { ...edge, from, to, state: "valid" as const } : edge), result: null };
+    return { ...current, edges: [...current.edges, { id: `edge-${Date.now()}`, from, to, state: "valid" as const }], result: null };
+  });
+
   const addNode = (type: NodeType) => {
     const id = `${type}-${Date.now()}`;
     const last = session.nodes.at(-1);
@@ -57,5 +68,5 @@ export function useGameSession() {
 
   const nextStage = () => selectStage(stageIndex + 1);
 
-  return { mode, stage, stageIndex, session, stages, totalCompleted, selectMode, selectStage, selectNode, addNode, removeNode, repair, run, reset, nextStage };
+  return { mode, stage, stageIndex, session, stages, totalCompleted, selectMode, selectStage, selectNode, moveNode, connectNodes, addNode, removeNode, repair, run, reset, nextStage };
 }
