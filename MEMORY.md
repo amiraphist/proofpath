@@ -41,3 +41,15 @@ The app was redesigned from Neon Glass Circuit to Paper Lab: white graph paper, 
 Player test: Stage 01 started with Start and Finish. The player added Agent from the palette, connected Start output to Agent input and Agent output to Finish input, then ran the graph. An initial validator bug incorrectly checked the last array node for Finish; this was fixed to check node presence. After reload, Build 01 returned `SYSTEM VERIFIED`, score 100, and `Next stage` appeared.
 
 Player test: Stage 09 was selected through the stage menu. `Apply safe repair` inserted the missing Check and rebuilt the route. Run returned `SYSTEM VERIFIED`, score 100, and `Nice repair. The route is safe.`
+
+## Full Player Audit — Findings
+
+While playing Stage 04 from a clean session, two logic/UX problems appeared. Build stages currently start with a blue Start→Finish edge, which makes the mission look already solved and forces the player to override an existing route. Newly added palette nodes also appear near the same right-side position, causing Check/Retry nodes to overlap and making a longer route hard to inspect or connect. These should be fixed before testing the longer Build stages again.
+
+## Full Player Audit — Regression Result
+
+After the fixes, Build 01 was replayed from a clean reload. It now starts with two unconnected nodes, Start and Finish, so the objective is honest. Agent was added, Start output connected to Agent input, Agent output connected to Finish input, and Run returned `SYSTEM VERIFIED`, score 100, with Next stage.
+
+Fix 01 was then opened from the stage selector in a clean state. Apply safe repair inserted the missing Check and rebuilt the route. Run returned `SYSTEM VERIFIED`, score 100, with `Nice repair. The route is safe.`
+
+The audit confirmed two real issues and fixed them: the misleading initial Build edge and overlapping palette-added nodes. The preview screenshot shows the revised paper layout and separated nodes.

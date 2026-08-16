@@ -40,3 +40,14 @@
 - [ ] Add a friendly onboarding cue suitable for a 15-year-old learner.
 - [ ] Keep the graph interaction simple: add, drag, connect, undo/reset, and run.
 - [ ] Test the first Build and first Fix stage as a new player before delivery.
+
+## Full Player Logic Audit
+
+- [ ] Play at least two Build stages from a clean reset, including one with a Check or Approval.
+- [ ] Play at least two Fix stages from a clean reset, including one with a retry or stop rule.
+- [ ] Verify every visible objective matches the graph the player can actually build or repair.
+- [ ] Verify that starting graphs are intentionally solvable and not accidentally misleading.
+- [ ] Verify that valid routes do not leave stale duplicate edges behind.
+- [ ] Verify that invalid routes explain one concrete next action.
+- [ ] Verify stage progression, progress count, reset behavior, and mode labels.
+- [ ] Fix all issues discovered during actual play, then re-run the same scenarios.

@@ -9,7 +9,7 @@ export function makeInitialGraph(stage: Stage, mode: GameMode): { nodes: GraphNo
   const sequence = mode === "build" ? ["start", "end"] : stage.buildSequence.map((type, index) => (index === 2 ? "agent" : type));
   const gap = sequence.length > 1 ? 82 / (sequence.length - 1) : 82;
   const nodes = sequence.map((type, index) => ({ id: `${type}-${index}`, type: type as GraphNode["type"], x: 9 + index * gap, y: 43 + (index % 2 === 0 ? -5 : 7) }));
-  const edges = nodes.slice(0, -1).map((node, index) => ({ id: `edge-${index}`, from: node.id, to: nodes[index + 1].id, state: (mode === "fix" && index === 1 ? "broken" : "valid") as GraphEdge["state"] }));
+  const edges = mode === "build" ? [] : nodes.slice(0, -1).map((node, index) => ({ id: `edge-${index}`, from: node.id, to: nodes[index + 1].id, state: (index === 1 ? "broken" : "valid") as GraphEdge["state"] }));
   return { nodes, edges };
 }
 

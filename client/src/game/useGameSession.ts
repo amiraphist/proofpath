@@ -1,4 +1,4 @@
-// GraphOps style reminder: Neon Glass Circuit, semantic neon colors, English-only technical game voice.
+// GraphOps style reminder: Paper Lab, white graph paper, black ink nodes, blue pen routes, English-only friendly learning voice.
 
 import { useMemo, useState } from "react";
 import { makeInitialGraph, validateGraph } from "./graphRules";
@@ -43,10 +43,14 @@ export function useGameSession() {
 
   const addNode = (type: NodeType) => {
     const id = `${type}-${Date.now()}`;
-    const last = session.nodes.at(-1);
-    const x = Math.min(90, (last?.x ?? 10) + 12);
-    const y = last?.y && last.y > 50 ? 43 : 56;
-    setSession((current) => ({ ...current, nodes: [...current.nodes, { id, type, x, y }], selectedNodeId: id, result: null }));
+    setSession((current) => {
+      const slot = current.nodes.length - 1;
+      const column = slot % 4;
+      const row = Math.floor(slot / 4);
+      const x = 25 + column * 17;
+      const y = 30 + row * 25;
+      return { ...current, nodes: [...current.nodes, { id, type, x, y }], selectedNodeId: id, result: null };
+    });
   };
 
   const removeNode = (nodeId: string) => {
