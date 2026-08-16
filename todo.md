@@ -51,3 +51,26 @@
 - [ ] Verify that invalid routes explain one concrete next action.
 - [ ] Verify stage progression, progress count, reset behavior, and mode labels.
 - [ ] Fix all issues discovered during actual play, then re-run the same scenarios.
+
+## Clarity and Delight Redesign
+
+- [ ] Remove Start and Finish as visible teaching nodes; use a clear entry card and success target instead.
+- [ ] Make each node explain itself with a friendly title, one-line job, and playful visual cue.
+- [ ] Replace ambiguous node labels with concrete actions such as Read message, Check amount, Ask owner, Send reward, and Stop.
+- [ ] Redesign graph connections so blue pen lines begin and end exactly at visible port centers.
+- [ ] Keep connections behind nodes, use smooth orthogonal or curved paths, and show a clear active target while connecting.
+- [ ] Add a visible close/delete control to every user-created node and a simple undo/reset action.
+- [ ] Prevent accidental duplicate edges and make invalid connections explain why they are rejected.
+- [ ] Rewrite all 16 missions around memorable everyday agent stories with one clear challenge each.
+- [ ] Add playful feedback, concrete win conditions, and short explanations suitable for a 15-year-old learner.
+- [ ] Play the revised first Build and Fix missions from a clean session before delivery.
+
+## Friendly Sounds and Path Lines
+
+- [ ] Use the friendly in-game term “blue pen lines” for graph connections, with “connections” in the help text.
+- [ ] Add a mute/unmute control and respect the browser's first-interaction audio policy.
+- [ ] Add a soft node-tap sound with a short wooden or paper-like character.
+- [ ] Add a tiny tick when a connection starts and a gentle pop when a blue pen line is completed.
+- [ ] Add a quiet wobble/error sound for invalid connections and a short warm success jingle.
+- [ ] Keep every sound under a comfortable volume and gate sound effects behind a user setting.
+- [ ] Test sounds on node click, connection start, connection completion, invalid target, delete, reset, and success.

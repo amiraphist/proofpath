@@ -53,3 +53,17 @@ After the fixes, Build 01 was replayed from a clean reload. It now starts with t
 Fix 01 was then opened from the stage selector in a clean state. Apply safe repair inserted the missing Check and rebuilt the route. Run returned `SYSTEM VERIFIED`, score 100, with `Nice repair. The route is safe.`
 
 The audit confirmed two real issues and fixed them: the misleading initial Build edge and overlapping palette-added nodes. The preview screenshot shows the revised paper layout and separated nodes.
+
+## Paper Playground Clarity Pass
+
+The graph model now uses visible action cards only; Start and Finish are no longer teaching nodes. The board shows friendly entry/target labels: Message enters and Safe result. Node cards use action-first language, always expose a close button, and explain their job in one line.
+
+A Web Audio sound layer was added with tiny sine/triangle tones for palette tap, node tap, connection start, connection completion, invalid input, deletion, and success/error. A mute toggle is visible in the header.
+
+Graph connections are now measured from the actual DOM card bounds so the SVG blue pen line starts at the real right-port center and ends at the real left-port center. The line is drawn behind cards. Stage 02 was played in preview: Read the message and Check the details were added, connected via the ports, and Test my idea returned SYSTEM VERIFIED with score 100. Close/remove was also tested successfully on a node.
+
+A further spacing adjustment places added cards across the target route width rather than stacking them near each other.
+
+## Friendly Sounds and Paper Path Verification
+
+The final Paper Playground view now uses the terms PAPER PATH, PENCIL CASE, blue pen dots, Message enters, and Safe result. The header includes a sound toggle. The first Build mission is visually empty by design, with a clear objective and a visible card palette. A clean Stage 02 test added Read the message and Check the details, connected their ports, and passed Test my idea with SYSTEM VERIFIED and score 100. Node deletion worked from the always-visible close button. `pnpm check` and production build passed after the sound and interaction changes.

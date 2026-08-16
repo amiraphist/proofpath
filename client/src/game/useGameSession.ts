@@ -44,11 +44,11 @@ export function useGameSession() {
   const addNode = (type: NodeType) => {
     const id = `${type}-${Date.now()}`;
     setSession((current) => {
-      const slot = current.nodes.length - 1;
-      const column = slot % 4;
-      const row = Math.floor(slot / 4);
-      const x = 25 + column * 17;
-      const y = 30 + row * 25;
+      const slot = current.nodes.length;
+      const targetCount = Math.max(1, stage.buildSequence.length);
+      const gap = targetCount > 1 ? 64 / (targetCount - 1) : 0;
+      const x = 18 + Math.min(slot, targetCount - 1) * gap;
+      const y = 46 + (slot % 2 === 0 ? -7 : 7);
       return { ...current, nodes: [...current.nodes, { id, type, x, y }], selectedNodeId: id, result: null };
     });
   };
@@ -59,13 +59,13 @@ export function useGameSession() {
 
   const repair = () => {
     setSession((current) => {
-      const gap = stage.buildSequence.length > 1 ? 82 / (stage.buildSequence.length - 1) : 82;
+      const gap = stage.buildSequence.length > 1 ? 68 / (stage.buildSequence.length - 1) : 68;
       const used = new Set<string>();
       const nodes = stage.buildSequence.map((type, index) => {
         const existing = current.nodes.find((node) => node.type === type && !used.has(node.id));
         const id = existing?.id ?? `${type}-repair-${index}`;
         used.add(id);
-        return { id, type, x: 9 + index * gap, y: 43 + (index % 2 === 0 ? -5 : 7) };
+        return { id, type, x: 16 + index * gap, y: 47 + (index % 2 === 0 ? -7 : 7) };
       });
       const edges = nodes.slice(0, -1).map((node, index) => ({ id: `edge-repaired-${index}`, from: node.id, to: nodes[index + 1].id, state: "valid" as const }));
       return { ...current, edges, nodes, selectedNodeId: null, result: null };
