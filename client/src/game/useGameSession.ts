@@ -29,6 +29,7 @@ export function useGameSession() {
   const selectMode = (nextMode: GameMode) => reset(nextMode, stageIndex);
   const selectStage = (nextStage: number) => { const safeIndex = Math.min(stages.length - 1, Math.max(0, nextStage)); reset(stages[safeIndex].mode, safeIndex); };
   const selectNode = (nodeId: string | null) => setSession((current) => ({ ...current, selectedNodeId: current.selectedNodeId === nodeId ? null : nodeId }));
+  const showConnectionNotice = (notice: string) => setSession((current) => ({ ...current, notice }));
 
   const moveNode = (nodeId: string, x: number, y: number) => setSession((current) => ({ ...current, nodes: current.nodes.map((node) => node.id === nodeId ? { ...node, x, y } : node), result: null, notice: null }));
 
@@ -37,9 +38,14 @@ export function useGameSession() {
     if (from === to) return { ...current, notice: "A card cannot connect to itself — pick a different blue dot." };
     const existing = current.edges.find((edge) => edge.from === from && edge.to === to);
     if (existing) return { ...current, notice: "That blue pen line is already there. Try a new path." };
-    saveHistory(current);
     const broken = current.edges.find((edge) => edge.state === "broken");
-    if (broken) return { ...current, edges: current.edges.map((edge) => edge.id === broken.id ? { ...edge, from, to, state: "valid" as const } : edge), result: null, notice: "Nice fix — the broken blue pen line is reconnected." };
+    if (broken) {
+      saveHistory(current);
+      return { ...current, edges: current.edges.map((edge) => edge.id === broken.id ? { ...edge, from, to, state: "valid" as const } : edge), result: null, notice: "Nice fix — the broken blue pen line is reconnected." };
+    }
+    if (current.edges.some((edge) => edge.state === "valid" && edge.from === from)) return { ...current, notice: "Each node gets one blue pen line leaving it. Keep one clear route." };
+    if (current.edges.some((edge) => edge.state === "valid" && edge.to === to)) return { ...current, notice: "Each node gets one blue pen line entering it. Keep one clear route." };
+    saveHistory(current);
     return { ...current, edges: [...current.edges, { id: `edge-${Date.now()}`, from, to, state: "valid" as const }], result: null, notice: "Blue pen line added. Keep building the path." };
   });
 
@@ -92,5 +98,5 @@ export function useGameSession() {
 
   const nextStage = () => selectStage(stageIndex + 1);
 
-  return { mode, stage, stageIndex, session, stages, totalCompleted, selectMode, selectStage, selectNode, moveNode, connectNodes, addNode, removeNode, repair, undo, run, reset, nextStage };
+  return { mode, stage, stageIndex, session, stages, totalCompleted, selectMode, selectStage, selectNode, moveNode, connectNodes, showConnectionNotice, addNode, removeNode, repair, undo, run, reset, nextStage };
 }

@@ -290,3 +290,10 @@
 - [x] Verify the live URL opens the playable standalone game from a clean browser session.
 - [x] Permit the temporary static preview host so the standalone classroom can be visually smoke-tested before Pages deployment.
 - [x] Fix the classroom entry route so the independent Vite root loads the game rather than a blank page.
+
+## Stage 03 Safe-Route Validation Regression
+
+- [x] Reproduce the accepted unsafe bypass where AI Agent can connect directly to Ledger beside the required Verify recipient route.
+- [x] Enforce a single valid predecessor per input port and reject required-route bypasses or parallel unsafe paths.
+- [x] Add a regression test proving Stage 03 only passes when verification is the sole path to Ledger.
+- [x] Re-run the complete curriculum and publish the validator correction.
