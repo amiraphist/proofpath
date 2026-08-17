@@ -125,3 +125,23 @@ button:focus-visible, [role="button"]:focus-visible { outline: 2px solid #2d66bd
 .graph-node--green .node-id { display: none; }
 .graph-node--green .node-port { border-color: #24835c; }
 .graph-node--green .node-port:hover { background: #24835c; box-shadow: 0 0 0 4px rgba(36,131,92,.16); }
+
+/* Ledger correction: device-only presentation, with graph ports floating beside it. */
+.graph-node--green { width: 132px; min-height: 196px; padding: 0; background: transparent; border: 0; box-shadow: none; }
+.graph-node--green::before { display: none; }
+.graph-node--green:hover, .graph-node--green.is-selected { border: 0; box-shadow: none; background: transparent; }
+.graph-node--green .node-head { position: absolute; top: -18px; left: 12px; right: 4px; z-index: 5; color: #275c43; }
+.graph-node--green .node-title { position: absolute; left: 0; right: 0; bottom: -20px; margin: 0; color: #275c43; font-size: 10px; text-align: center; white-space: nowrap; }
+.graph-node--green .ledger-vector { display: block; width: 120px; height: 190px; margin: 0 auto; }
+.graph-node--green .hardware-label { display: none; }
+.graph-node--green .node-port { border-color: #24835c; }
+.graph-node--green .node-port--left { left: -7px; }
+.graph-node--green .node-port--right { right: -7px; }
+.ledger-mini { display: block; width: 28px; height: 39px; object-fit: contain; }
+.palette { grid-template-columns: 1fr; gap: 7px; }
+.palette-card { min-height: 47px; flex-direction: row; align-items: center; padding: 8px; }
+.palette-card .palette-icon { width: 27px; height: 27px; }
+.palette-card .palette-plus { position: static; margin-left: auto; }
+.palette-card:nth-child(3n), .palette-card:nth-child(3n+1), .palette-card:nth-child(3n+2) { transform: none; }
+.palette-card:nth-child(even) { transform: rotate(.6deg); }
+.palette-card:hover { transform: translateY(-1px) rotate(0deg); }

@@ -120,3 +120,12 @@
 - [x] Keep accessible left/right connection ports attached to the device node and preserve blue pen line geometry.
 - [x] Update the Ledger palette card and device labels to make the hardware role obvious without claiming a real integration.
 - [x] Verify the vector device visually on desktop and mobile, and re-run graph tests/build.
+
+## Ledger and Curriculum Correction
+
+- [x] Replace the boxed/angled Ledger rendering with a clean front-facing device-only vector.
+- [x] Keep the graph input/output circles outside the device body, matching the other node ports.
+- [x] Render the exact `Ledger Nano™ Gen5` device in the palette instead of a generic icon card treatment.
+- [x] Restore the clearer previous palette arrangement instead of the dense two-column shuffled layout.
+- [x] Compare the attached 16-stage curriculum with the current 10-stage implementation; the comparison and recommendation are documented in MEMORY.md, and stage count remains 10 until the user confirms the scope change.
+- [x] Re-test the corrected Ledger node and palette, then replay Build 01 and Fix 01 to successful score-100 results before checkpoint.

@@ -112,3 +112,24 @@ Morning UI audit: the help button now toggles `Show solution hint` / `Hide solut
 - 2026-08-17: Replaced the generic Ledger signer rectangle with an inline SVG hardware device: angled dark shell, inset light transaction screen, Bitcoin mark, `Sign transaction to send payment?`, `Hold to sign`, `Reject`, page count, lower USB-style port, side button, and simulated-signer label.
 - 2026-08-17: The node remains a true graph node. Its accessible left/right blue ports are still present on the device boundary, and the existing DOM-port measurement keeps edge endpoints centered on those ports.
 - 2026-08-17: Desktop browser verification showed the device-shaped signer on the Paper Playground board with the correct title and accessible connection labels. The 390×844 mobile capture kept the board and navigation controls readable; the mission panel continues below the board as intended for Telegram-sized screens.
+
+## Ledger correction pass
+
+- 2026-08-17: Replaced the angled device-card treatment with a front-facing device-only SVG. The surrounding green node frame, background, and shadow are removed; only the device body, its small title/close control, and the two external graph port circles remain.
+- 2026-08-17: The palette was restored from the dense two-column layout to the earlier readable single-column card arrangement. The Ledger palette entry now contains a miniature front-facing device SVG and the exact name `Ledger Nano™ Gen5`.
+- 2026-08-17: Browser verification on Stage 01 showed the standalone front-facing Ledger device on the graph with accessible `Connect into Ledger Nano™ Gen5` and `Connect from Ledger Nano™ Gen5` controls. Tests, type-check, and production build passed.
+
+## 16-stage curriculum comparison and scope decision
+
+The attached 16-stage design is educationally stronger as a full course because its Build half introduces one new safety invariant at a time: hardware signing, spending limits, full recipient verification, price/slippage checks, owner approval, network/detail checks, multisig quorum, and simulation preview. Its Fix half also gives each attack a distinct mechanism: fake system update, address poisoning, infinite allowance, deepfake approval, rogue skill, stale session replay, preview/execution mismatch, and missing multisig quorum.
+
+The current implementation keeps 10 missions because the earlier product requirement explicitly requested five Build and five Fix missions for a simpler first release. To preserve that simplicity, the current 10-stage set compresses the highest-value concepts into five Build lessons and five Fix attacks. Recommendation: keep the current 10-stage version as the playable MVP and treat the attached 16 stages as the next “Course mode” expansion, rather than silently replacing the existing progression. This keeps the user’s intended short game intact while preserving a precise path to the deeper curriculum.
+
+## Post-correction gameplay verification plan
+
+After the Ledger and palette correction, the representative Build path to replay is Stage 01: AI Agent → Ledger Nano™ Gen5 → Send payment → Test my idea. The representative Fix path is Stage 06: remove the fake second AI Agent, add Check payment, reconnect the broken edge, then Test my idea. Both paths must end in PAYMENT PLAN VERIFIED with score 100 before the corrected checkpoint is saved.
+
+## Post-correction gameplay verification
+
+- 2026-08-17: Build 01 was replayed after the visual correction from a clean Stage 01. The player added AI Agent, the front-facing Ledger Nano™ Gen5 device, and Send payment; connected AI Agent → Ledger → Send payment; ran `Test my idea`; and reached `PAYMENT PLAN VERIFIED` with score 100.
+- 2026-08-17: Fix 01 / Stage 06 was selected after the same correction. Its attack state showed the inserted fake AI Agent, `Apply safe repair` replaced it with Check payment, and `Test my idea` reached `PAYMENT PLAN VERIFIED` with score 100.
