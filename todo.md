@@ -103,3 +103,20 @@
 - [x] Add protected tRPC procedures for loading and saving authenticated stage progress, scores, and attempts.
 - [x] Add deterministic tests covering the intended safe route for all 10 payment missions and broken Fix starts.
 - [x] Manually verify duplicate-edge prevention in the browser and record the player-path result in MEMORY.md.
+
+## August 2026 Curriculum and UX Revision
+
+- [x] Convert the attached 16-level design into the current 10-mission scope without losing the core security concepts.
+- [x] Make solution guidance opt-in: hide the exact route by default and reveal it only through an explicit Show solution button.
+- [x] Redesign the palette so available cards are not presented in the intended route order and do not visually solve the mission by position.
+- [x] Add a clear attack-state explanation for every Fix mission: what the attacker changed, why the changed route is dangerous, and what invariant the player must restore.
+- [x] Rewrite mission stories, objectives, lessons, and failure feedback for precise payment-safety education based on the attached curriculum.
+- [x] Add and validate the new security concepts that fit the 10-mission scope: spending limits, recipient verification, simulation preview, session expiry, and multisig quorum.
+- [x] Re-test representative Build and Fix missions after the curriculum and palette changes, including Stage 06 attack-state and Show solution behavior.
+
+## Ledger Vector Device Revision
+
+- [x] Replace the rectangular Ledger signer card with a recognizable clean vector Ledger Nano™ Gen5 device body and screen.
+- [x] Keep accessible left/right connection ports attached to the device node and preserve blue pen line geometry.
+- [x] Update the Ledger palette card and device labels to make the hardware role obvious without claiming a real integration.
+- [x] Verify the vector device visually on desktop and mobile, and re-run graph tests/build.

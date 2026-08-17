@@ -8,7 +8,7 @@ const clock = (index: number) => `Step ${index + 1}`;
 export function makeInitialGraph(stage: Stage, mode: GameMode): { nodes: GraphNode[]; edges: GraphEdge[] } {
   const sequence = mode === "build"
     ? []
-    : stage.buildSequence.map((type, index) => (index === 1 ? "agent" : type));
+    : (stage.attackSequence ?? stage.buildSequence.map((type, index) => (index === 1 ? "agent" : type)));
   const gap = sequence.length > 1 ? 68 / (sequence.length - 1) : 68;
   const nodes = sequence.map((type, index) => ({
     id: `${type}-${index}`,
@@ -75,14 +75,14 @@ export function validateGraph(stage: Stage, mode: GameMode, nodes: GraphNode[], 
   }
 
   const reason = broken
-    ? "That red line is broken. Reconnect the blue dots."
+    ? `${mode === "fix" ? stage.fixFault.replace("HACK ALERT: ", "") : "The route is incomplete."} Restore this safety rule: ${stage.lesson} Reconnect the red line.`
     : duplicate
-      ? "Two blue lines do the same job. Keep one clean path."
+      ? `${stage.lesson} Two blue lines do the same job. Keep one clean path.`
       : !nodeSetMatch
-        ? `This story needs: ${stage.buildSequence.map((type) => type === "agent" ? "AI Agent" : type === "condition" ? "Check" : type === "approval" ? "Owner approval" : type === "wallet" ? "Ledger signer" : type === "tool" ? "Send payment" : type === "receipt" ? "Save receipt" : type === "dedupe" ? "Block duplicates" : type === "retry" ? "Retry" : "Stop").join(" → ")}.`
+        ? `This story needs: ${stage.buildSequence.map((type) => ({ agent: "AI Agent", condition: "Check payment", verify: "Verify recipient", limit: "Spending limit", slippage: "Price & slippage", preview: "Simulate preview", approval: "Owner approval", quorum: "Multisig quorum", expiry: "Session expiry", wallet: "Ledger signer", tool: "Send payment", receipt: "Save receipt", dedupe: "Block duplicates", retry: "Safe retry", stop: "Stop & flag" } as Record<string, string>)[type]).join(" → ")}.`
         : !routeMatch
-          ? "The cards are in the wrong order. Follow the blue dots."
-          : "One small piece is missing. Read the mission card again.";
+          ? `${stage.lesson} The cards are in the wrong order. Follow the blue dots.`
+          : `One small piece is missing from this safety rule: ${stage.lesson}`;
 
   return {
     ok: false,

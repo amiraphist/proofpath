@@ -91,3 +91,37 @@ button:focus-visible, [role="button"]:focus-visible { outline: 2px solid #2d66bd
 
 .graph-caption__keys { color: #536887; font-size: 10px; letter-spacing: .01em; }
 @media (max-width: 900px) { .graph-caption__keys { display: none; } }
+
+/* Optional solution reveal: the learner sees the challenge first, not the answer. */
+.objective--hidden { background: rgba(237,244,252,.5); border: 2px dashed #a9b9ca; padding: 10px 9px; }
+.objective--hidden .hint-blur { color: var(--ink-soft); filter: blur(.7px); opacity: .78; user-select: none; }
+.hint-reveal-btn { display: inline-flex; margin-top: 9px; padding: 4px 8px; color: var(--blue); background: var(--paper); border: 1.5px solid var(--blue); border-radius: 4px; font-size: 10px; font-weight: 800; }
+.hint-reveal-btn:hover { color: var(--paper); background: var(--blue); }
+.objective--revealed .hint-reveal-btn { color: var(--ink-soft); border-color: #a9b9ca; font-weight: 700; }
+.palette { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.palette-card { min-height: 68px; flex-direction: column; align-items: flex-start; position: relative; padding: 8px 8px 7px; }
+.palette-card .palette-icon { width: 25px; height: 25px; }
+.palette-card .palette-plus { position: absolute; right: 7px; top: 7px; }
+.palette-card:nth-child(3n) { transform: rotate(-1.1deg) translateY(3px); }
+.palette-card:nth-child(3n+1) { transform: rotate(.7deg); }
+.palette-card:nth-child(3n+2) { transform: rotate(-.35deg) translateY(6px); }
+.palette-card:hover { transform: translateY(-2px) rotate(0deg); }
+.palette-card--teal { --node-color: #248b83; }
+.palette-card--amber { --node-color: #a47a00; }
+.palette-card--orange { --node-color: #c5652e; }
+.palette-card--purple { --node-color: #7650a8; }
+.palette-card--rose { --node-color: #ad4a67; }
+.palette-card--indigo { --node-color: #4b5ca8; }
+@media (max-width: 780px) {
+  .palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* The signer is a device-shaped teaching object, not a generic node card. */
+.graph-node--green { width: 154px; min-height: 208px; padding: 10px 12px 8px; background: #eef6f0; border-color: #275c43; box-shadow: 4px 5px 0 rgba(39,92,67,.18); }
+.graph-node--green .node-head { color: #275c43; }
+.graph-node--green .node-title { margin-top: 4px; font-size: 11px; }
+.graph-node--green .ledger-vector { display: block; width: 112px; height: 126px; margin: 3px auto -3px; }
+.graph-node--green .hardware-label { display: block; margin-top: 0; color: #275c43; font: 800 7px/1.2 "Trebuchet MS", sans-serif; letter-spacing: .08em; text-align: center; }
+.graph-node--green .node-id { display: none; }
+.graph-node--green .node-port { border-color: #24835c; }
+.graph-node--green .node-port:hover { background: #24835c; box-shadow: 0 0 0 4px rgba(36,131,92,.16); }

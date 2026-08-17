@@ -98,3 +98,17 @@ Morning UI audit: the help button now toggles `Show solution hint` / `Hide solut
 - 2026-08-17: Fresh 390×844 Telegram-sized screenshot kept the Build/Fix switch, Undo, Reset, Test my idea, Paper Path, and Stage 01 labels readable; the layout stacks the mission and tool panels below the board instead of truncating them.
 - 2026-08-17: Clean browser Stage 08 — Attack: Replay Button / Fix 03 was selected. Its attacked route showed duplicate AI Agent state and missing Block duplicates. `Apply safe repair` restored the duplicate lock, and `Test my idea` returned `PAYMENT PLAN VERIFIED`, `Nice repair — the blue pen line is safe again.`, score 100, with Next mission visible.
 - 2026-08-17: The connection measurement now reads actual `.node-port--left` and `.node-port--right` DOM rectangles, so blue pen endpoints stay centered on visible port buttons after layout changes.
+
+## Curriculum revision verification
+
+- 2026-08-17: The attached 16-level design was translated into a tighter 10-stage scope: five Build lessons introduce small-tip signing, spending limits, full recipient verification, price/slippage plus simulation preview, and multisig quorum; five Fix lessons cover fake system update/prompt injection, address poisoning, infinite approval, stale approval replay, and missing multisig signatures.
+- 2026-08-17: Fix stages now define explicit `attackSequence` data. Stage 06 visibly starts with two AI Agent cards, while its story says the attacker replaced Check payment; Stage 07 removes Recipient Verify, Stage 08 removes Simulate preview, Stage 09 removes Session expiry, and Stage 10 replaces Multisig quorum with one Owner approval.
+- 2026-08-17: The solution guide is now opt-in. By default the mission shows a slightly blurred generic challenge inside a dashed box with `Show solution`; clicking it reveals the exact route and changes the control to `Hide solution`.
+- 2026-08-17: Palette cards are deterministically shuffled and displayed as a two-column, hand-placed pencil-case grid with rotations and decoys, rather than a vertical sequence that mirrors the answer.
+- 2026-08-17: Browser verification of Stage 06 confirmed the HACK ALERT, two-agent attacked graph, mixed palette, and successful Show solution reveal. Tests/build/check pass after the curriculum rewrite.
+
+## Ledger device vector revision
+
+- 2026-08-17: Replaced the generic Ledger signer rectangle with an inline SVG hardware device: angled dark shell, inset light transaction screen, Bitcoin mark, `Sign transaction to send payment?`, `Hold to sign`, `Reject`, page count, lower USB-style port, side button, and simulated-signer label.
+- 2026-08-17: The node remains a true graph node. Its accessible left/right blue ports are still present on the device boundary, and the existing DOM-port measurement keeps edge endpoints centered on those ports.
+- 2026-08-17: Desktop browser verification showed the device-shaped signer on the Paper Playground board with the correct title and accessible connection labels. The 390×844 mobile capture kept the board and navigation controls readable; the mission panel continues below the board as intended for Telegram-sized screens.
