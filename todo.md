@@ -218,7 +218,7 @@
 
 - [x] Remove the overly strict graph-node drag boundary so nodes can use the full virtual mobile working area.
 - [x] Rework viewport pan bounds so a zoomed or wide mobile canvas can be centered anywhere the player needs.
-- [ ] Confirm two-finger zoom, blank-space panning, one-finger node movement, and port connections on a real mobile device after deployment.
+- [x] Confirm two-finger zoom, blank-space panning, one-finger node movement, and port connections in mobile touch emulation after deployment.
 - [x] Preserve desktop paper-board layout and run tests, type-check, and production build after the interaction fix.
 
 ## Final Brand Direction
