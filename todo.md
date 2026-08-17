@@ -180,3 +180,17 @@
 - [x] Open the floating mobile Pencil Case behavior, add a node from it, and confirm the drawer auto-closes; browser interaction returned drawer closed and node count 1.
 - [x] Play Build 01 after the latest port alignment: AI Agent → Ledger and Ledger → Send payment produced two valid edges and PAYMENT PLAN VERIFIED with score 100.
 - [x] Perform an explicit desktop browser check confirming the side Pencil Case remains visible after mobile drawer changes.
+
+## Mobile Nodes Orb Refinement
+
+- [x] Remove the unnecessary Message enters and Safe result labels from the graph board.
+- [x] Replace card wording with node wording in the empty-board instruction and mobile picker control.
+- [x] Turn the mobile Nodes control into a draggable glass orb with a tap-to-open threshold.
+- [x] Persist the mobile Nodes orb position on the player device and keep it within safe screen boundaries.
+- [x] Verify tap-to-open, drag, persistence, and desktop layout before checkpoint.
+
+## Nodes Orb Verification Gap Closure
+
+- [x] Reload after dragging the Nodes orb and confirm its stored position is restored from localStorage.
+- [x] Capture the post-change desktop layout and confirm the desktop Pencil Case remains visible while the mobile orb stays hidden.
+- [x] Inspect the desktop-rendered UI and explicitly verify the side Pencil Case is visible while the mobile Nodes orb is hidden.

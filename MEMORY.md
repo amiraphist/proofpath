@@ -170,3 +170,9 @@ After the Ledger and palette correction, the representative Build path to replay
 
 - 2026-08-17: Narrow viewport now uses a floating `Cards` trigger and a touch-friendly Drawer instead of forcing the full Pencil Case to the bottom of the page. Browser interaction opened the Drawer, selected Send payment, added one node, and confirmed the Drawer closed with `aria-expanded=false`.
 - 2026-08-17: After tightening Ledger port offsets, Build 01 was replayed in the browser: AI Agent → Ledger Nano™ Gen5 and Ledger Nano™ Gen5 → Send payment both produced valid edges, and Test my idea reached PAYMENT PLAN VERIFIED with score 100. Desktop capture confirmed the normal side Pencil Case remains visible.
+
+## Mobile Nodes orb refinement
+
+- 2026-08-17: Removed the graph-board Message enters and Safe result labels, leaving a clearer canvas with the single Drop your first node here cue. Card wording now uses node wording in the relevant picker and empty-board UI.
+- 2026-08-17: Replaced the fixed mobile Cards pill with a glass, AssistiveTouch-inspired Nodes orb. Pointer-event verification moved its stored location to `{"x":91,"y":74.63636363636364}` without opening the drawer; a tap opened the drawer with `aria-expanded=true`. Position is persisted under `graphops-mobile-nodes-position` and clamped within safe viewport bounds.
+- 2026-08-17: Reload verification restored that exact saved Nodes orb position (`left: 91%`, `top: 74.6364%`). In the rendered 1280×1100 desktop viewport, the Pencil Case was visible (245×968px at left 996px), while the mobile Nodes orb computed to `display: none`.

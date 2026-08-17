@@ -9,7 +9,7 @@ import { trpc } from "@/lib/trpc";
 import { useSoundEffects } from "@/game/useSoundEffects";
 import { nodeMeta, type GameMode, type NodeType } from "@/game/stages";
 import type { GraphNode } from "@/game/types";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 const LEDGER_ASSET = "/manus-storage/ledger_illustrator_no_bitcoin_9f898c01.svg";
 const LedgerMini = () => <img className="ledger-mini" src={LEDGER_ASSET} alt="Ledger Nano™ Gen5" />;
@@ -112,10 +112,8 @@ function GraphBoard({ nodes, edges, selectedNodeId, onSelect, onRemove, onMove, 
           return <g key={edge.id} className={`edge edge--${edge.state}`}><path d={`M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}`} /><circle cx={x1 + (x2 - x1) * .48} cy={y1 + (y2 - y1) * .48} r=".7" className="edge-pulse" style={{ animationDelay: `${index * 180}ms` }} /></g>;
         })}
       </svg>
-      <div className="graph-entry"><span className="entry-arrow">→</span><span><strong>Message enters</strong><small>your story starts here</small></span></div>
-      <div className="graph-target"><span><strong>Safe result</strong><small>your idea ends here</small></span><span className="entry-arrow">→</span></div>
       {nodes.map((node) => <NodeCard key={node.id} node={node} selected={selectedNodeId === node.id} source={connectionSource === node.id} target={Boolean(connectionSource && connectionSource !== node.id)} onSelect={() => { onSelect(node.id); onSound("tap"); }} onRemove={() => { onRemove(node.id); onSound("delete"); }} onStartDrag={(event) => startDrag(event, node)} onPort={(direction) => handlePort(node.id, direction)} />)}
-      {nodes.length === 0 && <div className="graph-empty"><Sparkles size={16} /> Pick a card from the pencil case</div>}
+      {nodes.length === 0 && <div className="graph-empty"><Sparkles size={16} /> Drop your first node here</div>}
     </div>
   );
 }
@@ -135,11 +133,47 @@ export default function GameCanvas() {
   const { muted, setMuted, play } = useSoundEffects();
   const [showHints, setShowHints] = useState(false);
   const [mobilePaletteOpen, setMobilePaletteOpen] = useState(false);
+  const [mobileOrbPosition, setMobileOrbPosition] = useState(() => {
+    try {
+      const stored = localStorage.getItem("graphops-mobile-nodes-position");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (typeof parsed.x === "number" && typeof parsed.y === "number") return { x: parsed.x, y: parsed.y };
+      }
+    } catch { /* use the friendly default */ }
+    return { x: 84, y: 81 };
+  });
+  const orbDragRef = useRef<{ pointerId: number; startX: number; startY: number; originX: number; originY: number; moved: boolean } | null>(null);
   const addPaletteNode = (type: NodeType) => { addNode(type); play("tap"); setMobilePaletteOpen(false); };
+  const startOrbDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (event.button !== 0) return;
+    orbDragRef.current = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, originX: mobileOrbPosition.x, originY: mobileOrbPosition.y, moved: false };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+  const moveOrbDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = orbDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const dx = event.clientX - drag.startX;
+    const dy = event.clientY - drag.startY;
+    if (Math.abs(dx) + Math.abs(dy) > 7) drag.moved = true;
+    const x = Math.min(91, Math.max(9, drag.originX + (dx / window.innerWidth) * 100));
+    const y = Math.min(92, Math.max(8, drag.originY + (dy / window.innerHeight) * 100));
+    setMobileOrbPosition({ x, y });
+  };
+  const endOrbDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = orbDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    orbDragRef.current = null;
+    if (!drag.moved) setMobilePaletteOpen(true);
+  };
 
   useEffect(() => {
     setShowHints(false);
   }, [stage.id]);
+
+  useEffect(() => {
+    localStorage.setItem("graphops-mobile-nodes-position", JSON.stringify(mobileOrbPosition));
+  }, [mobileOrbPosition]);
 
   useEffect(() => {
     if (!user || !session.result) return;
@@ -173,10 +207,11 @@ export default function GameCanvas() {
     <div className="game-layout">
       <aside className="mission-panel glass-panel"><div className="eyebrow"><span className="eyebrow-line" /> TODAY'S CHALLENGE</div><div className="stage-select"><div><span className="muted-label">CURRENT STAGE</span><strong>{String(stage.id).padStart(2, "0")} <span>/ {stages.length}</span></strong></div><select value={stageIndex} onChange={(event) => selectStage(Number(event.target.value))} aria-label="Select stage">{stages.map((item, index) => <option key={item.id} value={index}>{String(item.id).padStart(2, "0")} — {item.title}</option>)}</select><ChevronDown size={15} /></div><div className={`severity severity--${stage.severity}`}><span /> {stage.severity.toUpperCase()} RISK</div><h1>{stage.title}</h1><p className="client-line">PAYMENT FILE <span>·</span> {stage.client}</p><p className="story">{stage.story}</p><p className={`brand-voice ${mode === "fix" ? "brand-voice--attack" : ""}`}>{mode === "fix" ? stage.fixFault : "Build the route before the payment can move."}</p><div className={`objective ${showHints ? "objective--revealed" : "objective--hidden"}`}><span className="objective-icon"><ScanLine size={17} /></span><div><span className="muted-label">YOUR JOB</span>{showHints ? <p>{stage.objective}</p> : <p className="hint-blur">Choose the cards that enforce this story's safety rule, connect the blue dots, then test it.</p>}<button className="hint-reveal-btn" onClick={() => setShowHints((value) => !value)} aria-expanded={showHints}>{showHints ? "Hide solution" : "Show solution"}</button></div></div><div className="lesson"><span className="muted-label">WHY IT MATTERS</span><p>{stage.lesson}</p></div><div className="progress-wrap"><div className="progress-label"><span>MISSIONS</span><strong>{visibleCompleted} / {stages.length}</strong></div><div className="progress-bar"><span style={{ width: `${Math.max(4, (visibleCompleted / stages.length) * 100)}%` }} /></div></div></aside>
       <section className="play-area"><div className="play-toolbar"><div className="play-brief"><span className="play-brief__signal" /> <span>DRAW THE IDEA. THEN SEE WHAT IT DOES.</span></div><div className="play-toolbar__right"><ModeSwitch mode={mode} /><div className="toolbar-actions"><button className="ghost-btn" onClick={() => undo()}><RotateCcw size={14} /> Undo</button><button className="ghost-btn" onClick={() => reset()}><RotateCcw size={14} /> Reset</button><button className="run-btn" onClick={run}><Play size={14} fill="currentColor" /> Test my idea <ArrowRight size={14} /></button></div></div></div><GraphBoard alert={mode === "fix"} attackEvent={stage.attackEvent} nodes={session.nodes} edges={session.edges} selectedNodeId={session.selectedNodeId} onSelect={(id) => selectNode(id)} onRemove={removeNode} onMove={moveNode} onConnect={connectNodes} onSound={play} />{session.notice && <div className="notice-strip" role="status">{session.notice}</div>}<div className="board-foot"><span><span className="legend-dot legend-dot--cyan" /> Blue pen line</span><span><span className="legend-dot legend-dot--red" /> Needs fixing</span><span><span className="legend-dot legend-dot--amber" /> Human choice</span><span className="board-foot__shortcut">Tap a card to read it · × removes it</span></div></section>
-      <aside className="tools-panel glass-panel"><div className="tools-heading"><div><div className="eyebrow"><span className="eyebrow-line" /> PENCIL CASE</div><h2>Pick your cards</h2></div><span className="tool-count">{session.nodes.length} nodes</span></div><p className="tools-copy">{mode === "fix" ? "Read the attack event, then add trusted controls that stop the unsafe route before signing or sending." : "Pick only the cards this little story needs. Keep it simple."}</p><div className="interaction-guide"><span className="guide-step"><b>1</b> Pick a card</span><span className="guide-arrow">→</span><span className="guide-step"><b>2</b> Join blue dots</span><span className="guide-arrow">→</span><span className="guide-step"><b>3</b> Test it</span></div><div className="palette-heading"><span>AVAILABLE NODES</span><small>Tap + to add</small></div><div className="palette">{paletteCards}</div>{mode === "fix" && <button className="repair-btn" onClick={repair}><Wrench size={14} /> Show trusted repair</button>}<div className="trace-panel"><div className="trace-heading"><span><Activity size={14} /> WHAT HAPPENED</span><span className="trace-live">LIVE</span></div><div className="trace-list">{session.result?.trace.map((event) => <div key={`${event.time}-${event.label}`} className={`trace-event trace-event--${event.tone}`}><time>{event.time}</time><span><strong>{event.label}</strong>{event.detail}</span></div>) ?? <div className="trace-empty"><span className="trace-cursor" /> Awaiting simulation input...</div>}</div></div></aside>
+      <aside className="tools-panel glass-panel"><div className="tools-heading"><div><div className="eyebrow"><span className="eyebrow-line" /> PENCIL CASE</div><h2>Pick your nodes</h2></div><span className="tool-count">{session.nodes.length} nodes</span></div><p className="tools-copy">{mode === "fix" ? "Read the attack event, then add trusted controls that stop the unsafe route before signing or sending." : "Pick only the nodes this little story needs. Keep it simple."}</p><div className="interaction-guide"><span className="guide-step"><b>1</b> Pick a node</span><span className="guide-arrow">→</span><span className="guide-step"><b>2</b> Join blue dots</span><span className="guide-arrow">→</span><span className="guide-step"><b>3</b> Test it</span></div><div className="palette-heading"><span>AVAILABLE NODES</span><small>Tap + to add</small></div><div className="palette">{paletteCards}</div>{mode === "fix" && <button className="repair-btn" onClick={repair}><Wrench size={14} /> Show trusted repair</button>}<div className="trace-panel"><div className="trace-heading"><span><Activity size={14} /> WHAT HAPPENED</span><span className="trace-live">LIVE</span></div><div className="trace-list">{session.result?.trace.map((event) => <div key={`${event.time}-${event.label}`} className={`trace-event trace-event--${event.tone}`}><time>{event.time}</time><span><strong>{event.label}</strong>{event.detail}</span></div>) ?? <div className="trace-empty"><span className="trace-cursor" /> Awaiting simulation input...</div>}</div></div></aside>
     </div>
     {session.result && <div className={`result-banner ${session.result.ok ? "result-banner--success" : "result-banner--danger"}`}><div className="result-symbol">{session.result.ok ? <Check size={20} /> : <X size={20} />}</div><div><strong>{session.result.ok ? "PAYMENT PLAN VERIFIED" : "PAYMENT BLOCKED"}</strong><span>{session.result.summary}</span></div><div className="result-score"><small>SCORE</small><strong>{session.result.score}</strong></div>{session.result.ok && stageIndex < stages.length - 1 && <button onClick={nextStage}>Next mission <ArrowRight size={14} /></button>}</div>}
-    <Drawer open={mobilePaletteOpen} onOpenChange={setMobilePaletteOpen}><DrawerTrigger asChild><button className="mobile-pencil-trigger" aria-label="Open node pencil case" aria-expanded={mobilePaletteOpen}><WalletCards size={18} /><span>Cards</span><b>{session.nodes.length}</b></button></DrawerTrigger><DrawerContent className="mobile-pencil-drawer"><DrawerHeader><DrawerTitle>Pick your cards</DrawerTitle><DrawerDescription>Choose a card, then connect the blue dots.</DrawerDescription></DrawerHeader><div className="mobile-pencil-list">{paletteCards}</div>{mode === "fix" && <button className="mobile-repair-btn" onClick={() => { repair(); setMobilePaletteOpen(false); }}><Wrench size={14} /> Show trusted repair</button>}<DrawerClose asChild><button className="mobile-pencil-close">Close pencil case</button></DrawerClose></DrawerContent></Drawer>
+    <button className="mobile-pencil-trigger" style={{ left: `${mobileOrbPosition.x}%`, top: `${mobileOrbPosition.y}%` }} aria-label="Open or drag Nodes" aria-expanded={mobilePaletteOpen} onPointerDown={startOrbDrag} onPointerMove={moveOrbDrag} onPointerUp={endOrbDrag} onPointerCancel={() => { orbDragRef.current = null; }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setMobilePaletteOpen(true); } }} onClick={(event) => event.preventDefault()}><WalletCards size={18} /><span>Nodes</span><b>{session.nodes.length}</b></button>
+    <Drawer open={mobilePaletteOpen} onOpenChange={setMobilePaletteOpen}><DrawerContent className="mobile-pencil-drawer"><DrawerHeader><DrawerTitle>Pick your nodes</DrawerTitle><DrawerDescription>Choose a node, then connect the blue dots.</DrawerDescription></DrawerHeader><div className="mobile-pencil-list">{paletteCards}</div>{mode === "fix" && <button className="mobile-repair-btn" onClick={() => { repair(); setMobilePaletteOpen(false); }}><Wrench size={14} /> Show trusted repair</button>}<DrawerClose asChild><button className="mobile-pencil-close">Close nodes</button></DrawerClose></DrawerContent></Drawer>
     <footer className="footer-bar"><span>GRAPHOPS / PAPER PLAYGROUND</span><span>JUST PRACTICE · NO MONEY MOVES</span><span>Unofficial fan-made educational simulation. Not affiliated with or endorsed by Ledger.</span><span>ENGLISH PRACTICE <span className="footer-dot" /></span></footer>
   </main>;
 }
