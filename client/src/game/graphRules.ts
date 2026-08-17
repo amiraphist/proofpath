@@ -43,9 +43,20 @@ function trace(...events: Omit<TraceEvent, "time">[]): TraceEvent[] {
 
 function followsSequence(stage: Stage, nodes: GraphNode[], edges: GraphEdge[]) {
   const byId = new Map(nodes.map((node) => [node.id, node]));
-  const outgoing = new Map(edges.filter((edge) => edge.state === "valid").map((edge) => [edge.from, edge]));
-  const incoming = new Set(edges.map((edge) => edge.to));
-  let current = nodes.find((node) => !incoming.has(node.id));
+  const validEdges = edges.filter((edge) => edge.state === "valid");
+  if (validEdges.length !== Math.max(0, nodes.length - 1)) return false;
+
+  const outgoing = new Map<string, GraphEdge>();
+  const incoming = new Map<string, GraphEdge>();
+  for (const edge of validEdges) {
+    if (!byId.has(edge.from) || !byId.has(edge.to) || outgoing.has(edge.from) || incoming.has(edge.to)) return false;
+    outgoing.set(edge.from, edge);
+    incoming.set(edge.to, edge);
+  }
+
+  const starts = nodes.filter((node) => !incoming.has(node.id));
+  if (starts.length !== 1) return false;
+  let current: GraphNode | undefined = starts[0];
   const visited = new Set<string>();
   const route: string[] = [];
   while (current && !visited.has(current.id)) {
@@ -54,7 +65,7 @@ function followsSequence(stage: Stage, nodes: GraphNode[], edges: GraphEdge[]) {
     const edge = outgoing.get(current.id);
     current = edge ? byId.get(edge.to) : undefined;
   }
-  return route.join(">") === stage.buildSequence.join(">");
+  return visited.size === nodes.length && route.join(">") === stage.buildSequence.join(">");
 }
 
 const hasExactNodeSet = (stage: Stage, nodes: GraphNode[]) => {

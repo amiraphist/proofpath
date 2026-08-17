@@ -64,6 +64,20 @@ describe("ProofPath payment curriculum", () => {
     expect(stages[13].buildSequence).toContain("expiry");
   });
 
+  it("rejects Stage 03 when a direct Agent-to-Ledger bypass sits beside recipient verification", () => {
+    const stage = stages[2];
+    const graph = solvedGraph(2);
+    const [agent, verify, ledger] = graph.nodes;
+    const bypassed = {
+      ...graph,
+      edges: [...graph.edges, { id: "unsafe-bypass", from: agent.id, to: ledger.id, state: "valid" as const }],
+    };
+
+    expect(validateGraph(stage, "build", bypassed.nodes, bypassed.edges).ok).toBe(false);
+    expect(validateGraph(stage, "build", graph.nodes, graph.edges).ok).toBe(true);
+    expect(verify.type).toBe("verify");
+  });
+
   it("keeps Policy first for untrusted approval fixes and makes Rogue Skill deletion explicit", () => {
     expect(stages[8].buildSequence.slice(0, 3)).toEqual(["agent", "policy", "condition"]);
     expect(stages[11].buildSequence.slice(0, 3)).toEqual(["agent", "policy", "condition"]);
