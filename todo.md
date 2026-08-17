@@ -297,3 +297,12 @@
 - [x] Enforce a single valid predecessor per input port and reject required-route bypasses or parallel unsafe paths.
 - [x] Add a regression test proving Stage 03 only passes when verification is the sole path to Ledger.
 - [x] Re-run the complete curriculum and publish the validator correction.
+
+## Interaction QA Regression Pass
+
+- [x] Reproduce click-to-connect, attempted drag-to-connect, rejected connection, edge removal, keyboard, and mobile port-targeting behavior.
+- [x] Align all connection guidance with the supported interaction model and remove any misleading drag-to-connect instruction.
+- [x] Make connection ports stationary with larger desktop/mobile hit targets and clear available/occupied states.
+- [x] Add clear feedback for rejected connection attempts and a direct way to remove an incorrect blue pen line.
+- [x] Give each palette add control an unambiguous accessible label and verify keyboard-first connection flow.
+- [x] Add regression coverage, run desktop/mobile smoke tests, and publish the QA corrections.

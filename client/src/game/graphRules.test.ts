@@ -78,6 +78,15 @@ describe("ProofPath payment curriculum", () => {
     expect(verify.type).toBe("verify");
   });
 
+  it("explains the first connection gesture when all required nodes exist but no line has been drawn", () => {
+    const stage = stages[2];
+    const graph = solvedGraph(2);
+    const result = validateGraph(stage, "build", graph.nodes, []);
+
+    expect(result.ok).toBe(false);
+    expect(result.summary).toMatch(/click an output dot, then click the next input dot/i);
+  });
+
   it("keeps Policy first for untrusted approval fixes and makes Rogue Skill deletion explicit", () => {
     expect(stages[8].buildSequence.slice(0, 3)).toEqual(["agent", "policy", "condition"]);
     expect(stages[11].buildSequence.slice(0, 3)).toEqual(["agent", "policy", "condition"]);
