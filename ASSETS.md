@@ -10,7 +10,7 @@ The game uses the user-supplied **Ledger Nano™ Gen5** SVG as an unchanged visu
 
 ## CSS and SVG-native System
 
-Paper texture, nodes, ports, connectors, alert treatment, zoom controls, and the ProofPath wordmark are rendered through CSS and SVG-native interface elements. This keeps the game responsive in a browser and Telegram Mini App viewport without adding heavyweight media to the project tree.
+Paper texture, nodes, ports, connectors, alert treatment, zoom controls, and the ProofPath wordmark are rendered through CSS and SVG-native interface elements. This keeps the game responsive in desktop and mobile browsers without adding heavyweight media to the project tree.
 
 ## Asset Rules
 

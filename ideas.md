@@ -1,8 +1,8 @@
-# GraphOps — Paper Lab Design Direction
+# ProofPath — Paper Playground Design Direction
 
 ## Selected Direction: Paper Lab
 
-GraphOps is a small, friendly learning game that feels like a student sketchbook: white graph paper, pale blue square lines, black ink nodes, and blue pen connectors. It should feel handmade, playful, and understandable within seconds.
+ProofPath is a small, friendly learning game that feels like a student sketchbook: white graph paper, pale blue square lines, black ink nodes, and blue pen connectors. It should feel handmade, playful, and understandable within seconds.
 
 ### Design Movement
 Hand-drawn educational illustration mixed with classroom notebook UI. The interface should look intentionally drawn rather than digitally perfect.

@@ -1,11 +1,11 @@
-# GraphOps TODO
+# ProofPath TODO
 
 - [x] Use English for every user-facing string across the game; language audit found no Persian strings in client/src.
 - [x] Superseded: the requested scope is now exactly 10 payment missions, all with English titles, narratives, objectives, hints, failure states, and success states.
 - [x] Keep node labels, tool names, graph status messages, logs, score labels, and onboarding copy in English.
 - [x] Use English-only navigation and mode names: Build and Fix.
-- [x] Ensure Telegram Mini App and standalone web layouts share the same English interface.
-- [x] Add responsive mobile layouts for Telegram viewport sizes without truncating English labels.
+- [x] Ensure desktop and mobile web layouts share the same English interface.
+- [x] Add responsive mobile layouts without truncating English labels.
 - [x] Add accessible English tooltips and keyboard/focus states for graph nodes and controls.
 - [x] Verify there are no Persian, placeholder, or mixed-language strings before delivery.
 
@@ -137,7 +137,7 @@
 - [x] Change Undo history so node movement is not recorded and Undo only reverts structural graph actions.
 - [x] Keep node close/delete as the direct way to remove a newly added node.
 - [x] Add a subtle red pulsing alert treatment to Fix/attacked graph states without harming readability or motion accessibility.
-- [x] Verify the game at mobile/Twitter-sized viewports and document Telegram Mini App readiness and remaining constraints.
+- [x] Verify the game at mobile and Twitter-sized browser viewports and document responsive constraints.
 - [x] Re-run tests, type-check, build, and representative Build/Fix paths before checkpoint; final Stage 06 Fix reached PAYMENT PLAN VERIFIED with score 100.
 
 ## Attacker Semantics and 16-Stage Review
@@ -256,3 +256,37 @@
 - [x] Align package and repository metadata with ProofPath without altering curriculum or gameplay behavior.
 - [x] Update brand and self-hosting documentation to call the product ProofPath while preserving legacy technical paths only where required.
 - [x] Verify the desktop and mobile branded interface, tests, type-check, and production build.
+
+## ProofPath Launch Pack
+
+- [x] Create and integrate a Paper Playground ProofPath logo and favicon asset.
+- [x] Build an independent static classroom edition that runs without managed auth, tRPC, database, or server dependencies.
+- [x] Add complete local and free-host deployment instructions for the static edition.
+- [x] Add an automated GitHub Pages workflow with a free `amiraphist.github.io/proofpath` path deployment.
+- [x] Update the public GitHub repository with launch assets, static edition, and README guidance.
+- [x] Verify the main app plus the static edition build, then validate deployed path configuration.
+
+## Final Name Audit
+
+- [x] Rename the legacy GraphOps TODO heading to ProofPath TODO and verify no player-facing or handoff title retains the old product name.
+
+## Standalone Web Cleanup
+
+- [x] Remove Telegram WebApp runtime calls and the external Telegram SDK script.
+- [x] Remove Telegram and Mini App mentions from public documentation and product planning files.
+- [x] Verify no Telegram or Mini App references remain in tracked code and handoff docs.
+- [x] Re-run tests, type-check, production build, and public GitHub sync for the standalone web edition.
+
+## English-only Repository Audit
+
+- [x] Remove all Persian text from player copy, README, documentation, code comments, metadata, and repository handoff files.
+- [x] Verify the tracked ProofPath project contains no Persian Unicode characters.
+- [x] Re-run validation and sync the English-only cleanup to the public GitHub repository.
+
+## GitHub Pages Launch
+
+- [x] Publish the independent ProofPath static edition at `amiraphist.github.io/proofpath`.
+- [x] Configure a Pages workflow that rebuilds and redeploys on updates to `main`.
+- [x] Verify the live URL opens the playable standalone game from a clean browser session.
+- [x] Permit the temporary static preview host so the standalone classroom can be visually smoke-tested before Pages deployment.
+- [x] Fix the classroom entry route so the independent Vite root loads the game rather than a blank page.
