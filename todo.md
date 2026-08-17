@@ -205,3 +205,11 @@
 - [x] Place a real Owner approval immediately before Action seal in Stage 15 so the visual route matches the supplied post-approval sealing model.
 - [x] Document a concise 16-stage mapping that links each mission to the supplied security principles and fail-closed authority boundary.
 - [x] Record the authority-boundary review conclusion, including why Stage 15 was the only curriculum change required by this reference pass.
+
+## Mobile Graph Viewport
+
+- [x] Add pinch zoom to the mobile graph viewport with safe minimum and maximum scales.
+- [x] Add two-finger pan to move the mobile graph viewport in every direction without moving nodes.
+- [x] Preserve one-finger node dragging and port connection gestures without accidental viewport movement.
+- [x] Add a compact mobile zoom reset/control affordance and concise gesture guidance.
+- [x] Verify a crowded Fix mission on 390×844 plus desktop regression, automated tests, type-check, and production build.

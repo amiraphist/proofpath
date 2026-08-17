@@ -35,17 +35,35 @@ function NodeCard({ node, selected, source, target, onSelect, onRemove, onStartD
   );
 }
 
-function GraphBoard({ nodes, edges, selectedNodeId, onSelect, onRemove, onMove, onConnect, onSound, alert, attackEvent }: { nodes: GraphNode[]; edges: { id: string; from: string; to: string; state: string }[]; selectedNodeId: string | null; onSelect: (id: string) => void; onRemove: (id: string) => void; onMove: (id: string, x: number, y: number) => void; onConnect: (from: string, to: string) => void; onSound: (name: "tap" | "connect-start" | "connect-done" | "error" | "delete") => void; alert?: boolean; attackEvent?: string }) {
+function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove, onMove, onConnect, onSound, alert, attackEvent }: { stageId: number; nodes: GraphNode[]; edges: { id: string; from: string; to: string; state: string }[]; selectedNodeId: string | null; onSelect: (id: string) => void; onRemove: (id: string) => void; onMove: (id: string, x: number, y: number) => void; onConnect: (from: string, to: string) => void; onSound: (name: "tap" | "connect-start" | "connect-done" | "error" | "delete") => void; alert?: boolean; attackEvent?: string }) {
   const nodeById = new Map(nodes.map((node) => [node.id, node]));
   const boardRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
+  const pointersRef = useRef(new Map<number, { x: number; y: number }>());
+  const gestureRef = useRef<{ distance: number; centerX: number; centerY: number; scale: number; panX: number; panY: number } | null>(null);
   const [connectionSource, setConnectionSource] = useState<string | null>(null);
   const [cursorPoint, setCursorPoint] = useState<[number, number] | null>(null);
   const [portPoints, setPortPoints] = useState<Record<string, { input: [number, number]; output: [number, number] }>>({});
+  const [viewport, setViewport] = useState({ scale: 1, panX: 0, panY: 0 });
+  const [isMobileViewport, setIsMobileViewport] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 850px)").matches);
+  const viewportRef = useRef(viewport);
+  const hasWideScene = isMobileViewport && nodes.length >= 5;
+  const hasDenseScene = isMobileViewport && nodes.length >= 6;
+
+  useEffect(() => { viewportRef.current = viewport; }, [viewport]);
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 850px)");
+    const update = () => setIsMobileViewport(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  useEffect(() => { setViewport({ scale: hasDenseScene ? .68 : hasWideScene ? .82 : 1, panX: 0, panY: 0 }); }, [stageId, hasWideScene, hasDenseScene]);
 
   useLayoutEffect(() => {
     const measure = () => {
-      const board = boardRef.current;
+      const board = sceneRef.current;
       if (!board) return;
       const boardRect = board.getBoundingClientRect();
       const next: Record<string, { input: [number, number]; output: [number, number] }> = {};
@@ -69,37 +87,81 @@ function GraphBoard({ nodes, edges, selectedNodeId, onSelect, onRemove, onMove, 
   }, [nodes]);
 
   const startDrag = (event: ReactPointerEvent<HTMLDivElement>, node: GraphNode) => {
-    if (event.button !== 0 || (event.target as HTMLElement).closest(".node-port, .node-close")) return;
-    const rect = boardRef.current?.getBoundingClientRect(); if (!rect) return;
+    if (pointersRef.current.size > 1 || event.button !== 0 || (event.target as HTMLElement).closest(".node-port, .node-close")) return;
+    const rect = sceneRef.current?.getBoundingClientRect(); if (!rect) return;
     const pointX = ((event.clientX - rect.left) / rect.width) * 100;
     const pointY = ((event.clientY - rect.top) / rect.height) * 100;
     dragRef.current = { id: node.id, offsetX: pointX - node.x, offsetY: pointY - node.y };
     (event.currentTarget as HTMLElement).setPointerCapture?.(event.pointerId);
     onSelect(node.id);
   };
+  const pointerDistance = (first: { x: number; y: number }, second: { x: number; y: number }) => Math.hypot(second.x - first.x, second.y - first.y);
+  const beginViewportGesture = () => {
+    const [first, second] = Array.from(pointersRef.current.values());
+    if (!first || !second) return;
+    const current = viewportRef.current;
+    gestureRef.current = { distance: pointerDistance(first, second), centerX: (first.x + second.x) / 2, centerY: (first.y + second.y) / 2, scale: current.scale, panX: current.panX, panY: current.panY };
+    dragRef.current = null;
+    setCursorPoint(null);
+  };
+  const clampViewport = (scale: number, panX: number, panY: number) => {
+    const safeScale = Math.min(1.8, Math.max(.64, scale));
+    const sceneWidth = (hasWideScene ? 1.4 : 1) * safeScale;
+    const sceneHeight = safeScale;
+    const limitX = Math.max(0, ((sceneWidth - 1) / sceneWidth) * 50);
+    const limitY = Math.max(0, ((sceneHeight - 1) / sceneHeight) * 50);
+    return { scale: safeScale, panX: Math.min(limitX, Math.max(-limitX, panX)), panY: Math.min(limitY, Math.max(-limitY, panY)) };
+  };
+  const zoomBy = (delta: number) => setViewport((current) => clampViewport(current.scale + delta, current.panX, current.panY));
   const moveDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (connectionSource && boardRef.current) {
-      const rect = boardRef.current.getBoundingClientRect();
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointersRef.current.size > 1) {
+      const gesture = gestureRef.current;
+      const board = sceneRef.current;
+      const [first, second] = Array.from(pointersRef.current.values());
+      if (gesture && board && first && second) {
+        const rect = board.getBoundingClientRect();
+        const distance = pointerDistance(first, second);
+        const scale = gesture.scale * (distance / gesture.distance);
+        const centerX = (first.x + second.x) / 2;
+        const centerY = (first.y + second.y) / 2;
+        setViewport(clampViewport(scale, gesture.panX + ((centerX - gesture.centerX) / rect.width) * 100, gesture.panY + ((centerY - gesture.centerY) / rect.height) * 100));
+      }
+      return;
+    }
+    if (connectionSource && sceneRef.current) {
+      const rect = sceneRef.current.getBoundingClientRect();
       setCursorPoint([((event.clientX - rect.left) / rect.width) * 100, ((event.clientY - rect.top) / rect.height) * 100]);
     }
-    if (!dragRef.current || !boardRef.current) return;
-    const rect = boardRef.current.getBoundingClientRect();
+    if (!dragRef.current || !sceneRef.current) return;
+    const rect = sceneRef.current.getBoundingClientRect();
     const x = Math.min(92, Math.max(4, ((event.clientX - rect.left) / rect.width) * 100 - dragRef.current.offsetX));
     const y = Math.min(88, Math.max(12, ((event.clientY - rect.top) / rect.height) * 100 - dragRef.current.offsetY));
     onMove(dragRef.current.id, x, y);
   };
-  const stopDrag = () => { dragRef.current = null; };
+  const beginPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    if (pointersRef.current.size === 2) beginViewportGesture();
+  };
+  const stopDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
+    pointersRef.current.delete(event.pointerId);
+    dragRef.current = null;
+    if (pointersRef.current.size < 2) gestureRef.current = null;
+  };
   const handlePort = (nodeId: string, direction: "in" | "out") => {
     if (direction === "out") { setConnectionSource(nodeId); setCursorPoint(null); onSound("connect-start"); }
     else if (connectionSource) { onConnect(connectionSource, nodeId); setConnectionSource(null); setCursorPoint(null); onSound("connect-done"); }
     else { onConnect("", nodeId); onSound("error"); }
   };
   return (
-    <div className={`graph-board ${connectionSource ? "is-connecting" : ""} ${alert ? "is-alert" : ""}`} ref={boardRef} onPointerMove={moveDrag} onPointerUp={stopDrag} onPointerCancel={stopDrag}>
-      <div className="graph-grid" />
-      <div className="graph-caption"><span><ScanLine size={13} /> YOUR PAPER PATH</span><span className="graph-caption__hint">{connectionSource ? "Now click the next blue dot" : "Drag cards · connect blue pen dots"}</span><span className="graph-caption__keys">Keyboard: Enter select · C connect · V join · Delete remove</span></div>
-      {attackEvent && <div className="attack-event" role="note"><strong>⚠ ATTACK EVENT</strong><span>{attackEvent.replace("ATTACK EVENT: ", "")}</span></div>}
-      <svg className="graph-edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <div className={`graph-board ${connectionSource ? "is-connecting" : ""} ${alert ? "is-alert" : ""}`} ref={boardRef} onPointerDownCapture={beginPointer} onPointerMove={moveDrag} onPointerUp={stopDrag} onPointerCancel={stopDrag}>
+      <div className="graph-caption"><span><ScanLine size={13} /> YOUR PAPER PATH</span><span className="graph-caption__hint">{connectionSource ? "Now click the next blue dot" : "Drag cards · connect blue pen dots"}</span><span className="graph-caption__touch-hint">1 finger: node · 2 fingers: move & zoom</span><span className="graph-caption__keys">Keyboard: Enter select · C connect · V join · Delete remove</span></div>
+      <div className="mobile-viewport-controls" aria-label="Mobile graph zoom"><button onClick={() => zoomBy(-.18)} aria-label="Zoom out graph">−</button><button className="mobile-viewport-readout" onClick={() => setViewport({ scale: 1, panX: 0, panY: 0 })} aria-label="Reset graph view">{Math.round(viewport.scale * 100)}%</button><button onClick={() => zoomBy(.18)} aria-label="Zoom in graph">+</button></div>
+      <div className={`graph-scene ${hasWideScene ? "graph-scene--wide" : ""} ${hasDenseScene ? "graph-scene--dense" : ""}`} ref={sceneRef} style={{ transform: `translate(${viewport.panX}%, ${viewport.panY}%) scale(${viewport.scale})` }}>
+        <div className="graph-grid" />
+        {attackEvent && <div className="attack-event" role="note"><strong>⚠ ATTACK EVENT</strong><span>{attackEvent.replace("ATTACK EVENT: ", "")}</span></div>}
+        <svg className="graph-edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <filter id="cyan-glow"><feGaussianBlur stdDeviation="0.8" result="coloredBlur" /><feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
           <linearGradient id="route-cyan" x1="0" x2="1"><stop offset="0" stopColor="#38e8ff" stopOpacity=".25" /><stop offset=".5" stopColor="#38e8ff" /><stop offset="1" stopColor="#9a7cff" /></linearGradient>
@@ -111,9 +173,10 @@ function GraphBoard({ nodes, edges, selectedNodeId, onSelect, onRemove, onMove, 
           const [x1, y1] = start; const [x2, y2] = finish; const bend = Math.max(5, Math.abs(x2 - x1) * .34);
           return <g key={edge.id} className={`edge edge--${edge.state}`}><path d={`M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}`} /><circle cx={x1 + (x2 - x1) * .48} cy={y1 + (y2 - y1) * .48} r=".7" className="edge-pulse" style={{ animationDelay: `${index * 180}ms` }} /></g>;
         })}
-      </svg>
-      {nodes.map((node) => <NodeCard key={node.id} node={node} selected={selectedNodeId === node.id} source={connectionSource === node.id} target={Boolean(connectionSource && connectionSource !== node.id)} onSelect={() => { onSelect(node.id); onSound("tap"); }} onRemove={() => { onRemove(node.id); onSound("delete"); }} onStartDrag={(event) => startDrag(event, node)} onPort={(direction) => handlePort(node.id, direction)} />)}
-      {nodes.length === 0 && <div className="graph-empty"><Sparkles size={16} /> Drop your first node here</div>}
+        </svg>
+        {nodes.map((node) => <NodeCard key={node.id} node={node} selected={selectedNodeId === node.id} source={connectionSource === node.id} target={Boolean(connectionSource && connectionSource !== node.id)} onSelect={() => { onSelect(node.id); onSound("tap"); }} onRemove={() => { onRemove(node.id); onSound("delete"); }} onStartDrag={(event) => startDrag(event, node)} onPort={(direction) => handlePort(node.id, direction)} />)}
+        {nodes.length === 0 && <div className="graph-empty"><Sparkles size={16} /> Drop your first node here</div>}
+      </div>
     </div>
   );
 }
@@ -206,7 +269,7 @@ export default function GameCanvas() {
     <header className="topbar"><div className="brand"><div className="brand-mark"><span /><span /></div><div><strong>GRAPH<span>OPS</span></strong><small>agent systems lab</small></div></div><div className="topbar-status"><span className="status-dot" /> NOTEBOOK OPEN <span className="topbar-divider" /> <span>let's learn by trying</span></div><div className="topbar-tools"><button className="sound-toggle" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn sounds on" : "Mute sounds"}>{muted ? <VolumeX size={17} /> : <Volume2 size={17} />}</button><button className={`help-button ${showHints ? "is-on" : ""}`} onClick={() => setShowHints((value) => !value)} aria-label={showHints ? "Hide solution hint" : "Show solution hint"}><CircleHelp size={18} /></button></div></header>
     <div className="game-layout">
       <aside className="mission-panel glass-panel"><div className="eyebrow"><span className="eyebrow-line" /> TODAY'S CHALLENGE</div><div className="stage-select"><div><span className="muted-label">CURRENT STAGE</span><strong>{String(stage.id).padStart(2, "0")} <span>/ {stages.length}</span></strong></div><select value={stageIndex} onChange={(event) => selectStage(Number(event.target.value))} aria-label="Select stage">{stages.map((item, index) => <option key={item.id} value={index}>{String(item.id).padStart(2, "0")} — {item.title}</option>)}</select><ChevronDown size={15} /></div><div className={`severity severity--${stage.severity}`}><span /> {stage.severity.toUpperCase()} RISK</div><h1>{stage.title}</h1><p className="client-line">PAYMENT FILE <span>·</span> {stage.client}</p><p className="story">{stage.story}</p><p className={`brand-voice ${mode === "fix" ? "brand-voice--attack" : ""}`}>{mode === "fix" ? stage.fixFault : "Build the route before the payment can move."}</p><div className={`objective ${showHints ? "objective--revealed" : "objective--hidden"}`}><span className="objective-icon"><ScanLine size={17} /></span><div><span className="muted-label">YOUR JOB</span>{showHints ? <p>{stage.objective}</p> : <p className="hint-blur">Choose the cards that enforce this story's safety rule, connect the blue dots, then test it.</p>}<button className="hint-reveal-btn" onClick={() => setShowHints((value) => !value)} aria-expanded={showHints}>{showHints ? "Hide solution" : "Show solution"}</button></div></div><div className="lesson"><span className="muted-label">WHY IT MATTERS</span><p>{stage.lesson}</p></div><div className="progress-wrap"><div className="progress-label"><span>MISSIONS</span><strong>{visibleCompleted} / {stages.length}</strong></div><div className="progress-bar"><span style={{ width: `${Math.max(4, (visibleCompleted / stages.length) * 100)}%` }} /></div></div></aside>
-      <section className="play-area"><div className="play-toolbar"><div className="play-brief"><span className="play-brief__signal" /> <span>DRAW THE IDEA. THEN SEE WHAT IT DOES.</span></div><div className="play-toolbar__right"><ModeSwitch mode={mode} /><div className="toolbar-actions"><button className="ghost-btn" onClick={() => undo()}><RotateCcw size={14} /> Undo</button><button className="ghost-btn" onClick={() => reset()}><RotateCcw size={14} /> Reset</button><button className="run-btn" onClick={run}><Play size={14} fill="currentColor" /> Test my idea <ArrowRight size={14} /></button></div></div></div><GraphBoard alert={mode === "fix"} attackEvent={stage.attackEvent} nodes={session.nodes} edges={session.edges} selectedNodeId={session.selectedNodeId} onSelect={(id) => selectNode(id)} onRemove={removeNode} onMove={moveNode} onConnect={connectNodes} onSound={play} />{session.notice && <div className="notice-strip" role="status">{session.notice}</div>}<div className="board-foot"><span><span className="legend-dot legend-dot--cyan" /> Blue pen line</span><span><span className="legend-dot legend-dot--red" /> Needs fixing</span><span><span className="legend-dot legend-dot--amber" /> Human choice</span><span className="board-foot__shortcut">Tap a card to read it · × removes it</span></div></section>
+      <section className="play-area"><div className="play-toolbar"><div className="play-brief"><span className="play-brief__signal" /> <span>DRAW THE IDEA. THEN SEE WHAT IT DOES.</span></div><div className="play-toolbar__right"><ModeSwitch mode={mode} /><div className="toolbar-actions"><button className="ghost-btn" onClick={() => undo()}><RotateCcw size={14} /> Undo</button><button className="ghost-btn" onClick={() => reset()}><RotateCcw size={14} /> Reset</button><button className="run-btn" onClick={run}><Play size={14} fill="currentColor" /> Test my idea <ArrowRight size={14} /></button></div></div></div><GraphBoard stageId={stage.id} alert={mode === "fix"} attackEvent={stage.attackEvent} nodes={session.nodes} edges={session.edges} selectedNodeId={session.selectedNodeId} onSelect={(id) => selectNode(id)} onRemove={removeNode} onMove={moveNode} onConnect={connectNodes} onSound={play} />{session.notice && <div className="notice-strip" role="status">{session.notice}</div>}<div className="board-foot"><span><span className="legend-dot legend-dot--cyan" /> Blue pen line</span><span><span className="legend-dot legend-dot--red" /> Needs fixing</span><span><span className="legend-dot legend-dot--amber" /> Human choice</span><span className="board-foot__shortcut">Tap a card to read it · × removes it</span></div></section>
       <aside className="tools-panel glass-panel"><div className="tools-heading"><div><div className="eyebrow"><span className="eyebrow-line" /> PENCIL CASE</div><h2>Pick your nodes</h2></div><span className="tool-count">{session.nodes.length} nodes</span></div><p className="tools-copy">{mode === "fix" ? "Read the attack event, then add trusted controls that stop the unsafe route before signing or sending." : "Pick only the nodes this little story needs. Keep it simple."}</p><div className="interaction-guide"><span className="guide-step"><b>1</b> Pick a node</span><span className="guide-arrow">→</span><span className="guide-step"><b>2</b> Join blue dots</span><span className="guide-arrow">→</span><span className="guide-step"><b>3</b> Test it</span></div><div className="palette-heading"><span>AVAILABLE NODES</span><small>Tap + to add</small></div><div className="palette">{paletteCards}</div>{mode === "fix" && <button className="repair-btn" onClick={repair}><Wrench size={14} /> Show trusted repair</button>}<div className="trace-panel"><div className="trace-heading"><span><Activity size={14} /> WHAT HAPPENED</span><span className="trace-live">LIVE</span></div><div className="trace-list">{session.result?.trace.map((event) => <div key={`${event.time}-${event.label}`} className={`trace-event trace-event--${event.tone}`}><time>{event.time}</time><span><strong>{event.label}</strong>{event.detail}</span></div>) ?? <div className="trace-empty"><span className="trace-cursor" /> Awaiting simulation input...</div>}</div></div></aside>
     </div>
     {session.result && <div className={`result-banner ${session.result.ok ? "result-banner--success" : "result-banner--danger"}`}><div className="result-symbol">{session.result.ok ? <Check size={20} /> : <X size={20} />}</div><div><strong>{session.result.ok ? "PAYMENT PLAN VERIFIED" : "PAYMENT BLOCKED"}</strong><span>{session.result.summary}</span></div><div className="result-score"><small>SCORE</small><strong>{session.result.score}</strong></div>{session.result.ok && stageIndex < stages.length - 1 && <button onClick={nextStage}>Next mission <ArrowRight size={14} /></button>}</div>}
