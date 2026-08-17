@@ -40,6 +40,7 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
   const boardRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
+  const panDragRef = useRef<{ x: number; y: number; panX: number; panY: number } | null>(null);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const gestureRef = useRef<{ distance: number; centerX: number; centerY: number; scale: number; panX: number; panY: number } | null>(null);
   const [connectionSource, setConnectionSource] = useState<string | null>(null);
@@ -59,7 +60,8 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
-  useEffect(() => { setViewport({ scale: hasDenseScene ? .68 : hasWideScene ? .82 : 1, panX: 0, panY: 0 }); }, [stageId, hasWideScene, hasDenseScene]);
+  const initialViewport = () => ({ scale: hasDenseScene ? .68 : hasWideScene ? .82 : 1, panX: 0, panY: 0 });
+  useEffect(() => { setViewport(initialViewport()); }, [stageId, hasWideScene, hasDenseScene]);
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -106,13 +108,15 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
   };
   const clampViewport = (scale: number, panX: number, panY: number) => {
     const safeScale = Math.min(1.8, Math.max(.64, scale));
-    const sceneWidth = (hasWideScene ? 1.4 : 1) * safeScale;
+    const sceneMultiplier = hasDenseScene ? 2.2 : hasWideScene ? 1.7 : 1;
+    const sceneWidth = sceneMultiplier * safeScale;
     const sceneHeight = safeScale;
     const limitX = Math.max(0, ((sceneWidth - 1) / sceneWidth) * 50);
     const limitY = Math.max(0, ((sceneHeight - 1) / sceneHeight) * 50);
     return { scale: safeScale, panX: Math.min(limitX, Math.max(-limitX, panX)), panY: Math.min(limitY, Math.max(-limitY, panY)) };
   };
   const zoomBy = (delta: number) => setViewport((current) => clampViewport(current.scale + delta, current.panX, current.panY));
+  const fitViewport = () => setViewport(initialViewport());
   const moveDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (pointersRef.current.size > 1) {
@@ -129,24 +133,37 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
       }
       return;
     }
+    if (panDragRef.current && sceneRef.current) {
+      const rect = sceneRef.current.getBoundingClientRect();
+      const current = panDragRef.current;
+      setViewport(clampViewport(viewportRef.current.scale, current.panX + ((event.clientX - current.x) / rect.width) * 100, current.panY + ((event.clientY - current.y) / rect.height) * 100));
+      return;
+    }
     if (connectionSource && sceneRef.current) {
       const rect = sceneRef.current.getBoundingClientRect();
       setCursorPoint([((event.clientX - rect.left) / rect.width) * 100, ((event.clientY - rect.top) / rect.height) * 100]);
     }
     if (!dragRef.current || !sceneRef.current) return;
     const rect = sceneRef.current.getBoundingClientRect();
-    const x = Math.min(92, Math.max(4, ((event.clientX - rect.left) / rect.width) * 100 - dragRef.current.offsetX));
-    const y = Math.min(88, Math.max(12, ((event.clientY - rect.top) / rect.height) * 100 - dragRef.current.offsetY));
+    const x = Math.min(106, Math.max(-6, ((event.clientX - rect.left) / rect.width) * 100 - dragRef.current.offsetX));
+    const y = Math.min(96, Math.max(5, ((event.clientY - rect.top) / rect.height) * 100 - dragRef.current.offsetY));
     onMove(dragRef.current.id, x, y);
   };
   const beginPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     event.currentTarget.setPointerCapture?.(event.pointerId);
-    if (pointersRef.current.size === 2) beginViewportGesture();
+    if (pointersRef.current.size === 2) { panDragRef.current = null; beginViewportGesture(); return; }
+    const target = event.target as HTMLElement;
+    const isEditingTarget = target.closest(".graph-node, .mobile-viewport-controls, .graph-caption, .attack-event");
+    if (!connectionSource && !isEditingTarget) {
+      const current = viewportRef.current;
+      panDragRef.current = { x: event.clientX, y: event.clientY, panX: current.panX, panY: current.panY };
+    }
   };
   const stopDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     pointersRef.current.delete(event.pointerId);
     dragRef.current = null;
+    panDragRef.current = null;
     if (pointersRef.current.size < 2) gestureRef.current = null;
   };
   const handlePort = (nodeId: string, direction: "in" | "out") => {
@@ -156,8 +173,8 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
   };
   return (
     <div className={`graph-board ${connectionSource ? "is-connecting" : ""} ${alert ? "is-alert" : ""}`} ref={boardRef} onPointerDownCapture={beginPointer} onPointerMove={moveDrag} onPointerUp={stopDrag} onPointerCancel={stopDrag}>
-      <div className="graph-caption"><span><ScanLine size={13} /> YOUR PAPER PATH</span><span className="graph-caption__hint">{connectionSource ? "Now click the next blue dot" : "Drag cards · connect blue pen dots"}</span><span className="graph-caption__touch-hint">1 finger: node · 2 fingers: move & zoom</span><span className="graph-caption__keys">Keyboard: Enter select · C connect · V join · Delete remove</span></div>
-      <div className="mobile-viewport-controls" aria-label="Mobile graph zoom"><button onClick={() => zoomBy(-.18)} aria-label="Zoom out graph">−</button><button className="mobile-viewport-readout" onClick={() => setViewport({ scale: 1, panX: 0, panY: 0 })} aria-label="Reset graph view">{Math.round(viewport.scale * 100)}%</button><button onClick={() => zoomBy(.18)} aria-label="Zoom in graph">+</button></div>
+      <div className="graph-caption"><span><ScanLine size={13} /> YOUR PAPER PATH</span><span className="graph-caption__hint">{connectionSource ? "Now click the next blue dot" : "Drag cards · connect blue pen dots"}</span><span className="graph-caption__touch-hint">Node: 1 finger · space: pan · 2 fingers: zoom</span><span className="graph-caption__keys">Keyboard: Enter select · C connect · V join · Delete remove</span></div>
+      <div className="mobile-viewport-controls" aria-label="Mobile graph zoom"><button onClick={() => zoomBy(-.18)} aria-label="Zoom out graph">−</button><button className="mobile-viewport-readout" onClick={fitViewport} aria-label="Fit graph view">{Math.round(viewport.scale * 100)}%</button><button onClick={() => zoomBy(.18)} aria-label="Zoom in graph">+</button></div>
       <div className={`graph-scene ${hasWideScene ? "graph-scene--wide" : ""} ${hasDenseScene ? "graph-scene--dense" : ""}`} ref={sceneRef} style={{ transform: `translate(${viewport.panX}%, ${viewport.panY}%) scale(${viewport.scale})` }}>
         <div className="graph-grid" />
         {attackEvent && <div className="attack-event" role="note"><strong>⚠ ATTACK EVENT</strong><span>{attackEvent.replace("ATTACK EVENT: ", "")}</span></div>}

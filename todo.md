@@ -213,3 +213,14 @@
 - [x] Preserve one-finger node dragging and port connection gestures without accidental viewport movement.
 - [x] Add a compact mobile zoom reset/control affordance and concise gesture guidance.
 - [x] Verify a crowded Fix mission on 390×844 plus desktop regression, automated tests, type-check, and production build.
+
+## Mobile Movement Freedom
+
+- [x] Remove the overly strict graph-node drag boundary so nodes can use the full virtual mobile working area.
+- [x] Rework viewport pan bounds so a zoomed or wide mobile canvas can be centered anywhere the player needs.
+- [ ] Confirm two-finger zoom, blank-space panning, one-finger node movement, and port connections on a real mobile device after deployment.
+- [x] Preserve desktop paper-board layout and run tests, type-check, and production build after the interaction fix.
+
+## Final Brand Direction
+
+- [x] Prepare concise English game-name options with Persian translations and a distinct logo direction for each.
