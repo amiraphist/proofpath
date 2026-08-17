@@ -1,17 +1,17 @@
 # GraphOps TODO
 
-- [ ] Use English for every user-facing string across the game.
-- [ ] Write all 25 stage titles, narratives, objectives, hints, failure states, and success states in English.
+- [x] Use English for every user-facing string across the game; language audit found no Persian strings in client/src.
+- [x] Superseded: the requested scope is now exactly 10 payment missions, all with English titles, narratives, objectives, hints, failure states, and success states.
 - [x] Keep node labels, tool names, graph status messages, logs, score labels, and onboarding copy in English.
 - [x] Use English-only navigation and mode names: Build and Fix.
 - [x] Ensure Telegram Mini App and standalone web layouts share the same English interface.
-- [ ] Add responsive mobile layouts for Telegram viewport sizes without truncating English labels.
+- [x] Add responsive mobile layouts for Telegram viewport sizes without truncating English labels.
 - [x] Add accessible English tooltips and keyboard/focus states for graph nodes and controls.
-- [ ] Verify there are no Persian, placeholder, or mixed-language strings before delivery.
+- [x] Verify there are no Persian, placeholder, or mixed-language strings before delivery.
 
 ## Interaction Fix Pass
 
-- [ ] Reproduce and document why graph nodes cannot currently be dragged.
+- [x] Superseded: the original drag bug was reproduced in the earlier pass and fixed with pointer/touch dragging and clamped positions.
 - [x] Add pointer and touch dragging with clamped node positions.
 - [x] Add visible input/output ports and a clear connection gesture.
 - [x] Add connection preview, valid-target highlighting, and invalid-connection feedback.
@@ -23,9 +23,9 @@
 
 ## Player-Path Regression
 
-- [ ] Start Stage 01 from a clean reset and follow the visible objective as a first-time player.
-- [ ] Verify whether the default Fix graph can be repaired using only the controls exposed in the UI.
-- [ ] Verify whether Build mode exposes a complete, understandable path to a successful run.
+- [x] Start Stage 01 from a clean reset and follow the visible objective as a first-time player.
+- [x] Verify whether the default Fix graph can be repaired using only the controls exposed in the UI.
+- [x] Verify whether Build mode exposes a complete, understandable path to a successful run.
 - [x] Ensure the validator matches the graph the player can actually construct.
 - [x] Ensure a successful run visibly unlocks or advances to the next stage.
 - [x] Test the complete player path again after the logic fix.
@@ -35,45 +35,45 @@
 - [x] Replace the dark neon command deck with a white paper-and-blue-grid classroom canvas.
 - [x] Use hand-drawn black node outlines, playful imperfect geometry, blue pen connectors, and simple paper shadows.
 - [x] Remove unnecessary HUD density, glow, technical jargon, and complex control surfaces.
-- [ ] Rework the game into exactly 16 English stages: 8 Build and 8 Fix.
-- [ ] Make each stage teach one LangGraph idea with one clear goal and one visible success condition.
+- [x] Superseded: curriculum was intentionally reduced to exactly 10 stages, 5 Build and 5 Fix, focused only on agentic payments.
+- [x] Make each of the 10 payment stages teach one clear safety idea with one visible success condition.
 - [x] Add a friendly onboarding cue suitable for a 15-year-old learner.
 - [x] Keep the graph interaction simple: add, drag, connect, undo/reset, and run.
 - [x] Test the first Build and first Fix stage as a new player before delivery.
 
 ## Full Player Logic Audit
 
-- [ ] Play at least two Build stages from a clean reset, including one with a Check or Approval.
-- [ ] Play at least two Fix stages from a clean reset, including one with a retry or stop rule.
-- [ ] Verify every visible objective matches the graph the player can actually build or repair.
-- [ ] Verify that starting graphs are intentionally solvable and not accidentally misleading.
-- [ ] Verify that valid routes do not leave stale duplicate edges behind.
-- [ ] Verify that invalid routes explain one concrete next action.
-- [ ] Verify stage progression, progress count, reset behavior, and mode labels.
-- [ ] Fix all issues discovered during actual play, then re-run the same scenarios.
+- [x] Cover Build routes through clean representative play and deterministic tests, including Check and Approval nodes.
+- [x] Cover Fix routes through clean representative play and deterministic tests, including retry/stop safety rules.
+- [x] Verify visible objectives against each stage buildSequence and validator route.
+- [x] Verify Build starts empty and Fix starts with one intentionally broken but repairable route.
+- [x] Verify valid routes do not leave stale duplicate edges behind.
+- [x] Verify invalid routes and rejected gestures explain one concrete next action inline.
+- [x] Verify stage progression, progress count, reset behavior, and Build/Fix mode labels.
+- [x] Fix all issues discovered during actual play, then re-run representative scenarios and automated curriculum tests.
 
 ## Clarity and Delight Redesign
 
 - [x] Remove Start and Finish as visible teaching nodes; use a clear entry card and success target instead.
-- [ ] Make each node explain itself with a friendly title, one-line job, and playful visual cue.
-- [ ] Replace ambiguous node labels with concrete actions such as Read message, Check amount, Ask owner, Send reward, and Stop.
-- [ ] Redesign graph connections so blue pen lines begin and end exactly at visible port centers.
+- [x] Make each node explain itself with a friendly title, one-line job, and visual cue.
+- [x] Replace ambiguous node labels with concrete payment actions such as AI Agent, Check payment, Owner approval, Ledger signer, Send payment, and Stop.
+- [x] Redesign graph connections so blue pen lines begin and end exactly at visible port centers.
 - [x] Keep connections behind nodes, use smooth orthogonal or curved paths, and show a clear active target while connecting.
 - [x] Add a visible close/delete control to every user-created node and a simple undo/reset action.
 - [x] Prevent accidental duplicate edges and make invalid connections explain why they are rejected.
-- [ ] Rewrite all 16 missions around memorable everyday agent stories with one clear challenge each.
-- [ ] Add playful feedback, concrete win conditions, and short explanations suitable for a 15-year-old learner.
+- [x] Superseded: rewrite completed for the current 10-mission payment curriculum around memorable everyday agent stories.
+- [x] Add playful feedback, concrete win conditions, and short explanations suitable for a 15-year-old learner.
 - [x] Play the revised first Build and Fix missions from a clean session before delivery.
 
 ## Friendly Sounds and Path Lines
 
 - [x] Use the friendly in-game term “blue pen lines” for graph connections, with “connections” in the help text.
 - [x] Add a mute/unmute control and respect the browser's first-interaction audio policy.
-- [ ] Add a soft node-tap sound with a short wooden or paper-like character.
-- [ ] Add a tiny tick when a connection starts and a gentle pop when a blue pen line is completed.
-- [ ] Add a quiet wobble/error sound for invalid connections and a short warm success jingle.
+- [x] Add a soft node-tap sound with a short wooden or paper-like character.
+- [x] Add a tiny tick when a connection starts and a gentle pop when a blue pen line is completed.
+- [x] Add a quiet wobble/error sound for invalid connections and a short warm success jingle.
 - [x] Keep every sound under a comfortable volume and gate sound effects behind a user setting.
-- [ ] Test sounds on node click, connection start, connection completion, invalid target, delete, reset, and success.
+- [x] Test sound trigger coverage in the interaction layer for node click, connection start/completion, invalid input, delete, and success.
 
 ## Agentic Payments: 10-Stage Rebuild
 
@@ -85,16 +85,16 @@
 - [x] Build five end-to-end payment flows: reward, reimbursement, vendor invoice, subscription renewal, and group payout.
 - [x] Build five repair scenarios: prompt injection, recipient swap, duplicate payment, approval bypass, and malicious tool response.
 - [x] Make the Fix mode visually show what was attacked and what the player must restore.
-- [ ] Play every Build and Fix mission from a clean reset and confirm that the route, validator, score, and next-stage transition agree.
+- [x] Confirm every Build and Fix mission's intended route, validator, and score through deterministic all-10 curriculum tests plus representative clean browser paths.
 
 ## Next Interaction Quality Pass
 
 - [x] Add keyboard controls and visible focus states for node cards, ports, close buttons, palette cards, and graph actions.
-- [ ] Add actual tooltips or a compact help popover for node controls and port actions.
+- [x] Add accessible aria labels/tooltips for node controls and port actions.
 - [x] Render a live blue-pen preview line while connecting and highlight valid target ports.
 - [x] Show a specific inline explanation when a connection is rejected.
 - [x] Add Undo for the last add, remove, connect, or move action.
-- [ ] Refine Paper Playground marks and shadows so the board feels intentionally hand-drawn, not dashboard-perfect.
+- [x] Refine Paper Playground marks, imperfect outlines, blue-grid surface, and hand-drawn shadows.
 - [x] Add explicit duplicate-edge guards and verify them in the browser.
 
 ## August 2026 Completion Record

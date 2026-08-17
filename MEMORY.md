@@ -92,3 +92,9 @@ Morning UI audit: the help button now toggles `Show solution hint` / `Hide solut
 - Added deterministic Vitest coverage for the intended safe path of all 10 missions and Fix starting-state broken routes. `pnpm test` reports 2 files / 3 tests passing.
 - Manual duplicate-edge browser test passed: after AI Agent → Check payment was connected once, repeating the same output/input click displayed `That blue pen line is already there. Try a new path.` without adding another line.
 - Final desktop screenshot confirmed the Paper Playground board, 10-stage payment curriculum, Ledger Nano™ Gen5 simulated signer card, Undo/Reset/Test controls, and keyboard guidance.
+
+## Additional verification
+
+- 2026-08-17: Fresh 390×844 Telegram-sized screenshot kept the Build/Fix switch, Undo, Reset, Test my idea, Paper Path, and Stage 01 labels readable; the layout stacks the mission and tool panels below the board instead of truncating them.
+- 2026-08-17: Clean browser Stage 08 — Attack: Replay Button / Fix 03 was selected. Its attacked route showed duplicate AI Agent state and missing Block duplicates. `Apply safe repair` restored the duplicate lock, and `Test my idea` returned `PAYMENT PLAN VERIFIED`, `Nice repair — the blue pen line is safe again.`, score 100, with Next mission visible.
+- 2026-08-17: The connection measurement now reads actual `.node-port--left` and `.node-port--right` DOM rectangles, so blue pen endpoints stay centered on visible port buttons after layout changes.
