@@ -243,12 +243,12 @@
 
 ## GitHub Handoff
 
-- [ ] Confirm the available GitHub connection and choose the destination repository.
+- [x] Confirm the available GitHub connection and choose the destination repository.
 - [x] Review repository metadata and ensure the current handoff and self-hosting notes are included.
-- [ ] Export the complete GraphOps project to GitHub without omitting required source directories.
-- [ ] Verify the repository’s files and provide the repository link and next-run instructions.
-- [ ] Use the approved ProofPath name in repository metadata and the GitHub handoff guidance.
-- [ ] Create the ProofPath GitHub repository as public under @amiraphist.
+- [x] Export the complete ProofPath project to GitHub without omitting required source directories.
+- [x] Verify the repository’s files and provide the repository link and next-run instructions.
+- [x] Use the approved ProofPath name in repository metadata and the GitHub handoff guidance.
+- [x] Create the ProofPath GitHub repository as public under @amiraphist.
 
 ## ProofPath Rebrand
 

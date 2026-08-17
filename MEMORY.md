@@ -215,3 +215,9 @@ After the Ledger and palette correction, the representative Build path to replay
 - 2026-08-17: The user approved **ProofPath** («مسیر مطمئن») as the final product name. Updated the desktop and mobile header wordmark, browser title and description, footer, accessibility label, package metadata, and the player-position persistence key (with a read fallback for the prior key).
 - 2026-08-17: Rewrote repository-facing `PLAN.md`, `STRUCTURE.md`, and `ASSETS.md` to document the real 16-stage Paper Playground product instead of its obsolete 25-stage neon predecessor. Updated curriculum, Ledger-use, brand, and self-hosting handoff notes to use ProofPath consistently.
 - 2026-08-17: Desktop and 390×844 mobile captures show the new PROOFPATH wordmark cleanly. Final rebrand verification passed: 9 Vitest tests, TypeScript check, production build, and a residual-name audit with no player-facing old-name occurrences.
+
+## Public GitHub handoff
+
+- 2026-08-17: Enabled the GitHub connection for @amiraphist and created the user-approved public repository at `https://github.com/amiraphist/proofpath`.
+- 2026-08-17: Added a public README that explains the 16-mission curriculum, simulation boundaries, local validation commands, repository map, ProofPath brand, and Ledger disclaimer. Pushed the full project history and source to `main`.
+- 2026-08-17: Verified the repository is PUBLIC, its default branch is `main`, and it includes `README.md`, `SELF_HOSTING_HANDOFF.md`, `client/`, `server/`, `drizzle/`, and `package.json`. The local working tree tracks `github/main` cleanly.
