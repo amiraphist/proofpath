@@ -36,6 +36,7 @@ const ledger = "wallet" as const;
 const pay = "tool" as const;
 const receipt = "receipt" as const;
 const dedupe = "dedupe" as const;
+const retry = "retry" as const;
 const stop = "stop" as const;
 
 export const stages: Stage[] = [
@@ -64,7 +65,7 @@ export const stages: Stage[] = [
     lesson: "A changed payment destination deserves both a check and a human decision.",
     buildSequence: [agent, check, ask, ledger, pay],
     fixFault: "No attack here — protect a vendor payment from a wrong destination.",
-    available: [agent, check, ask, ledger, pay],
+    available: [agent, check, ask, ledger, pay, stop],
   },
   {
     id: 4, title: "Trip Fund Split", client: "Build 04 · Group payout", severity: "medium", mode: "build",
@@ -78,11 +79,11 @@ export const stages: Stage[] = [
   {
     id: 5, title: "Monthly Tool Renewal", client: "Build 05 · Subscription", severity: "low", mode: "build",
     story: "A design tool renews tonight. The agent should pay once and leave a record.",
-    objective: "Build: AI Agent → Check payment → Block duplicates → Ledger Nano™ Gen5 → Send payment → Save receipt.",
-    lesson: "Recurring payments still need a check, a signer, and a record.",
-    buildSequence: [agent, check, dedupe, ledger, pay, receipt],
-    fixFault: "No attack here — build a clean recurring-payment workflow.",
-    available: [agent, check, dedupe, ledger, pay, receipt],
+    objective: "Build: AI Agent → Check payment → Ledger Nano™ Gen5 → Safe retry → Send payment → Save receipt.",
+    lesson: "A timeout can be retried safely, but never replay the signing decision.",
+    buildSequence: [agent, check, ledger, retry, pay, receipt],
+    fixFault: "No attack here — build a renewal route that survives one timeout.",
+    available: [agent, check, ledger, retry, pay, receipt],
   },
   {
     id: 6, title: "Attack: The Bossy Prompt", client: "Fix 01 · Prompt injection", severity: "high", mode: "fix",

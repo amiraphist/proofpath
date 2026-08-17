@@ -65,3 +65,29 @@ button:focus-visible, select:focus-visible, [role="button"]:focus-visible { outl
 @media (max-width: 1080px) { .game-layout { grid-template-columns: 215px minmax(390px, 1fr) 215px; gap: 12px; }.mission-panel, .tools-panel { padding: 14px; }.graph-node { width: 105px; } }
 @media (max-width: 850px) { .game-shell { padding: 0 12px 12px; }.topbar { height: 64px; }.topbar-status { display: none; }.game-layout { grid-template-columns: 1fr; min-height: auto; }.mission-panel, .tools-panel { min-height: auto; }.mission-panel { padding: 16px; }.mission-panel .progress-wrap { margin-top: 17px; }.play-area { order: -1; }.graph-board { min-height: 490px; }.tools-panel { padding: 16px; }.palette { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: none; }.trace-panel { margin-top: 17px; }.footer-bar { flex-wrap: wrap; gap: 7px; font-size: 7px; }.board-foot__shortcut { display: none; }.play-toolbar { align-items: stretch; flex-direction: column; }.play-toolbar__right { justify-content: space-between; }.play-brief { font-size: 11px; } }
 @media (max-width: 520px) { .brand strong { font-size: 16px; }.brand small { font-size: 8px; }.graph-board { min-height: 430px; }.graph-node { width: 94px; min-height: 67px; padding: 7px 8px; }.node-title { font-size: 10px; }.node-type, .node-id { font-size: 7px; }.mode-switch button, .ghost-btn, .run-btn { padding: 7px 8px; font-size: 10px; }.toolbar-actions { gap: 5px; }.interaction-guide { font-size: 8px; }.result-banner { gap: 7px; }.result-banner span { font-size: 10px; }.result-score { padding-left: 7px; }.result-banner button { padding: 7px; } }
+
+/* Ledger Nano Gen5 — paper-playground vector signer */
+.ledger-vector { display: block; width: 76px; height: 54px; margin: 4px auto 2px; filter: drop-shadow(1px 2px 0 rgba(24, 40, 31, .12)); }
+.hardware-label { display: block; margin-top: 2px; color: #317356; font: 600 6px/1.1 "IBM Plex Mono", monospace; letter-spacing: .04em; text-align: center; }
+.graph-node--green .node-title { color: #195f42; }
+.graph-node--green { min-width: 142px; }
+.graph-node--green .node-head { color: #195f42; }
+.graph-node--violet .node-title { color: #634092; }
+.graph-node--amber .node-title { color: #8a5f09; }
+.palette-card--violet .palette-icon { color: #7249a8; }
+.palette-card--amber .palette-icon { color: #a16a00; }
+.palette-card--green .palette-icon { color: #18734e; }
+.node-close { z-index: 4; }
+
+/* Clarity pass: paper feedback and connection guidance */
+.notice-strip { margin: 8px auto 0; width: min(92%, 760px); padding: 7px 12px; border: 1.5px solid #2359a7; border-radius: 8px 5px 9px 6px; background: #edf5ff; color: #1e4f96; font: 600 12px/1.3 "IBM Plex Mono", monospace; box-shadow: 2px 2px 0 rgba(35, 89, 167, .16); }
+.edge--preview { fill: none; stroke: #2d66bd; stroke-width: .65; stroke-dasharray: 2 1.5; opacity: .8; pointer-events: none; }
+.node-port.is-target { background: #edf5ff; border-color: #2d66bd; box-shadow: 0 0 0 4px rgba(45, 102, 189, .15), 2px 2px 0 rgba(45, 102, 189, .22); animation: dotReady 750ms ease-in-out infinite alternate; }
+.graph-node.is-target { outline: 1px dashed rgba(45, 102, 189, .32); outline-offset: 3px; }
+button:focus-visible, [role="button"]:focus-visible { outline: 2px solid #2d66bd; outline-offset: 3px; }
+.help-button.is-on { background: #edf5ff; color: #2359a7; }
+@keyframes dotReady { from { transform: scale(1); } to { transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { .node-port.is-target { animation: none; } }
+
+.graph-caption__keys { color: #536887; font-size: 10px; letter-spacing: .01em; }
+@media (max-width: 900px) { .graph-caption__keys { display: none; } }

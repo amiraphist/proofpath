@@ -75,3 +75,20 @@ The official Ledger product page confirms the product spelling **Ledger Nano™ 
 The new Build 01 payment mission was played through the UI: AI Agent → Check payment → Owner approval → Ledger Nano™ Gen5 → Send payment. The route completed with `PAYMENT PLAN VERIFIED` and score 100. The payment-specific stage card, distinct palette, hardware signer card, and 10-stage curriculum are rendering in the preview.
 
 Fix 01 was also played from a clean stage selection. The initial state visibly had a fake second AI Agent in place of Check payment, matching the revised Prompt Injection alert and objective. Apply safe repair restored Check payment, and Test my idea completed with `PAYMENT PLAN VERIFIED`, score 100, and the message `Nice repair — the blue pen line is safe again.`
+
+
+Morning audit notes: the direct Cryptomaan product page confirms the Nano Gen5 presentation used for the vector reference: a compact black hardware wallet with a large light touchscreen, lower control area, and side button. The in-game SVG is explicitly a simulated signer and avoids claiming hardware integration. The preview rendered the vector signer inside the graph card. Graph design was tightened: Stage 03 now has a Stop & flag decoy in its palette, and Stage 05 now uses Safe retry in the actual solution rather than duplicating the dedupe pattern. A missing retry shorthand was fixed; TypeScript is green again.
+
+
+Morning UI audit: the help button now toggles `Show solution hint` / `Hide solution hint`. With hints hidden, Build 01 no longer shows the exact route; it says: `Choose only the cards this story needs, connect the blue dots, then test it.` The simplified labels now read NOTEBOOK OPEN, TODAY'S CHALLENGE, YOUR PAPER PATH, WHAT HAPPENED, and PAPER PLAYGROUND.
+
+## 2026-08-17 Interaction Quality Pass
+
+- Added keyboard behavior: Enter/Space selects a node, C starts an output connection, V joins an input, and Delete/Backspace removes a node. The board exposes these shortcuts in English and visible focus rings are styled.
+- Added a live blue-pen preview path while connecting and a pulsing target highlight on candidate input ports.
+- Added inline notices for duplicate edges, self-connections, input-before-output, successful connections, undo, removal, and safe repair.
+- Added history snapshots for add, move, connect, remove, repair, and an Undo control.
+- Added `player_progress` schema/table plus protected tRPC list/save procedures. Scores, attempts, mode, and completion are stored per authenticated user/stage/mode; anonymous play remains available.
+- Added deterministic Vitest coverage for the intended safe path of all 10 missions and Fix starting-state broken routes. `pnpm test` reports 2 files / 3 tests passing.
+- Manual duplicate-edge browser test passed: after AI Agent → Check payment was connected once, repeating the same output/input click displayed `That blue pen line is already there. Try a new path.` without adding another line.
+- Final desktop screenshot confirmed the Paper Playground board, 10-stage payment curriculum, Ledger Nano™ Gen5 simulated signer card, Undo/Reset/Test controls, and keyboard guidance.

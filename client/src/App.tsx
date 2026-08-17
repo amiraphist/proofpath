@@ -7,8 +7,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import GameCanvas from "./components/GameCanvas";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import NotFound from "./pages/NotFound";
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return <Switch><Route path="/" component={GameCanvas} /><Route path="/404" component={NotFound} /><Route component={NotFound} /></Switch>;
 }
 

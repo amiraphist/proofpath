@@ -40,4 +40,5 @@ export type GameSession = {
   result: SessionResult | null;
   attempts: number;
   completed: boolean;
+  notice: string | null;
 };
