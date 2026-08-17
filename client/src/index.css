@@ -156,3 +156,10 @@ button:focus-visible, [role="button"]:focus-visible { outline: 2px solid #2d66bd
 .graph-board.is-alert .graph-caption__hint { color: #a23838; }
 @keyframes paper-alert-pulse { 0%, 100% { opacity: .28; } 50% { opacity: .75; } }
 @media (prefers-reduced-motion: reduce) { .graph-board.is-alert::after { animation: none; opacity: .5; } }
+
+/* Compromised agent cards stay visible as evidence, but cannot be mistaken for trusted nodes. */
+.graph-node.is-compromised { --node-color: #b43838; border-color: #b43838; background: #fff5f3; box-shadow: 4px 5px 0 rgba(180, 56, 56, .16); }
+.graph-node.is-compromised .node-head, .graph-node.is-compromised .node-title { color: #a72f2f; }
+.graph-node.is-compromised .node-icon { color: #b43838; }
+.compromised-note { display: block; margin-top: 4px; color: #a72f2f; font: 800 7px/1.1 "Trebuchet MS", sans-serif; letter-spacing: .07em; }
+.graph-node.is-compromised .node-port { border-color: #b43838; }

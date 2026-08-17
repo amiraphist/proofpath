@@ -10,7 +10,7 @@ function solvedGraph(stageIndex: number) {
 }
 
 describe("GraphOps payment curriculum", () => {
-  it("accepts the intended safe path for all ten missions", () => {
+  it("accepts the intended safe path for all sixteen missions", () => {
     stages.forEach((stage, index) => {
       const graph = solvedGraph(index);
       const result = validateGraph(stage, stage.mode, graph.nodes, graph.edges);
@@ -30,11 +30,23 @@ describe("GraphOps payment curriculum", () => {
     });
   });
 
+  it("keeps the attacker visible while requiring the policy guard in Fake System Update", () => {
+    const stage = stages[8];
+    const attacked = makeInitialGraph(stage, "fix");
+    expect(attacked.nodes.some((node) => node.compromised)).toBe(true);
+    expect(attacked.nodes.find((node) => node.compromised)?.type).toBe("agent");
+    const repairedNodes = stage.buildSequence.map((type, index) => ({ id: `${type}-safe-${index}`, type, x: 20 + index * 12, y: 45 }));
+    const repairedEdges = repairedNodes.slice(0, -1).map((node, index) => ({ id: `edge-safe-${index}`, from: node.id, to: repairedNodes[index + 1].id, state: "valid" as const }));
+    const withVisibleAttacker = [...repairedNodes, { id: "agent-attacker", type: "agent" as const, compromised: true, x: 52, y: 78 }];
+    const result = validateGraph(stage, "fix", withVisibleAttacker, repairedEdges);
+    expect(result.ok).toBe(true);
+  });
+
   it("keeps the new safety concepts in the intended Build curriculum", () => {
     expect(stages[1].buildSequence).toContain("limit");
     expect(stages[2].buildSequence).toContain("verify");
-    expect(stages[3].buildSequence).toEqual(["agent", "slippage", "preview", "wallet", "tool"]);
-    expect(stages[4].buildSequence).toContain("quorum");
-    expect(stages[8].buildSequence).toContain("expiry");
+    expect(stages[3].buildSequence).toEqual(["agent", "slippage", "wallet", "tool"]);
+    expect(stages[6].buildSequence).toContain("quorum");
+    expect(stages[13].buildSequence).toContain("expiry");
   });
 });

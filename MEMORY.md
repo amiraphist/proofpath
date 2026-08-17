@@ -144,3 +144,11 @@ After the Ledger and palette correction, the representative Build path to replay
 ## Final Fix verification after exact asset pass
 
 - 2026-08-17: After switching to the supplied unchanged SVG asset, removing movement from Undo history, and adding the subtle red Fix alert, Stage 06 was reopened from its attacked state. `Apply safe repair` replaced the fake AI Agent with Check payment, and `Test my idea` reached `PAYMENT PLAN VERIFIED` with score 100.
+
+## Attacker semantics and 16-stage curriculum pass
+
+- 2026-08-17: The attached 16-level design was restored as the active curriculum: eight Build missions introduce one payment-safety concept at a time, followed by eight Fix missions covering prompt injection, address poisoning, infinite approvals, deepfake approval, rogue skills, stale-session replay, preview/execution mismatch, and multisig bypass. The UI now reports `/ 16` and the selector contains all sixteen missions.
+- 2026-08-17: Fake System Update now keeps the compromised AI Agent on the board as a red `COMPROMISED` / `ATTACKER NODE · ISOLATE` card. Safe repair adds Policy guard and Check payment to the trusted path without silently deleting the attacker. The validator ignores the isolated compromised card while requiring the complete safe build sequence.
+- 2026-08-17: Stage 09 was browser-tested after the migration. Applying safe repair kept the attacker visible, created AI Agent → Policy guard → Check payment → Owner approval → Ledger Nano™ Gen5 → Send payment, and `Test my idea` reached PAYMENT PLAN VERIFIED with score 100.
+- 2026-08-17: Mobile capture at 390×844 shows the mobile-first order as toolbar, paper graph, then mission panel and palette content below; the stage counter correctly reads `01 / 16` and remains readable for a Twitter/TikTok-style phone entry point.
+- 2026-08-17: Stage 01 Build was replayed in the browser after restoring the 16-stage curriculum. AI Agent → Ledger Nano™ Gen5 → Send payment reached PAYMENT PLAN VERIFIED with score 100. The Ledger image was also the direct pointer target during the browser interaction check; its native image dragging is disabled so the node drag handler receives the gesture.

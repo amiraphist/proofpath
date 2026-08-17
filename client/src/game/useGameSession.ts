@@ -71,8 +71,9 @@ export function useGameSession() {
       used.add(id);
       return { id, type, x: 16 + index * gap, y: 47 + (index % 2 === 0 ? -7 : 7) };
     });
+    const compromised = current.nodes.filter((node) => node.compromised).map((node, index) => ({ ...node, x: Math.min(86, 18 + index * 12), y: 76 + index * 5 }));
     const edges = nodes.slice(0, -1).map((node, index) => ({ id: `edge-repaired-${index}`, from: node.id, to: nodes[index + 1].id, state: "valid" as const }));
-    return { ...current, edges, nodes, selectedNodeId: null, result: null, notice: "Safe repair applied. Read the blue path, then test it." };
+    return { ...current, edges, nodes: [...nodes, ...compromised], selectedNodeId: null, result: null, notice: "Safe repair applied. The compromised card stays visible but is isolated from the signing route." };
   });
 
   const undo = () => {

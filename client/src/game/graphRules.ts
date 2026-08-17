@@ -13,6 +13,7 @@ export function makeInitialGraph(stage: Stage, mode: GameMode): { nodes: GraphNo
   const nodes = sequence.map((type, index) => ({
     id: `${type}-${index}`,
     type: type as GraphNode["type"],
+    compromised: mode === "fix" && (stage.attackSequence?.[index] === "agent" || stage.attackSequence?.[index] === "rogue") && stage.buildSequence[index] !== stage.attackSequence?.[index],
     x: 16 + index * gap,
     y: 47 + (index % 2 === 0 ? -7 : 7),
   }));
@@ -33,10 +34,12 @@ function trace(...events: Omit<TraceEvent, "time">[]): TraceEvent[] {
 }
 
 function followsSequence(stage: Stage, nodes: GraphNode[], edges: GraphEdge[]) {
-  const byId = new Map(nodes.map((node) => [node.id, node]));
-  const outgoing = new Map(edges.filter((edge) => edge.state === "valid").map((edge) => [edge.from, edge]));
-  const incoming = new Set(edges.map((edge) => edge.to));
-  let current = nodes.find((node) => !incoming.has(node.id));
+  const safeNodes = nodes.filter((node) => !node.compromised);
+  const safeEdges = edges.filter((edge) => !nodes.find((node) => node.id === edge.from)?.compromised && !nodes.find((node) => node.id === edge.to)?.compromised);
+  const byId = new Map(safeNodes.map((node) => [node.id, node]));
+  const outgoing = new Map(safeEdges.filter((edge) => edge.state === "valid").map((edge) => [edge.from, edge]));
+  const incoming = new Set(safeEdges.map((edge) => edge.to));
+  let current = safeNodes.find((node) => !incoming.has(node.id));
   const visited = new Set<string>();
   const route: string[] = [];
   while (current && !visited.has(current.id)) {
@@ -49,13 +52,15 @@ function followsSequence(stage: Stage, nodes: GraphNode[], edges: GraphEdge[]) {
 }
 
 const hasExactNodeSet = (stage: Stage, nodes: GraphNode[]) => {
-  if (nodes.length !== stage.buildSequence.length) return false;
-  return stage.buildSequence.every((type) => nodes.filter((node) => node.type === type).length === stage.buildSequence.filter((item) => item === type).length);
+  const safeNodes = nodes.filter((node) => !node.compromised);
+  if (safeNodes.length !== stage.buildSequence.length) return false;
+  return stage.buildSequence.every((type) => safeNodes.filter((node) => node.type === type).length === stage.buildSequence.filter((item) => item === type).length);
 };
 
 export function validateGraph(stage: Stage, mode: GameMode, nodes: GraphNode[], edges: GraphEdge[]): SessionResult {
-  const broken = edges.some((edge) => edge.state === "broken");
-  const duplicate = new Set(edges.map((edge) => `${edge.from}:${edge.to}`)).size !== edges.length;
+  const safeEdges = edges.filter((edge) => !nodes.find((node) => node.id === edge.from)?.compromised && !nodes.find((node) => node.id === edge.to)?.compromised);
+  const broken = safeEdges.some((edge) => edge.state === "broken");
+  const duplicate = new Set(safeEdges.map((edge) => `${edge.from}:${edge.to}`)).size !== safeEdges.length;
   const nodeSetMatch = hasExactNodeSet(stage, nodes);
   const routeMatch = followsSequence(stage, nodes, edges);
   const safe = nodeSetMatch && !broken && !duplicate && routeMatch;
@@ -79,7 +84,7 @@ export function validateGraph(stage: Stage, mode: GameMode, nodes: GraphNode[], 
     : duplicate
       ? `${stage.lesson} Two blue lines do the same job. Keep one clean path.`
       : !nodeSetMatch
-        ? `This story needs: ${stage.buildSequence.map((type) => ({ agent: "AI Agent", condition: "Check payment", verify: "Verify recipient", limit: "Spending limit", slippage: "Price & slippage", preview: "Simulate preview", approval: "Owner approval", quorum: "Multisig quorum", expiry: "Session expiry", wallet: "Ledger signer", tool: "Send payment", receipt: "Save receipt", dedupe: "Block duplicates", retry: "Safe retry", stop: "Stop & flag" } as Record<string, string>)[type]).join(" → ")}.`
+        ? `This story needs: ${stage.buildSequence.map((type) => ({ agent: "AI Agent", condition: "Check payment", verify: "Verify recipient", limit: "Spending limit", slippage: "Price & slippage", preview: "Simulate preview", approval: "Owner approval", quorum: "Multisig quorum", expiry: "Session expiry", wallet: "Ledger signer", tool: "Send payment", receipt: "Save receipt", dedupe: "Block duplicates", retry: "Safe retry", stop: "Stop & flag", policy: "Policy guard", rogue: "Unvetted skill" } as Record<string, string>)[type]).join(" → ")}.`
         : !routeMatch
           ? `${stage.lesson} The cards are in the wrong order. Follow the blue dots.`
           : `One small piece is missing from this safety rule: ${stage.lesson}`;

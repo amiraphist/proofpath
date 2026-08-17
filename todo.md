@@ -139,3 +139,12 @@
 - [x] Add a subtle red pulsing alert treatment to Fix/attacked graph states without harming readability or motion accessibility.
 - [x] Verify the game at mobile/Twitter-sized viewports and document Telegram Mini App readiness and remaining constraints.
 - [x] Re-run tests, type-check, build, and representative Build/Fix paths before checkpoint; final Stage 06 Fix reached PAYMENT PLAN VERIFIED with score 100.
+
+## Attacker Semantics and 16-Stage Review
+
+- [x] Make dragging the Ledger node work from the device image as well as its text/header area by disabling native image dragging and preserving pointer capture.
+- [x] Add explicit compromised/attacker visual markers to malicious AI Agent nodes in Fix missions.
+- [x] Add a Policy guard gate and deterministic validator path that isolates the attacker before the Ledger signer.
+- [x] Update attack mission copy to explain that the attacker remains visible and is contained rather than silently deleted.
+- [x] Re-read the attached 16-stage curriculum, restore it as the active scope, and document the migration in MEMORY.md.
+- [x] Re-test the corrected Build/Fix routes, mobile layout, and all deterministic mission tests before checkpoint; Build 01 and Stage 09 Fix both reached PAYMENT PLAN VERIFIED with score 100.

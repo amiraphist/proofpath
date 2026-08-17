@@ -5,6 +5,7 @@ import type { GameMode, NodeType } from "./stages";
 export type GraphNode = {
   id: string;
   type: NodeType;
+  compromised?: boolean;
   x: number;
   y: number;
 };
