@@ -34,7 +34,7 @@ The full authenticated-progress edition expects the managed runtime, OAuth, tRPC
 
 ## Brand and visual system
 
-The approved brand is **ProofPath** — «مسیر مطمئن». Its visual direction is a blue hand-drawn route passing through a black verification stamp. See [`BRAND_DIRECTIONS.md`](./BRAND_DIRECTIONS.md) for the chosen direction and alternatives considered.
+The approved brand is **ProofPath**. Its visual direction is a blue hand-drawn route passing through a black verification stamp. See [`BRAND_DIRECTIONS.md`](./BRAND_DIRECTIONS.md) for the chosen direction and alternatives considered.
 
 ## Ledger notice
 
