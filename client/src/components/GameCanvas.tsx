@@ -40,7 +40,7 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
   const boardRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
-  const panDragRef = useRef<{ x: number; y: number; panX: number; panY: number } | null>(null);
+  const scrollDragRef = useRef<{ y: number } | null>(null);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const gestureRef = useRef<{ distance: number; centerX: number; centerY: number; scale: number; panX: number; panY: number } | null>(null);
   const [connectionSource, setConnectionSource] = useState<string | null>(null);
@@ -107,7 +107,7 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
     setCursorPoint(null);
   };
   const clampViewport = (scale: number, panX: number, panY: number) => {
-    const safeScale = Math.min(1.8, Math.max(.64, scale));
+    const safeScale = Math.min(1.8, Math.max(.3, scale));
     const sceneMultiplier = hasDenseScene ? 2.2 : hasWideScene ? 1.7 : 1;
     const sceneWidth = sceneMultiplier * safeScale;
     const sceneHeight = safeScale;
@@ -121,6 +121,7 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (pointersRef.current.size > 1) {
       const gesture = gestureRef.current;
+      scrollDragRef.current = null;
       const board = sceneRef.current;
       const [first, second] = Array.from(pointersRef.current.values());
       if (gesture && board && first && second) {
@@ -133,10 +134,10 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
       }
       return;
     }
-    if (panDragRef.current && sceneRef.current) {
-      const rect = sceneRef.current.getBoundingClientRect();
-      const current = panDragRef.current;
-      setViewport(clampViewport(viewportRef.current.scale, current.panX + ((event.clientX - current.x) / rect.width) * 100, current.panY + ((event.clientY - current.y) / rect.height) * 100));
+    if (scrollDragRef.current && isMobileViewport) {
+      const deltaY = scrollDragRef.current.y - event.clientY;
+      if (Math.abs(deltaY) > .5) window.scrollBy(0, deltaY);
+      scrollDragRef.current.y = event.clientY;
       return;
     }
     if (connectionSource && sceneRef.current) {
@@ -151,19 +152,17 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
   };
   const beginPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    event.currentTarget.setPointerCapture?.(event.pointerId);
-    if (pointersRef.current.size === 2) { panDragRef.current = null; beginViewportGesture(); return; }
+    if (pointersRef.current.size === 2) { scrollDragRef.current = null; beginViewportGesture(); return; }
     const target = event.target as HTMLElement;
-    const isEditingTarget = target.closest(".graph-node, .mobile-viewport-controls, .graph-caption, .attack-event");
-    if (!connectionSource && !isEditingTarget) {
-      const current = viewportRef.current;
-      panDragRef.current = { x: event.clientX, y: event.clientY, panX: current.panX, panY: current.panY };
+    if (isMobileViewport && !connectionSource && !target.closest(".graph-node, .mobile-viewport-controls")) {
+      scrollDragRef.current = { y: event.clientY };
+      event.currentTarget.setPointerCapture?.(event.pointerId);
     }
   };
   const stopDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     pointersRef.current.delete(event.pointerId);
     dragRef.current = null;
-    panDragRef.current = null;
+    scrollDragRef.current = null;
     if (pointersRef.current.size < 2) gestureRef.current = null;
   };
   const handlePort = (nodeId: string, direction: "in" | "out") => {
@@ -173,7 +172,7 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
   };
   return (
     <div className={`graph-board ${connectionSource ? "is-connecting" : ""} ${alert ? "is-alert" : ""}`} ref={boardRef} onPointerDownCapture={beginPointer} onPointerMove={moveDrag} onPointerUp={stopDrag} onPointerCancel={stopDrag}>
-      <div className="graph-caption"><span><ScanLine size={13} /> YOUR PAPER PATH</span><span className="graph-caption__hint">{connectionSource ? "Now click the next blue dot" : "Drag cards · connect blue pen dots"}</span><span className="graph-caption__touch-hint">Node: 1 finger · space: pan · 2 fingers: zoom</span><span className="graph-caption__keys">Keyboard: Enter select · C connect · V join · Delete remove</span></div>
+      <div className="graph-caption"><span><ScanLine size={13} /> YOUR PAPER PATH</span><span className="graph-caption__hint">{connectionSource ? "Now click the next blue dot" : "Drag cards · connect blue pen dots"}</span><span className="graph-caption__touch-hint">Node: drag · page: swipe · view: 2 fingers</span><span className="graph-caption__keys">Keyboard: Enter select · C connect · V join · Delete remove</span></div>
       <div className="mobile-viewport-controls" aria-label="Mobile graph zoom"><button onClick={() => zoomBy(-.18)} aria-label="Zoom out graph">−</button><button className="mobile-viewport-readout" onClick={fitViewport} aria-label="Fit graph view">{Math.round(viewport.scale * 100)}%</button><button onClick={() => zoomBy(.18)} aria-label="Zoom in graph">+</button></div>
       <div className={`graph-scene ${hasWideScene ? "graph-scene--wide" : ""} ${hasDenseScene ? "graph-scene--dense" : ""}`} ref={sceneRef} style={{ transform: `translate(${viewport.panX}%, ${viewport.panY}%) scale(${viewport.scale})` }}>
         <div className="graph-grid" />

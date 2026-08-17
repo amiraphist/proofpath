@@ -43,13 +43,15 @@ await wait(250);
 
 const initial = await evaluate(`(() => { const board = document.querySelector('.graph-board').getBoundingClientRect(); const scene = document.querySelector('.graph-scene'); return { board: { left: board.left, top: board.top, width: board.width, height: board.height }, transform: scene.style.transform, className: scene.className }; })()`);
 const blankX = initial.board.left + initial.board.width * 0.5;
-const blankY = initial.board.top + initial.board.height * 0.22;
+const blankY = initial.board.top + 48;
 
-await touch("touchStart", [[blankX, blankY, 1]]);
-await touch("touchMove", [[blankX + 58, blankY + 42, 1]]);
+await touch("touchStart", [[blankX, blankY + 50, 1]]);
+await touch("touchMove", [[blankX, blankY - 30, 1]]);
 await touch("touchEnd", []);
 await wait(160);
-const panned = await evaluate(`document.querySelector('.graph-scene').style.transform`);
+const scrolled = await evaluate(`window.scrollY`);
+await evaluate(`window.scrollTo(0, 0)`);
+await wait(120);
 
 await touch("touchStart", [[blankX - 45, blankY, 1]]);
 await touch("touchStart", [[blankX - 45, blankY, 1], [blankX + 45, blankY, 2]]);
@@ -58,6 +60,12 @@ await touch("touchEnd", []);
 await wait(160);
 const pinched = await evaluate(`({ transform: document.querySelector('.graph-scene').style.transform, zoom: document.querySelector('.mobile-viewport-readout').textContent })`);
 
+await evaluate(`(() => { const buttons = document.querySelectorAll('.mobile-viewport-controls button'); for (let i = 0; i < 8; i += 1) buttons[0].click(); })()`);
+await wait(120);
+const zoomFloor = await evaluate(`document.querySelector('.mobile-viewport-readout').textContent`);
+await evaluate(`document.querySelectorAll('.mobile-viewport-controls button')[1].click()`);
+await wait(100);
+
 const nodeStart = await evaluate(`(() => { const node = document.querySelector('.graph-node'); const rect = node.getBoundingClientRect(); return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, left: node.style.left, top: node.style.top }; })()`);
 await touch("touchStart", [[nodeStart.x, nodeStart.y, 1]]);
 await touch("touchMove", [[nodeStart.x + 64, nodeStart.y + 52, 1]]);
@@ -65,5 +73,5 @@ await touch("touchEnd", []);
 await wait(160);
 const nodeMoved = await evaluate(`(() => { const node = document.querySelector('.graph-node'); return { left: node.style.left, top: node.style.top }; })()`);
 
-console.log(JSON.stringify({ initial, panned, pinched, nodeStart, nodeMoved }, null, 2));
+console.log(JSON.stringify({ initial, scrolled, pinched, zoomFloor, nodeStart, nodeMoved }, null, 2));
 ws.close();

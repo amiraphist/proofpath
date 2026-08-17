@@ -224,3 +224,11 @@
 ## Final Brand Direction
 
 - [x] Prepare concise English game-name options with Persian translations and a distinct logo direction for each.
+
+## Interaction and Mobile Scroll Correction
+
+- [x] Restore desktop node close buttons and blue-port path creation without gesture-layer interference.
+- [x] Lower the mobile zoom-out floor to 30% while keeping pan bounds correct across all virtual canvas sizes.
+- [x] Allow vertical page scrolling from Paper Path on mobile while retaining intentional node drag, blank-space pan, and pinch zoom.
+- [x] Hide the Blue pen line / Needs fixing / Human choice legend on mobile.
+- [x] Verify desktop close/connect actions, mobile scroll, 30% zoom, gesture behavior, tests, type-check, and production build.
