@@ -259,34 +259,34 @@
 
 ## ProofPath Launch Pack
 
-- [ ] Create and integrate a Paper Playground ProofPath logo and favicon asset.
-- [ ] Build an independent static classroom edition that runs without managed auth, tRPC, database, or server dependencies.
-- [ ] Add complete local and free-host deployment instructions for the static edition.
-- [ ] Add an automated GitHub Pages workflow with a free `amiraphist.github.io/proofpath` path deployment.
-- [ ] Update the public GitHub repository with launch assets, static edition, and README guidance.
-- [ ] Verify the main app plus the static edition build, then validate deployed path configuration.
+- [x] Create and integrate a Paper Playground ProofPath logo and favicon asset.
+- [x] Build an independent static classroom edition that runs without managed auth, tRPC, database, or server dependencies.
+- [x] Add complete local and free-host deployment instructions for the static edition.
+- [x] Add an automated GitHub Pages workflow with a free `amiraphist.github.io/proofpath` path deployment.
+- [x] Update the public GitHub repository with launch assets, static edition, and README guidance.
+- [x] Verify the main app plus the static edition build, then validate deployed path configuration.
 
 ## Final Name Audit
 
-- [ ] Rename the legacy GraphOps TODO heading to ProofPath TODO and verify no player-facing or handoff title retains the old product name.
+- [x] Rename the legacy GraphOps TODO heading to ProofPath TODO and verify no player-facing or handoff title retains the old product name.
 
 ## Standalone Web Cleanup
 
-- [ ] Remove Telegram WebApp runtime calls and the external Telegram SDK script.
-- [ ] Remove Telegram and Mini App mentions from public documentation and product planning files.
-- [ ] Verify no Telegram or Mini App references remain in tracked code and handoff docs.
-- [ ] Re-run tests, type-check, production build, and public GitHub sync for the standalone web edition.
+- [x] Remove Telegram WebApp runtime calls and the external Telegram SDK script.
+- [x] Remove Telegram and Mini App mentions from public documentation and product planning files.
+- [x] Verify no Telegram or Mini App references remain in tracked code and handoff docs.
+- [x] Re-run tests, type-check, production build, and public GitHub sync for the standalone web edition.
 
 ## English-only Repository Audit
 
-- [ ] Remove all Persian text from player copy, README, documentation, code comments, metadata, and repository handoff files.
-- [ ] Verify the tracked ProofPath project contains no Persian Unicode characters.
-- [ ] Re-run validation and sync the English-only cleanup to the public GitHub repository.
+- [x] Remove all Persian text from player copy, README, documentation, code comments, metadata, and repository handoff files.
+- [x] Verify the tracked ProofPath project contains no Persian Unicode characters.
+- [x] Re-run validation and sync the English-only cleanup to the public GitHub repository.
 
 ## GitHub Pages Launch
 
-- [ ] Publish the independent ProofPath static edition at `amiraphist.github.io/proofpath`.
-- [ ] Configure a Pages workflow that rebuilds and redeploys on updates to `main`.
-- [ ] Verify the live URL opens the playable standalone game from a clean browser session.
-- [ ] Permit the temporary static preview host so the standalone classroom can be visually smoke-tested before Pages deployment.
-- [ ] Fix the classroom entry route so the independent Vite root loads the game rather than a blank page.
+- [x] Publish the independent ProofPath static edition at `amiraphist.github.io/proofpath`.
+- [x] Configure a Pages workflow that rebuilds and redeploys on updates to `main`.
+- [x] Verify the live URL opens the playable standalone game from a clean browser session.
+- [x] Permit the temporary static preview host so the standalone classroom can be visually smoke-tested before Pages deployment.
+- [x] Fix the classroom entry route so the independent Vite root loads the game rather than a blank page.
