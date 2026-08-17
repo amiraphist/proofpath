@@ -1,4 +1,4 @@
-// GraphOps style reminder: Paper Playground, tiny friendly sounds, never loud or distracting.
+// ProofPath style reminder: Paper Playground, tiny friendly sounds, never loud or distracting.
 
 import { useCallback, useRef, useState } from "react";
 

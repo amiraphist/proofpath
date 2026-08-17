@@ -1,6 +1,6 @@
-# GraphOps — Current 16-Mission Design
+# ProofPath — Current 16-Mission Design
 
-GraphOps is an English-only educational game about safe AI-agent payment workflows. The first eight missions teach secure construction. The final eight begin with an external **ATTACK EVENT** that exploits a missing or flawed trusted control; the player restores the trusted route instead of deleting a hacker node.
+ProofPath is an English-only educational game about safe AI-agent payment workflows. The first eight missions teach secure construction. The final eight begin with an external **ATTACK EVENT** that exploits a missing or flawed trusted control; the player restores the trusted route instead of deleting a hacker node.
 
 | Stage | Mode | Safety concept | Trusted route |
 |---|---|---|---|
@@ -54,4 +54,4 @@ The curriculum applies the supplied principle that an **AI Agent proposes but ne
 
 The review found that the active curriculum already represented policy enforcement, hardware signing, quorum, expiration, preview, and containment with a visible trusted route and an external **ATTACK EVENT** for every Fix mission. The first material gap was a post-approval mutation lesson: Stage 15 now uses **Owner approval → Seal exact action → Ledger Nano™ Gen5**, making an altered post-approval request fail closed. A subsequent QA pass found that Stage 12 had two missing controls but only one visual repair cue. Its attacked route now preserves **Check payment** and the real **Owner approval**, leaving exactly one visible repair: insert **Policy guard** immediately after the Agent. This keeps every Fix mission aligned with the current single broken-edge teaching engine.
 
-Ledger Nano™ Gen5 appears solely as a simulated educational hardware signer. GraphOps is an unofficial fan-made educational simulation and is not affiliated with or endorsed by Ledger.
+Ledger Nano™ Gen5 appears solely as a simulated educational hardware signer. ProofPath is an unofficial fan-made educational simulation and is not affiliated with or endorsed by Ledger.

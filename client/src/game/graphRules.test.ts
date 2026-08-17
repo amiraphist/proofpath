@@ -9,7 +9,7 @@ function solvedGraph(stageIndex: number) {
   return { nodes, edges };
 }
 
-describe("GraphOps payment curriculum", () => {
+describe("ProofPath payment curriculum", () => {
   it("accepts the intended safe path for all sixteen missions", () => {
     stages.forEach((stage, index) => {
       const graph = solvedGraph(index);

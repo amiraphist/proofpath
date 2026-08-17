@@ -209,3 +209,9 @@ After the Ledger and palette correction, the representative Build path to replay
 - 2026-08-17: Rewrote Stage 12 player copy so it states that the real Owner approval still exists, but an untrusted deepfake claim can shape planning until Policy guard rejects it. The repaired route `Agent → Policy guard → Check payment → Owner approval → Ledger → Send` reached PAYMENT PLAN VERIFIED with score 100 in the browser.
 - 2026-08-17: Added a Stage 12 regression test for its exact attack sequence, safe route, single broken `edge-0`, and successful repair. The suite now has 9 passing tests; TypeScript and production build pass.
 - 2026-08-17: Added `SELF_HOSTING_HANDOFF.md`, separating portable curriculum/rule code from the managed auth, tRPC, database, and runtime shell. It documents both a static classroom migration and a full authenticated-progress migration without making hosting-availability guarantees.
+
+## ProofPath rebrand
+
+- 2026-08-17: The user approved **ProofPath** («مسیر مطمئن») as the final product name. Updated the desktop and mobile header wordmark, browser title and description, footer, accessibility label, package metadata, and the player-position persistence key (with a read fallback for the prior key).
+- 2026-08-17: Rewrote repository-facing `PLAN.md`, `STRUCTURE.md`, and `ASSETS.md` to document the real 16-stage Paper Playground product instead of its obsolete 25-stage neon predecessor. Updated curriculum, Ledger-use, brand, and self-hosting handoff notes to use ProofPath consistently.
+- 2026-08-17: Desktop and 390×844 mobile captures show the new PROOFPATH wordmark cleanly. Final rebrand verification passed: 9 Vitest tests, TypeScript check, production build, and a residual-name audit with no player-facing old-name occurrences.

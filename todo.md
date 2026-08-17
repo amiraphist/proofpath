@@ -240,3 +240,18 @@
 - [x] Add a regression test that locks the intended Stage 12 attack graph and safe repair path.
 - [x] Write a self-hosting handoff note that distinguishes portable game logic from platform-managed auth and persistence scaffolding.
 - [x] Re-run tests, type-check, build, and play Stage 12 through its repaired route.
+
+## GitHub Handoff
+
+- [ ] Confirm the available GitHub connection and choose the destination repository.
+- [x] Review repository metadata and ensure the current handoff and self-hosting notes are included.
+- [ ] Export the complete GraphOps project to GitHub without omitting required source directories.
+- [ ] Verify the repository’s files and provide the repository link and next-run instructions.
+- [x] Use the approved ProofPath name in repository metadata and the GitHub handoff guidance.
+
+## ProofPath Rebrand
+
+- [x] Replace all player-facing GraphOps naming with ProofPath in the header, browser title, footer, and accessibility labels.
+- [x] Align package and repository metadata with ProofPath without altering curriculum or gameplay behavior.
+- [x] Update brand and self-hosting documentation to call the product ProofPath while preserving legacy technical paths only where required.
+- [x] Verify the desktop and mobile branded interface, tests, type-check, and production build.

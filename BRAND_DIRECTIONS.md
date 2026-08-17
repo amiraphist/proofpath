@@ -1,8 +1,8 @@
-# GraphOps — Final Brand Directions
+# ProofPath — Final Brand Direction
 
 ## Recommendation
 
-**ProofPath** is the strongest replacement for GraphOps. It says that every payment action needs a verifiable path, works for AI agents without sounding like an infrastructure dashboard, and remains understandable for a fifteen-year-old player. Its Persian sense is **«مسیر اثبات‌شده»** or, more naturally, **«مسیر مطمئن»**.
+**ProofPath** is the approved brand. It says that every payment action needs a verifiable path, works for AI agents without sounding like an infrastructure dashboard, and remains understandable for a fifteen-year-old player. Its Persian sense is **«مسیر اثبات‌شده»** or, more naturally, **«مسیر مطمئن»**.
 
 The recommended logo is a hand-drawn blue pen line that enters a small black-outlined verification stamp, then continues as a clean route. It keeps the paper-playground identity, visually explains the game, and avoids visual or naming similarity to any hardware-wallet brand.
 

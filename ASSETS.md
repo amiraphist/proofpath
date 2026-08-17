@@ -1,15 +1,17 @@
-# GraphOps Assets
+# ProofPath Assets
 
-**Art direction:** Neon Glass Circuit. Dark ink-blue command deck, translucent rounded node cards, semantic neon accents, crisp SVG pulse rails, subtle grid texture, and restrained glass bloom. English UI only.
+## Active Art Direction
 
-## Generated Assets
+ProofPath uses a **Paper Playground** visual system: warm white graph paper, pale blue grid lines, black ink node cards, blue pen routes, and friendly English learning copy. The visual language is deliberately simple enough for a fifteen-year-old player while keeping payment-safety concepts clear.
 
-A custom reference image and logo generation were attempted after entering the image-generation workflow, but the current daily generation quota was exhausted. No generated asset URL is used in the implementation.
+## Supplied Hardware Asset
 
-## CSS/SVG-Native Asset Plan
+The game uses the user-supplied **Ledger Nano™ Gen5** SVG as an unchanged visual for a simulated external signer. It is stored through the managed asset URL and is never presented as a real wallet integration, product partnership, or transaction capability.
 
-The first version uses CSS gradients, pseudo-elements, SVG paths, semantic color tokens, and small inline icon geometry for the graph, because these are sharper and more responsive for a Telegram Mini App than raster art. The visual target is still represented in the UI through the graph canvas, pulse edges, glass node cards, incident tape, and dark atmospheric background.
+## CSS and SVG-native System
+
+Paper texture, nodes, ports, connectors, alert treatment, zoom controls, and the ProofPath wordmark are rendered through CSS and SVG-native interface elements. This keeps the game responsive in a browser and Telegram Mini App viewport without adding heavyweight media to the project tree.
 
 ## Asset Rules
 
-Do not place large media files inside the project tree. If custom image generation becomes available later, add only lightweight branding or background assets under `/home/ubuntu/webdev-static-assets/`, upload them through the WebDev asset flow, and reference their returned lifecycle-safe URLs directly.
+Keep any future static media outside the repository tree at `/home/ubuntu/webdev-static-assets/`, upload it through the project asset flow, and reference only the returned lifecycle-safe URL. Use lightweight art that strengthens the Paper Playground style without obscuring the graph interaction.

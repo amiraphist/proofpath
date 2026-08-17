@@ -1,4 +1,4 @@
-// GraphOps style reminder: Neon Glass Circuit, semantic neon colors, English-only technical game voice.
+// ProofPath style reminder: Paper Playground, black ink cards, blue pen routes, English-only learning voice.
 
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";

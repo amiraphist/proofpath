@@ -1,61 +1,25 @@
-# GraphOps Build Plan
+# ProofPath Build Plan
 
 ## Product Goal
 
-GraphOps is an English-only browser game that teaches practical LangGraph thinking through 25 compact scenarios. It runs as a standalone web link and is designed to fit the Telegram Mini App viewport. The player uses a small set of visual nodes to build or repair a workflow.
+ProofPath is an English-only educational browser game for safe AI-agent payment workflows. It teaches a fifteen-year-old player to build or repair a trusted route using friendly visual nodes, while making clear that an AI Agent may propose but never authorize a payment.
 
-## Modes
+## Active Curriculum
 
-- **Build:** assemble a valid graph from a small tool palette.
-- **Fix:** inspect a damaged graph, identify the faulty edge or missing guard, and repair it.
+The product contains **16 deterministic missions**: eight Build missions and eight Fix missions. Build missions begin with an empty paper board. Fix missions begin with a flawed route and an external **ATTACK EVENT**; players add or restore trusted controls rather than deleting a hacker node.
 
-## MVP Scope
+## Interaction Model
 
-The first playable version includes a single responsive screen, a stage selector, Build/Fix mode switcher, a graph canvas rendered with SVG and CSS glass cards, draggable or selectable nodes, animated edges, a tool palette, a compact incident log, stage objective, hint, reset, run, and success/failure feedback. All UI and content are English-only.
+The Paper Playground uses hand-drawn black-ink nodes, blue pen connections, and a supplied Ledger Nano™ Gen5 visual asset as a simulated external signer. Desktop supports pointer drag, port connections, keyboard shortcuts, and structural Undo. Mobile supports an accessible Nodes orb, a virtual graph canvas, 30%–180% zoom, pinch/pan, and page scrolling from blank Paper Path space.
 
-## 25-Stage Learning Arc
+## Safety Scope
 
-1. Human approval before payment
-2. Validate recipient identity
-3. Reject negative amounts
-4. Enforce a spending limit
-5. Prevent duplicate execution
-6. Retry a failed read-only tool
-7. Stop after a retry budget
-8. Handle a malformed tool response
-9. Separate planning from execution
-10. Add a policy check
-11. Block an untrusted instruction in external data
-12. Protect sensitive payment fields
-13. Require a verified account
-14. Escalate high-value transfers
-15. Handle a timeout without assuming success
-16. Add an idempotency key
-17. Route a declined payment safely
-18. Preserve an audit log
-19. Verify a webhook before updating state
-20. Recover from a partial workflow
-21. Add a human review branch
-22. Coordinate two specialist agents
-23. Limit agent-to-agent permissions
-24. Design a safe purchase mandate
-25. Repair a complete multi-step payout graph
-
-## Risk Slices
-
-- Graph interaction must remain usable on touch screens and narrow Telegram viewports.
-- Node connections must communicate validity without relying on color alone.
-- Build and Fix rules need deterministic stage validation and clear failure explanations.
-- Motion must remain lightweight and respect reduced-motion preferences.
-- The UI must not imply real payments; all execution is a simulation.
-- The stage data model must prevent mixed-language strings.
+Each route is a simulation only. No wallet, secret, or real payment API is used. The curriculum covers policy enforcement, recipient verification, spending limits, human approval, quorum, expiry, preview, intent sealing, and containment.
 
 ## Acceptance Criteria
 
-- A first-time player can understand the objective within 10 seconds.
-- A player can complete at least the first five stages without documentation.
-- Every stage displays an objective, available tools, a deterministic validator, and a learning takeaway.
-- Failed runs explain the violated safety principle in plain English.
-- The interface works at desktop 1280x720 and mobile 390x844.
-- No real payment API, wallet, secret, or external transaction is used.
-- `pnpm check` passes and the preview shows the interactive game rather than template content.
+- Every intended route validates deterministically and scores 100.
+- Every Fix mission has a clear external attack event and a visible repair cue.
+- Stage 12 has one visible Policy guard insertion; Stage 15 seals an already-approved exact action.
+- The interface works at desktop 1280×720 and mobile 390×844.
+- `pnpm test`, `pnpm check`, and `pnpm build` pass before release.

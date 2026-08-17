@@ -1,4 +1,4 @@
-// GraphOps style reminder: Paper Playground, visible action cards only, blue pen lines, friendly English feedback.
+// ProofPath style reminder: Paper Playground, visible action cards only, blue pen lines, friendly English feedback.
 
 import type { GameMode, Stage } from "./stages";
 import type { GraphEdge, GraphNode, SessionResult, TraceEvent } from "./types";

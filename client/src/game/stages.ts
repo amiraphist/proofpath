@@ -1,4 +1,4 @@
-// GraphOps curriculum: precise, payment-only safety missions for a young learner.
+// ProofPath curriculum: precise, payment-only safety missions for a young learner.
 
 export type GameMode = "build" | "fix";
 export type NodeType = "agent" | "policy" | "condition" | "verify" | "limit" | "slippage" | "preview" | "seal" | "approval" | "quorum" | "expiry" | "wallet" | "tool" | "receipt" | "dedupe" | "retry" | "stop";

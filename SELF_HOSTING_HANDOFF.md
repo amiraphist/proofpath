@@ -1,8 +1,8 @@
-# GraphOps: Self-Hosting Handoff
+# ProofPath: Self-Hosting Handoff
 
 ## Scope of this note
 
-GraphOps currently runs as a React game inside a managed application shell. The **gameplay curriculum and graph validator are portable**, but the shipped application also includes platform-provided authentication, tRPC, database, and runtime bootstrap code. A code archive that excludes those shell directories will not type-check or build unchanged.
+ProofPath currently runs as a React game inside a managed application shell. The **gameplay curriculum and graph validator are portable**, but the shipped application also includes platform-provided authentication, tRPC, database, and runtime bootstrap code. A code archive that excludes those shell directories will not type-check or build unchanged.
 
 | Layer | Location | Self-hosting status |
 |---|---|---|
