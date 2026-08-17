@@ -148,3 +148,12 @@
 - [x] Update attack mission copy to explain that the attacker remains visible and is contained rather than silently deleted.
 - [x] Re-read the attached 16-stage curriculum, restore it as the active scope, and document the migration in MEMORY.md.
 - [x] Re-test the corrected Build/Fix routes, mobile layout, and all deterministic mission tests before checkpoint; Build 01 and Stage 09 Fix both reached PAYMENT PLAN VERIFIED with score 100.
+
+## Attack-Event Fix Redesign
+
+- [x] Replace attacker nodes in Fix start graphs with external attack-event context and flawed trusted-node routing.
+- [x] Make every Fix solution add or restore a trusted control that blocks unsafe flow before signing or sending.
+- [x] Keep the Ledger signer only in Fix stories where the unsafe route can reach a signing step; omit it from control-only containment stories, including Rogue Skill palette and repair route.
+- [x] Rewrite Fix mission copy and safe-repair behavior so the player never solves a mission by deleting or isolating a hacker node.
+- [x] Reduce the visible Ledger device size while preserving external connection ports and direct image dragging; direct SVG-image drag moved the Ledger node in browser verification.
+- [x] Re-test all 16 deterministic routes plus representative Build/Fix and mobile player paths before checkpoint; Stage 01 Build, Stage 09 Fix, and Stage 13 containment each reached score 100.

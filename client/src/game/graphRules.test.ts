@@ -30,16 +30,16 @@ describe("GraphOps payment curriculum", () => {
     });
   });
 
-  it("keeps the attacker visible while requiring the policy guard in Fake System Update", () => {
+  it("models Fake System Update as an external attack event that policy guard blocks", () => {
     const stage = stages[8];
     const attacked = makeInitialGraph(stage, "fix");
-    expect(attacked.nodes.some((node) => node.compromised)).toBe(true);
-    expect(attacked.nodes.find((node) => node.compromised)?.type).toBe("agent");
+    expect(stage.attackEvent).toMatch(/malicious prompt/i);
+    expect(attacked.nodes.some((node) => node.compromised)).toBe(false);
     const repairedNodes = stage.buildSequence.map((type, index) => ({ id: `${type}-safe-${index}`, type, x: 20 + index * 12, y: 45 }));
     const repairedEdges = repairedNodes.slice(0, -1).map((node, index) => ({ id: `edge-safe-${index}`, from: node.id, to: repairedNodes[index + 1].id, state: "valid" as const }));
-    const withVisibleAttacker = [...repairedNodes, { id: "agent-attacker", type: "agent" as const, compromised: true, x: 52, y: 78 }];
-    const result = validateGraph(stage, "fix", withVisibleAttacker, repairedEdges);
+    const result = validateGraph(stage, "fix", repairedNodes, repairedEdges);
     expect(result.ok).toBe(true);
+    expect(stage.buildSequence).toContain("policy");
   });
 
   it("keeps the new safety concepts in the intended Build curriculum", () => {
