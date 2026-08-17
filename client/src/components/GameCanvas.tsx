@@ -16,7 +16,7 @@ const LedgerMini = () => <img className="ledger-mini" src={LEDGER_ASSET} alt="Le
 
 const iconFor = (type: NodeType) => {
   if (type === "wallet") return <LedgerMini />;
-  const Icon = type === "condition" || type === "verify" ? ShieldCheck : type === "approval" || type === "quorum" ? LockKeyhole : type === "receipt" ? FileCheck2 : type === "dedupe" ? CopyCheck : type === "tool" ? Wrench : type === "agent" ? Bot : type === "retry" || type === "expiry" ? RotateCcw : type === "limit" || type === "slippage" || type === "preview" ? Activity : type === "stop" ? X : Activity;
+  const Icon = type === "condition" || type === "verify" ? ShieldCheck : type === "approval" || type === "quorum" || type === "seal" ? LockKeyhole : type === "receipt" ? FileCheck2 : type === "dedupe" ? CopyCheck : type === "tool" ? Wrench : type === "agent" ? Bot : type === "retry" || type === "expiry" ? RotateCcw : type === "limit" || type === "slippage" || type === "preview" ? Activity : type === "stop" ? X : Activity;
   return <Icon size={14} strokeWidth={2.2} />;
 };
 

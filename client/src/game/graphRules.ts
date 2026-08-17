@@ -88,7 +88,7 @@ export function validateGraph(stage: Stage, mode: GameMode, nodes: GraphNode[], 
     : duplicate
       ? `${stage.lesson} Two blue lines do the same job. Keep one clean path.`
       : !nodeSetMatch
-        ? `This story needs: ${stage.buildSequence.map((type) => ({ agent: "AI Agent", condition: "Check payment", verify: "Verify recipient", limit: "Spending limit", slippage: "Price & slippage", preview: "Simulate preview", approval: "Owner approval", quorum: "Multisig quorum", expiry: "Session expiry", wallet: "Ledger signer", tool: "Send payment", receipt: "Save receipt", dedupe: "Block duplicates", retry: "Safe retry", stop: "Stop & flag", policy: "Policy guard" } as Record<string, string>)[type]).join(" → ")}.`
+        ? `This story needs: ${stage.buildSequence.map((type) => ({ agent: "AI Agent", condition: "Check payment", verify: "Verify recipient", limit: "Spending limit", slippage: "Price & slippage", preview: "Simulate preview", seal: "Seal exact action", approval: "Owner approval", quorum: "Multisig quorum", expiry: "Session expiry", wallet: "Ledger signer", tool: "Send payment", receipt: "Save receipt", dedupe: "Block duplicates", retry: "Safe retry", stop: "Stop & flag", policy: "Policy guard" } as Record<string, string>)[type]).join(" → ")}.`
         : !routeMatch
           ? `${stage.lesson} The cards are in the wrong order. Follow the blue dots.`
           : `One small piece is missing from this safety rule: ${stage.lesson}`;

@@ -194,3 +194,14 @@
 - [x] Reload after dragging the Nodes orb and confirm its stored position is restored from localStorage.
 - [x] Capture the post-change desktop layout and confirm the desktop Pencil Case remains visible while the mobile orb stays hidden.
 - [x] Inspect the desktop-rendered UI and explicitly verify the side Pencil Case is visible while the mobile Nodes orb is hidden.
+
+## Supplied Security Architecture Review
+
+- [x] Map the supplied intelligence-versus-authority, policy, hardware enforcement, sealing, quorum, and containment principles to all 16 active missions.
+- [x] Identify any stage whose build or Fix failure path lacks a clear external authority boundary or explicit deny/stop outcome.
+- [x] Update stage copy, node semantics, documentation, and tests where the supplied material reveals a concrete educational gap.
+- [x] Re-run curriculum tests, type-check, build, and representative player paths after any stage-design changes.
+- [x] Add an Action seal control to Stage 15 so its Fix path teaches that approved amount, destination, action type, expiry, and one-time use are locked before hardware signing.
+- [x] Place a real Owner approval immediately before Action seal in Stage 15 so the visual route matches the supplied post-approval sealing model.
+- [x] Document a concise 16-stage mapping that links each mission to the supplied security principles and fail-closed authority boundary.
+- [x] Record the authority-boundary review conclusion, including why Stage 15 was the only curriculum change required by this reference pass.

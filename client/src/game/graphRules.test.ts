@@ -31,7 +31,7 @@ describe("GraphOps payment curriculum", () => {
   });
 
   it("marks the genuine divergence edge and accepts the deterministic repair for every Fix mission", () => {
-    const expectedBrokenEdgeByStage: Record<number, number> = { 9: 0, 10: 0, 11: 1, 12: 0, 13: 0, 14: 2, 15: 1, 16: 1 };
+    const expectedBrokenEdgeByStage: Record<number, number> = { 9: 0, 10: 0, 11: 1, 12: 0, 13: 0, 14: 2, 15: 3, 16: 1 };
     stages.forEach((stage, index) => {
       if (stage.mode !== "fix") return;
       const attacked = makeInitialGraph(stage, "fix");
@@ -69,5 +69,13 @@ describe("GraphOps payment curriculum", () => {
     expect(stages[11].buildSequence.slice(0, 3)).toEqual(["agent", "policy", "condition"]);
     expect(stages[12].objective).toMatch(/Delete the Send payment card/i);
     expect(stages[12].available).not.toContain("wallet");
+  });
+
+  it("requires a sealed action before hardware signing when an agent can mutate an approved request", () => {
+    const stage = stages[14];
+    expect(stage.buildSequence).toEqual(["agent", "condition", "preview", "approval", "seal", "wallet", "tool"]);
+    expect(stage.attackSequence).toEqual(["agent", "condition", "preview", "approval", "wallet", "tool"]);
+    expect(stage.attackEvent).toMatch(/changed the destination after real owner approval/i);
+    expect(stage.fixFault).toMatch(/Seal exact action/i);
   });
 });
