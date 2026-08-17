@@ -44,7 +44,7 @@ The curriculum applies the supplied principle that an **AI Agent proposes but ne
 | 09 | Prompt-injection containment | External malicious text meets Policy guard and Check payment; it cannot authorize a signer request. |
 | 10 | Address-poisoning defense | Verify recipient rejects a look-alike destination before approval and hardware signing. |
 | 11 | Simulation before irreversible action | Simulate preview exposes a hidden allowance before the request reaches Ledger. |
-| 12 | Trusted approval channel | Policy guard rejects an untrusted deepfake claim; only the real Owner approval path reaches signing. |
+| 12 | Trusted approval channel | Policy guard rejects an untrusted deepfake claim before the already-present real Owner approval path reaches signing. |
 | 13 | Local-breach containment | Policy guard routes an unvetted skill to Stop & flag; there is no Ledger or Send payment endpoint to reach. |
 | 14 | Expiring authority | Session expiry invalidates a replayed approval before the external signer. |
 | 15 | Intent locking / sealed action | After Preview and Owner approval, Seal exact action binds amount, recipient, action, expiry, and one-time use; mutation fails before Ledger. |
@@ -52,6 +52,6 @@ The curriculum applies the supplied principle that an **AI Agent proposes but ne
 
 ## Reference-Pass Conclusion
 
-The review found that the active curriculum already represented policy enforcement, hardware signing, quorum, expiration, preview, and containment with a visible trusted route and an external **ATTACK EVENT** for every Fix mission. The single material gap was a post-approval mutation lesson: the earlier Stage 15 taught preview integrity but not that an approved payload must be bound before signing. It now uses **Owner approval → Seal exact action → Ledger Nano™ Gen5**, making an altered post-approval request fail closed. No other stage required a structural change in this reference pass.
+The review found that the active curriculum already represented policy enforcement, hardware signing, quorum, expiration, preview, and containment with a visible trusted route and an external **ATTACK EVENT** for every Fix mission. The first material gap was a post-approval mutation lesson: Stage 15 now uses **Owner approval → Seal exact action → Ledger Nano™ Gen5**, making an altered post-approval request fail closed. A subsequent QA pass found that Stage 12 had two missing controls but only one visual repair cue. Its attacked route now preserves **Check payment** and the real **Owner approval**, leaving exactly one visible repair: insert **Policy guard** immediately after the Agent. This keeps every Fix mission aligned with the current single broken-edge teaching engine.
 
 Ledger Nano™ Gen5 appears solely as a simulated educational hardware signer. GraphOps is an unofficial fan-made educational simulation and is not affiliated with or endorsed by Ledger.

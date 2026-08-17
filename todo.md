@@ -232,3 +232,11 @@
 - [x] Allow vertical page scrolling from Paper Path on mobile while retaining intentional node drag, blank-space pan, and pinch zoom.
 - [x] Hide the Blue pen line / Needs fixing / Human choice legend on mobile.
 - [x] Verify desktop close/connect actions, mobile scroll, 30% zoom, gesture behavior, tests, type-check, and production build.
+
+## External QA Follow-up
+
+- [x] Audit Stage 12’s attack and safe sequences against the one-cue repair engine.
+- [x] Rebuild Stage 12 so its visible repair path has exactly one missing trusted-control insertion.
+- [x] Add a regression test that locks the intended Stage 12 attack graph and safe repair path.
+- [x] Write a self-hosting handoff note that distinguishes portable game logic from platform-managed auth and persistence scaffolding.
+- [x] Re-run tests, type-check, build, and play Stage 12 through its repaired route.

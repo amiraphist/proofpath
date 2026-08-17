@@ -71,6 +71,19 @@ describe("GraphOps payment curriculum", () => {
     expect(stages[12].available).not.toContain("wallet");
   });
 
+  it("makes Deepfake Approval a single visible Policy guard repair", () => {
+    const stage = stages[11];
+    const attacked = makeInitialGraph(stage, "fix");
+    expect(stage.attackSequence).toEqual(["agent", "condition", "approval", "wallet", "tool"]);
+    expect(stage.buildSequence).toEqual(["agent", "policy", "condition", "approval", "wallet", "tool"]);
+    expect(attacked.edges.filter((edge) => edge.state === "broken").map((edge) => edge.id)).toEqual(["edge-0"]);
+    expect(stage.attackSequence.filter((type) => !stage.buildSequence.includes(type))).toEqual([]);
+    expect(stage.buildSequence.filter((type) => !stage.attackSequence?.includes(type))).toEqual(["policy"]);
+    expect(validateGraph(stage, "fix", attacked.nodes, attacked.edges).ok).toBe(false);
+    const repaired = solvedGraph(11);
+    expect(validateGraph(stage, "fix", repaired.nodes, repaired.edges).ok).toBe(true);
+  });
+
   it("requires a sealed action before hardware signing when an agent can mutate an approved request", () => {
     const stage = stages[14];
     expect(stage.buildSequence).toEqual(["agent", "condition", "preview", "approval", "seal", "wallet", "tool"]);
