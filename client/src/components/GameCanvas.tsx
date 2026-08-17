@@ -4,15 +4,14 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { Activity, ArrowRight, Bot, Check, ChevronDown, CircleHelp, CopyCheck, FileCheck2, GitBranch, LockKeyhole, Play, RotateCcw, ScanLine, ShieldCheck, Sparkles, Volume2, VolumeX, WalletCards, Wrench, X } from "lucide-react";
 import { useGameSession } from "@/game/useGameSession";
-import { useAuth } from "@/_core/hooks/useAuth";
-import { trpc } from "@/lib/trpc";
 import { useSoundEffects } from "@/game/useSoundEffects";
 import { nodeMeta, type GameMode, type NodeType } from "@/game/stages";
 import type { GraphNode } from "@/game/types";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
-const LEDGER_ASSET = "/manus-storage/ledger_illustrator_no_bitcoin_9f898c01.svg";
-const LedgerMini = () => <img className="ledger-mini" src={LEDGER_ASSET} alt="Ledger Nano™ Gen5" />;
+const MANAGED_LEDGER_ASSET = "/manus-storage/ledger_illustrator_no_bitcoin_9f898c01.svg";
+const ledgerAsset = () => (window as Window & { __PROOFPATH_LEDGER_ASSET__?: string }).__PROOFPATH_LEDGER_ASSET__ ?? MANAGED_LEDGER_ASSET;
+const LedgerMini = () => <img className="ledger-mini" src={ledgerAsset()} alt="Ledger Nano™ Gen5" />;
 
 const iconFor = (type: NodeType) => {
   if (type === "wallet") return <LedgerMini />;
@@ -20,7 +19,7 @@ const iconFor = (type: NodeType) => {
   return <Icon size={14} strokeWidth={2.2} />;
 };
 
-const LedgerVector = () => <img className="ledger-vector" src={LEDGER_ASSET} alt="Ledger Nano™ Gen5 simulated hardware signer" draggable={false} onDragStart={(event) => event.preventDefault()} />;
+const LedgerVector = () => <img className="ledger-vector" src={ledgerAsset()} alt="Ledger Nano™ Gen5 simulated hardware signer" draggable={false} onDragStart={(event) => event.preventDefault()} />;
 
 function NodeCard({ node, selected, source, target, onSelect, onRemove, onStartDrag, onPort }: { node: GraphNode; selected: boolean; source: boolean; target: boolean; onSelect: () => void; onRemove: () => void; onStartDrag: (event: ReactPointerEvent<HTMLDivElement>) => void; onPort: (direction: "in" | "out") => void }) {
   const meta = nodeMeta[node.type];
@@ -201,13 +200,11 @@ function ModeSwitch({ mode }: { mode: GameMode }) {
   return <div className="mode-switch" role="group" aria-label="Stage mode"><button className={mode === "build" ? "is-active" : ""} disabled={mode !== "build"}><GitBranch size={15} /> Build</button><button className={mode === "fix" ? "is-active" : ""} disabled={mode !== "fix"}><Wrench size={15} /> Fix</button></div>;
 }
 
-export default function GameCanvas() {
+export type ProgressEvent = { stageId: number; mode: GameMode; completed: boolean; score: number; attempts: number };
+
+export default function GameCanvas({ persistedCompleted = 0, onProgress }: { persistedCompleted?: number; onProgress?: (event: ProgressEvent) => void }) {
   const ambientRef = useRef<HTMLCanvasElement>(null);
   const { mode, stage, stageIndex, session, stages, totalCompleted, selectStage, selectNode, moveNode, connectNodes, addNode, removeNode, repair, undo, run, reset, nextStage } = useGameSession();
-  const { user } = useAuth();
-  const saveProgress = trpc.progress.save.useMutation();
-  const persistedProgress = trpc.progress.list.useQuery(undefined, { enabled: Boolean(user) });
-  const persistedCompleted = persistedProgress.data?.filter((item) => item.completed === 1).length ?? 0;
   const visibleCompleted = Math.max(totalCompleted, persistedCompleted);
   const { muted, setMuted, play } = useSoundEffects();
   const [showHints, setShowHints] = useState(false);
@@ -255,20 +252,15 @@ export default function GameCanvas() {
   }, [mobileOrbPosition]);
 
   useEffect(() => {
-    if (!user || !session.result) return;
-    saveProgress.mutate({ stageId: stage.id, mode, completed: session.result.ok, score: session.result.score, attempts: session.attempts });
-  }, [user?.id, session.result, session.attempts, stage.id, mode]);
+    if (!session.result) return;
+    onProgress?.({ stageId: stage.id, mode, completed: session.result.ok, score: session.result.score, attempts: session.attempts });
+  }, [onProgress, session.result, session.attempts, stage.id, mode]);
 
   useEffect(() => {
     if (session.result) play(session.result.ok ? "success" : "error");
   }, [session.result, play]);
 
   useEffect(() => {
-    const telegramApp = (window as any).Telegram?.WebApp;
-    telegramApp?.ready?.();
-    telegramApp?.expand?.();
-    telegramApp?.setHeaderColor?.("#fffefb");
-    telegramApp?.setBackgroundColor?.("#fffefb");
     const canvas = ambientRef.current; if (!canvas) return;
     const ctx = canvas.getContext("2d"); if (!ctx) return;
     let raf = 0; let width = 0; let height = 0;

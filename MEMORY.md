@@ -1,4 +1,4 @@
-# GraphOps Memory
+# ProofPath Memory
 
 The desktop preview renders the full GraphOps interface correctly with the dark Neon Glass Circuit styling, English-only labels, glass node cards, colored ports, pulse rails, mission panel, tool palette, and incident tape.
 
@@ -95,7 +95,7 @@ Morning UI audit: the help button now toggles `Show solution hint` / `Hide solut
 
 ## Additional verification
 
-- 2026-08-17: Fresh 390×844 Telegram-sized screenshot kept the Build/Fix switch, Undo, Reset, Test my idea, Paper Path, and Stage 01 labels readable; the layout stacks the mission and tool panels below the board instead of truncating them.
+- 2026-08-17: Fresh 390×844 mobile-browser screenshot kept the Build/Fix switch, Undo, Reset, Test my idea, Paper Path, and Stage 01 labels readable; the layout stacks the mission and tool panels below the board instead of truncating them.
 - 2026-08-17: Clean browser Stage 08 — Attack: Replay Button / Fix 03 was selected. Its attacked route showed duplicate AI Agent state and missing Block duplicates. `Apply safe repair` restored the duplicate lock, and `Test my idea` returned `PAYMENT PLAN VERIFIED`, `Nice repair — the blue pen line is safe again.`, score 100, with Next mission visible.
 - 2026-08-17: The connection measurement now reads actual `.node-port--left` and `.node-port--right` DOM rectangles, so blue pen endpoints stay centered on visible port buttons after layout changes.
 
@@ -111,7 +111,7 @@ Morning UI audit: the help button now toggles `Show solution hint` / `Hide solut
 
 - 2026-08-17: Replaced the generic Ledger signer rectangle with an inline SVG hardware device: angled dark shell, inset light transaction screen, Bitcoin mark, `Sign transaction to send payment?`, `Hold to sign`, `Reject`, page count, lower USB-style port, side button, and simulated-signer label.
 - 2026-08-17: The node remains a true graph node. Its accessible left/right blue ports are still present on the device boundary, and the existing DOM-port measurement keeps edge endpoints centered on those ports.
-- 2026-08-17: Desktop browser verification showed the device-shaped signer on the Paper Playground board with the correct title and accessible connection labels. The 390×844 mobile capture kept the board and navigation controls readable; the mission panel continues below the board as intended for Telegram-sized screens.
+- 2026-08-17: Desktop browser verification showed the device-shaped signer on the Paper Playground board with the correct title and accessible connection labels. The 390×844 mobile capture kept the board and navigation controls readable; the mission panel continues below the board as intended for narrow screens.
 
 ## Ledger correction pass
 
@@ -139,7 +139,7 @@ After the Ledger and palette correction, the representative Build path to replay
 - 2026-08-17: The supplied `ledger_illustrator_no_bitcoin.svg` is now used unchanged as the exact asset for the graph device and the palette thumbnail. The previous inline redraw was removed. The graph node shows only the device image; the connection circles remain external and the exact `Ledger Nano™ Gen5` label remains accessible.
 - 2026-08-17: Node movement is no longer saved into Undo history. Undo continues to cover structural actions such as add, connect, remove, and safe repair; a newly added card should be removed directly with its close button instead of treating a drag as an undoable action.
 - 2026-08-17: Fix mode now applies a restrained red paper-alert pulse to the graph board and caption, with a reduced-motion fallback. Stage 06 browser verification showed the attacked graph and alert treatment without reducing text readability.
-- 2026-08-17: The 390×844 mobile capture keeps the toolbar, graph board, entry/result markers, and legible paper-grid interaction visible, with the mission and palette continuing below the board. Telegram WebApp `ready`, `expand`, header color, and background color hooks are already present; the current deployment can serve as the web/Twitter link and Mini App shell, pending Telegram BotFather configuration and launch-link setup.
+- 2026-08-17: The 390×844 mobile capture keeps the toolbar, graph board, entry/result markers, and legible paper-grid interaction visible, with the mission and palette continuing below the board. The current deployment can serve as a standalone web and social-link experience.
 
 ## Final Fix verification after exact asset pass
 
@@ -194,7 +194,7 @@ After the Ledger and palette correction, the representative Build path to replay
 - 2026-08-17: Replaced the restrictive node boundary (`x: 4–92`, `y: 12–88`) with a larger virtual-workspace range (`x: -6–106`, `y: 5–96`). A player can now move a node into the extended mobile canvas instead of hitting an artificial wall near the board edges.
 - 2026-08-17: Corrected the pan-bound calculation to use the actual mobile scene width: 1× for ordinary boards, 1.7× for wide routes, and 2.2× for dense routes. Blank-space one-finger panning is now available in addition to pinch/two-finger movement, while node and port gestures remain editing-only. Fit view returns to the stage’s sensible initial framing.
 - 2026-08-17: Browser replay of Stage 14 again reached PAYMENT PLAN VERIFIED with score 100; Vitest reports 8 passing tests, TypeScript passes, and production build passes. Real-device gesture confirmation remains the deliberate follow-up step after deployment.
-- 2026-08-17: Added `BRAND_DIRECTIONS.md` with six English name candidates, Persian translations, brand rationale, and logo directions. The leading recommendation is **ProofPath** / «مسیر مطمئن», using a hand-drawn blue path through a black verification stamp.
+- 2026-08-17: Added `BRAND_DIRECTIONS.md` with six English name candidates, brand rationale, and logo directions. The leading recommendation is **ProofPath**, using a hand-drawn blue path through a black verification stamp.
 - 2026-08-17: CDP mobile touch emulation at 390×844 verified Stage 14’s interaction model. The wide scene began at 82%; a blank-space one-finger drag changed viewport translation to `11.4938%`, pinch expanded it to `134%` with retained pan, and a one-finger node move changed the Agent from `16%,40%` to `23.781%,49.1327%`. This provides direct automated touch-event coverage beyond static mobile capture.
 
 ## Desktop controls and mobile scroll correction
@@ -212,7 +212,7 @@ After the Ledger and palette correction, the representative Build path to replay
 
 ## ProofPath rebrand
 
-- 2026-08-17: The user approved **ProofPath** («مسیر مطمئن») as the final product name. Updated the desktop and mobile header wordmark, browser title and description, footer, accessibility label, package metadata, and the player-position persistence key (with a read fallback for the prior key).
+- 2026-08-17: The user approved **ProofPath** as the final product name. Updated the desktop and mobile header wordmark, browser title and description, footer, accessibility label, package metadata, and the player-position persistence key (with a read fallback for the prior key).
 - 2026-08-17: Rewrote repository-facing `PLAN.md`, `STRUCTURE.md`, and `ASSETS.md` to document the real 16-stage Paper Playground product instead of its obsolete 25-stage neon predecessor. Updated curriculum, Ledger-use, brand, and self-hosting handoff notes to use ProofPath consistently.
 - 2026-08-17: Desktop and 390×844 mobile captures show the new PROOFPATH wordmark cleanly. Final rebrand verification passed: 9 Vitest tests, TypeScript check, production build, and a residual-name audit with no player-facing old-name occurrences.
 
