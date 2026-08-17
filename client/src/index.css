@@ -145,3 +145,14 @@ button:focus-visible, [role="button"]:focus-visible { outline: 2px solid #2d66bd
 .palette-card:nth-child(3n), .palette-card:nth-child(3n+1), .palette-card:nth-child(3n+2) { transform: none; }
 .palette-card:nth-child(even) { transform: rotate(.6deg); }
 .palette-card:hover { transform: translateY(-1px) rotate(0deg); }
+
+/* Exact supplied Ledger SVG asset: preserve artwork, only size the image for the graph. */
+.graph-node--green .ledger-vector { display: block; width: 116px; height: 190px; margin: 0 auto; object-fit: contain; }
+.graph-node--green .ledger-mini { width: 28px; height: 38px; object-fit: contain; }
+
+/* A quiet attacked-state signal for Fix mode. It should feel like a warning, not a neon dashboard. */
+.graph-board.is-alert { border-color: rgba(181, 53, 53, .48); box-shadow: 0 0 0 2px rgba(181, 53, 53, .08), 4px 5px 0 rgba(35, 45, 52, .1); }
+.graph-board.is-alert::after { content: ""; position: absolute; inset: 0; pointer-events: none; border: 2px solid rgba(181, 53, 53, .16); animation: paper-alert-pulse 2.8s ease-in-out infinite; }
+.graph-board.is-alert .graph-caption__hint { color: #a23838; }
+@keyframes paper-alert-pulse { 0%, 100% { opacity: .28; } 50% { opacity: .75; } }
+@media (prefers-reduced-motion: reduce) { .graph-board.is-alert::after { animation: none; opacity: .5; } }

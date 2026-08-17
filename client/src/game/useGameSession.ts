@@ -30,7 +30,7 @@ export function useGameSession() {
   const selectStage = (nextStage: number) => { const safeIndex = Math.min(stages.length - 1, Math.max(0, nextStage)); reset(stages[safeIndex].mode, safeIndex); };
   const selectNode = (nodeId: string | null) => setSession((current) => ({ ...current, selectedNodeId: current.selectedNodeId === nodeId ? null : nodeId }));
 
-  const moveNode = (nodeId: string, x: number, y: number) => setSession((current) => { saveHistory(current); return { ...current, nodes: current.nodes.map((node) => node.id === nodeId ? { ...node, x, y } : node), result: null, notice: null }; });
+  const moveNode = (nodeId: string, x: number, y: number) => setSession((current) => ({ ...current, nodes: current.nodes.map((node) => node.id === nodeId ? { ...node, x, y } : node), result: null, notice: null }));
 
   const connectNodes = (from: string, to: string) => setSession((current) => {
     if (!from) return { ...current, notice: "Choose an output blue dot first, then choose the next card." };

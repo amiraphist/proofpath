@@ -133,3 +133,14 @@ After the Ledger and palette correction, the representative Build path to replay
 
 - 2026-08-17: Build 01 was replayed after the visual correction from a clean Stage 01. The player added AI Agent, the front-facing Ledger Nano™ Gen5 device, and Send payment; connected AI Agent → Ledger → Send payment; ran `Test my idea`; and reached `PAYMENT PLAN VERIFIED` with score 100.
 - 2026-08-17: Fix 01 / Stage 06 was selected after the same correction. Its attack state showed the inserted fake AI Agent, `Apply safe repair` replaced it with Check payment, and `Test my idea` reached `PAYMENT PLAN VERIFIED` with score 100.
+
+## SVG, Undo, alert, and mobile pass
+
+- 2026-08-17: The supplied `ledger_illustrator_no_bitcoin.svg` is now used unchanged as the exact asset for the graph device and the palette thumbnail. The previous inline redraw was removed. The graph node shows only the device image; the connection circles remain external and the exact `Ledger Nano™ Gen5` label remains accessible.
+- 2026-08-17: Node movement is no longer saved into Undo history. Undo continues to cover structural actions such as add, connect, remove, and safe repair; a newly added card should be removed directly with its close button instead of treating a drag as an undoable action.
+- 2026-08-17: Fix mode now applies a restrained red paper-alert pulse to the graph board and caption, with a reduced-motion fallback. Stage 06 browser verification showed the attacked graph and alert treatment without reducing text readability.
+- 2026-08-17: The 390×844 mobile capture keeps the toolbar, graph board, entry/result markers, and legible paper-grid interaction visible, with the mission and palette continuing below the board. Telegram WebApp `ready`, `expand`, header color, and background color hooks are already present; the current deployment can serve as the web/Twitter link and Mini App shell, pending Telegram BotFather configuration and launch-link setup.
+
+## Final Fix verification after exact asset pass
+
+- 2026-08-17: After switching to the supplied unchanged SVG asset, removing movement from Undo history, and adding the subtle red Fix alert, Stage 06 was reopened from its attacked state. `Apply safe repair` replaced the fake AI Agent with Check payment, and `Test my idea` reached `PAYMENT PLAN VERIFIED` with score 100.

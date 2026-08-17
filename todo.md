@@ -129,3 +129,13 @@
 - [x] Restore the clearer previous palette arrangement instead of the dense two-column shuffled layout.
 - [x] Compare the attached 16-stage curriculum with the current 10-stage implementation; the comparison and recommendation are documented in MEMORY.md, and stage count remains 10 until the user confirms the scope change.
 - [x] Re-test the corrected Ledger node and palette, then replay Build 01 and Fix 01 to successful score-100 results before checkpoint.
+
+## Ledger Asset, Undo, Alert, and Mobile Pass
+
+- [x] Use the supplied `ledger_illustrator_no_bitcoin.svg` asset exactly as provided, without redrawing or altering its artwork.
+- [x] Keep the Ledger asset visually device-only while preserving external graph ports and the exact `Ledger Nano™ Gen5` label.
+- [x] Change Undo history so node movement is not recorded and Undo only reverts structural graph actions.
+- [x] Keep node close/delete as the direct way to remove a newly added node.
+- [x] Add a subtle red pulsing alert treatment to Fix/attacked graph states without harming readability or motion accessibility.
+- [x] Verify the game at mobile/Twitter-sized viewports and document Telegram Mini App readiness and remaining constraints.
+- [x] Re-run tests, type-check, build, and representative Build/Fix paths before checkpoint; final Stage 06 Fix reached PAYMENT PLAN VERIFIED with score 100.
