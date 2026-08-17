@@ -165,3 +165,8 @@ After the Ledger and palette correction, the representative Build path to replay
 - 2026-08-17: The review correctly identified a fixed broken-edge index. `makeInitialGraph()` now derives the red broken edge from the first divergence between a Fix attack sequence and its safe sequence. Regression coverage asserts the expected red edge for all eight Fix stages and validates both the attacked failure state and solved success state.
 - 2026-08-17: Stage 13 now explicitly says to delete Send payment, and its palette omits Ledger. Stage 12 now puts Policy guard before Check payment, matching the prompt-injection defense ordering.
 - 2026-08-17: Added the permanent Ledger non-affiliation disclaimer in the UI footer and rewrote `GRAPH_DESIGNS.md` to describe the active 16-stage curriculum. Browser checks confirmed Stage 14 points red to Owner approval → Ledger for session-expiry insertion and Stage 13 displays its deletion instruction with no Ledger palette card.
+
+## Mobile floating Pencil Case pass
+
+- 2026-08-17: Narrow viewport now uses a floating `Cards` trigger and a touch-friendly Drawer instead of forcing the full Pencil Case to the bottom of the page. Browser interaction opened the Drawer, selected Send payment, added one node, and confirmed the Drawer closed with `aria-expanded=false`.
+- 2026-08-17: After tightening Ledger port offsets, Build 01 was replayed in the browser: AI Agent → Ledger Nano™ Gen5 and Ledger Nano™ Gen5 → Send payment both produced valid edges, and Test my idea reached PAYMENT PLAN VERIFIED with score 100. Desktop capture confirmed the normal side Pencil Case remains visible.

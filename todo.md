@@ -167,3 +167,16 @@
 - [x] Align Policy guard ordering across relevant Fix stages.
 - [x] Add regression tests that prove each Fix attack graph is broken at its true divergence and each deterministic repair resolves it.
 - [x] Re-run browser, test, type-check, and production build after the review fixes.
+
+## Mobile Floating Palette and Ledger Alignment
+
+- [x] Add a floating collapsible Pencil Case button for narrow mobile viewports so node cards stay reachable beside the board.
+- [x] Auto-close the mobile Pencil Case after adding a node and keep it keyboard accessible.
+- [x] Tighten Ledger input/output port placement around the device body without changing the supplied SVG artwork.
+- [x] Verify the mobile palette, Ledger connectivity, desktop layout, tests, and build before checkpoint.
+
+## Mobile and Ledger Verification Gap Closure
+
+- [x] Open the floating mobile Pencil Case behavior, add a node from it, and confirm the drawer auto-closes; browser interaction returned drawer closed and node count 1.
+- [x] Play Build 01 after the latest port alignment: AI Agent → Ledger and Ledger → Send payment produced two valid edges and PAYMENT PLAN VERIFIED with score 100.
+- [x] Perform an explicit desktop browser check confirming the side Pencil Case remains visible after mobile drawer changes.
