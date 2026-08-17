@@ -67,6 +67,13 @@ export function useGameSession() {
     return { ...current, nodes: current.nodes.filter((node) => node.id !== nodeId), edges: current.edges.filter((edge) => edge.from !== nodeId && edge.to !== nodeId), selectedNodeId: null, result: null, notice: "Card removed. You can undo that if it was a mistake." };
   });
 
+  const removeEdge = (edgeId: string) => setSession((current) => {
+    const edge = current.edges.find((item) => item.id === edgeId);
+    if (!edge) return current;
+    saveHistory(current);
+    return { ...current, edges: current.edges.filter((item) => item.id !== edgeId), result: null, notice: "Blue pen line removed. Draw the safer route instead." };
+  });
+
   const repair = () => setSession((current) => {
     saveHistory(current);
     const gap = stage.buildSequence.length > 1 ? 68 / (stage.buildSequence.length - 1) : 68;
@@ -98,5 +105,5 @@ export function useGameSession() {
 
   const nextStage = () => selectStage(stageIndex + 1);
 
-  return { mode, stage, stageIndex, session, stages, totalCompleted, selectMode, selectStage, selectNode, moveNode, connectNodes, showConnectionNotice, addNode, removeNode, repair, undo, run, reset, nextStage };
+  return { mode, stage, stageIndex, session, stages, totalCompleted, selectMode, selectStage, selectNode, moveNode, connectNodes, showConnectionNotice, addNode, removeNode, removeEdge, repair, undo, run, reset, nextStage };
 }

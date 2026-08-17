@@ -38,6 +38,10 @@ Clicking `Apply safe repair` now rebuilds the graph from `stage.buildSequence`, 
 
 The app was redesigned from Neon Glass Circuit to Paper Lab: white graph paper, pale blue grid, black hand-drawn node cards, blue pen connectors, friendly English copy, and 16 stages total. Stages 01–08 are Build; 09–16 are Fix.
 
+## Interaction QA Replay — August 2026
+
+The Stage 03 QA replay confirmed that drag-to-connect does not create an edge, while click/tap on an output port followed by an input port does. The connection guide now states this explicitly. The replay also verified one-line removal, a working keyboard sequence (`C` on the source then `V` on the target), accessible node and palette labels, 28px desktop port targets, and 44px mobile port targets. The visual port dot remains small and stationary; the enlarged hit target is invisible. A direct click on a blue pen line removes it so the player can redraw a route.
+
 Player test: Stage 01 started with Start and Finish. The player added Agent from the palette, connected Start output to Agent input and Agent output to Finish input, then ran the graph. An initial validator bug incorrectly checked the last array node for Finish; this was fixed to check node presence. After reload, Build 01 returned `SYSTEM VERIFIED`, score 100, and `Next stage` appeared.
 
 Player test: Stage 09 was selected through the stage menu. `Apply safe repair` inserted the missing Check and rebuilt the route. Run returned `SYSTEM VERIFIED`, score 100, and `Nice repair. The route is safe.`
