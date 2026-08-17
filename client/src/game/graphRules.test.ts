@@ -30,6 +30,20 @@ describe("GraphOps payment curriculum", () => {
     });
   });
 
+  it("marks the genuine divergence edge and accepts the deterministic repair for every Fix mission", () => {
+    const expectedBrokenEdgeByStage: Record<number, number> = { 9: 0, 10: 0, 11: 1, 12: 0, 13: 0, 14: 2, 15: 1, 16: 1 };
+    stages.forEach((stage, index) => {
+      if (stage.mode !== "fix") return;
+      const attacked = makeInitialGraph(stage, "fix");
+      const broken = attacked.edges.find((edge) => edge.state === "broken");
+      expect(broken, `stage ${stage.id}`).toBeDefined();
+      expect(broken?.id, `stage ${stage.id}`).toBe(`edge-${expectedBrokenEdgeByStage[stage.id]}`);
+      expect(validateGraph(stage, "fix", attacked.nodes, attacked.edges).ok, `attacked stage ${stage.id}`).toBe(false);
+      const repaired = solvedGraph(index);
+      expect(validateGraph(stage, "fix", repaired.nodes, repaired.edges).ok, `repaired stage ${stage.id}`).toBe(true);
+    });
+  });
+
   it("models Fake System Update as an external attack event that policy guard blocks", () => {
     const stage = stages[8];
     const attacked = makeInitialGraph(stage, "fix");
@@ -48,5 +62,12 @@ describe("GraphOps payment curriculum", () => {
     expect(stages[3].buildSequence).toEqual(["agent", "slippage", "wallet", "tool"]);
     expect(stages[6].buildSequence).toContain("quorum");
     expect(stages[13].buildSequence).toContain("expiry");
+  });
+
+  it("keeps Policy first for untrusted approval fixes and makes Rogue Skill deletion explicit", () => {
+    expect(stages[8].buildSequence.slice(0, 3)).toEqual(["agent", "policy", "condition"]);
+    expect(stages[11].buildSequence.slice(0, 3)).toEqual(["agent", "policy", "condition"]);
+    expect(stages[12].objective).toMatch(/Delete the Send payment card/i);
+    expect(stages[12].available).not.toContain("wallet");
   });
 });

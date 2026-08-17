@@ -5,6 +5,15 @@ import type { GraphEdge, GraphNode, SessionResult, TraceEvent } from "./types";
 
 const clock = (index: number) => `Step ${index + 1}`;
 
+// The red edge marks the exact trusted connection that an attack exploited.
+// It is the edge immediately before the first attack/safe-route divergence.
+function brokenEdgeIndex(stage: Stage, sequence: GraphNode["type"][]) {
+  const safe = stage.buildSequence;
+  const firstDifference = sequence.findIndex((type, index) => type !== safe[index]);
+  if (firstDifference === -1) return Math.max(0, sequence.length - 2);
+  return Math.max(0, Math.min(firstDifference - 1, sequence.length - 2));
+}
+
 export function makeInitialGraph(stage: Stage, mode: GameMode): { nodes: GraphNode[]; edges: GraphEdge[] } {
   const sequence = mode === "build"
     ? []
@@ -16,7 +25,7 @@ export function makeInitialGraph(stage: Stage, mode: GameMode): { nodes: GraphNo
     x: 16 + index * gap,
     y: 47 + (index % 2 === 0 ? -7 : 7),
   }));
-  const brokenIndex = Math.max(0, Math.min(1, nodes.length - 2));
+  const brokenIndex = brokenEdgeIndex(stage, sequence as GraphNode["type"][]);
   const edges = mode === "build"
     ? []
     : nodes.slice(0, -1).map((node, index) => ({

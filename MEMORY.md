@@ -159,3 +159,9 @@ After the Ledger and palette correction, the representative Build path to replay
 - 2026-08-17: Stage 09 browser verification reached PAYMENT PLAN VERIFIED with Policy guard and Check payment added before Owner approval, Ledger Nano™ Gen5, and Send payment. Stage 13 browser verification reached score 100 through AI Agent → Policy guard → Stop & flag, with no Ledger in the solved containment route.
 - 2026-08-17: Ledger device dimensions were reduced for cleaner board balance while retaining device-image drag handling and external input/output ports. Mobile 390×844 capture remained readable after the board and device changes.
 - 2026-08-17: Rogue Skill no longer exposes Ledger Nano™ Gen5 in its palette, because its trusted solution contains the attack before any signing request is created. Direct pointer-event browser verification from the center of the current Ledger SVG image changed the node position from `50%,53%` to `63.7482%,57.8111%`; Stage 01 then completed at score 100 after that direct image drag.
+
+## Independent review remediation
+
+- 2026-08-17: The review correctly identified a fixed broken-edge index. `makeInitialGraph()` now derives the red broken edge from the first divergence between a Fix attack sequence and its safe sequence. Regression coverage asserts the expected red edge for all eight Fix stages and validates both the attacked failure state and solved success state.
+- 2026-08-17: Stage 13 now explicitly says to delete Send payment, and its palette omits Ledger. Stage 12 now puts Policy guard before Check payment, matching the prompt-injection defense ordering.
+- 2026-08-17: Added the permanent Ledger non-affiliation disclaimer in the UI footer and rewrote `GRAPH_DESIGNS.md` to describe the active 16-stage curriculum. Browser checks confirmed Stage 14 points red to Owner approval → Ledger for session-expiry insertion and Stage 13 displays its deletion instruction with no Ledger palette card.

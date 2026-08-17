@@ -157,3 +157,13 @@
 - [x] Rewrite Fix mission copy and safe-repair behavior so the player never solves a mission by deleting or isolating a hacker node.
 - [x] Reduce the visible Ledger device size while preserving external connection ports and direct image dragging; direct SVG-image drag moved the Ledger node in browser verification.
 - [x] Re-test all 16 deterministic routes plus representative Build/Fix and mobile player paths before checkpoint; Stage 01 Build, Stage 09 Fix, and Stage 13 containment each reached score 100.
+
+## Independent Code Review Fixes
+
+- [x] Make the broken Fix edge stage-aware so the red dashed cue identifies the true insertion or replacement point.
+- [x] Clarify Stage 13 by explicitly instructing the player to remove the unsafe Send payment card before adding containment controls.
+- [x] Add a permanent UI disclaimer stating that GraphOps is an unofficial educational simulation not affiliated with or endorsed by Ledger.
+- [x] Update stale `GRAPH_DESIGNS.md` content so the documentation matches the 16-stage curriculum.
+- [x] Align Policy guard ordering across relevant Fix stages.
+- [x] Add regression tests that prove each Fix attack graph is broken at its true divergence and each deterministic repair resolves it.
+- [x] Re-run browser, test, type-check, and production build after the review fixes.
