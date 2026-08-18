@@ -52,11 +52,34 @@ const orb = await evaluate(`(() => { const rect = document.querySelector('.mobil
 await touch("touchStart", [[orb.x, orb.y, 1]]);
 await touch("touchEnd", []);
 await wait(220);
-const afterTap = await evaluate(`({ expanded: document.querySelector('.mobile-pencil-trigger').getAttribute('aria-expanded'), drawer: Boolean(document.querySelector('.mobile-pencil-drawer')), drawerVisible: document.querySelector('.mobile-pencil-drawer')?.getBoundingClientRect().height ?? 0 })`);
+const afterTap = await evaluate(`({ expanded: document.querySelector('.mobile-pencil-trigger').getAttribute('aria-expanded'), picker: Boolean(document.querySelector('.mobile-picker-sheet')), pickerVisible: document.querySelector('.mobile-picker-sheet')?.getBoundingClientRect().height ?? 0 })`);
 
-await evaluate(`document.querySelector('.mobile-pencil-close')?.click()`);
-await wait(520);
-const fixedOrb = await evaluate(`(() => { const button = document.querySelector('.mobile-pencil-trigger'); const rect = button.getBoundingClientRect(); return { expanded: button.getAttribute('aria-expanded'), touchAction: getComputedStyle(button).touchAction, rightGap: Math.round(window.innerWidth - rect.right), bottomGap: Math.round(window.innerHeight - rect.bottom) }; })()`);
+const firstCard = await evaluate(`(() => { const card = document.querySelector('.mobile-picker-list .palette-card'); if (!card) return null; const rect = card.getBoundingClientRect(); return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }; })()`);
+if (!firstCard) throw new Error("Nodes picker did not expose a selectable card after tap");
+await touch("touchStart", [[firstCard.x, firstCard.y, 1]]);
+await touch("touchEnd", []);
+await wait(240);
+const afterPick = await evaluate(`({ pickerOpen: Boolean(document.querySelector('.mobile-picker-sheet')), nodeCount: document.querySelectorAll('.graph-node').length, notice: document.querySelector('.notice-strip')?.textContent ?? null })`);
 
-console.log(JSON.stringify({ nativeScroll, tapOpenedDrawer: afterTap.expanded === "true" && afterTap.drawerVisible > 0, afterTap, fixedOrb }, null, 2));
+await evaluate(`(() => { const select = document.querySelector('.stage-select select'); select.value = '8'; select.dispatchEvent(new Event('change', { bubbles: true })); })()`);
+await wait(180);
+const fixOrb = await evaluate(`(() => { const rect = document.querySelector('.mobile-pencil-trigger').getBoundingClientRect(); return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }; })()`);
+await touch("touchStart", [[fixOrb.x, fixOrb.y, 1]]);
+await touch("touchEnd", []);
+await wait(140);
+const fixPicker = await evaluate(`({ stage: document.querySelector('.client-line')?.textContent ?? null, pickerOpen: Boolean(document.querySelector('.mobile-picker-sheet')), cards: document.querySelectorAll('.mobile-picker-list .palette-card').length })`);
+await evaluate(`document.querySelector('.mobile-picker-close')?.click()`);
+await wait(120);
+
+const beforeDrag = await evaluate(`(() => { const orb = document.querySelector('.mobile-orb-wrap'); const button = document.querySelector('.mobile-pencil-trigger'); return { left: orb.style.left, top: orb.style.top, expanded: button.getAttribute('aria-expanded') }; })()`);
+const dragHandle = await evaluate(`(() => { const rect = document.querySelector('.mobile-orb-drag-handle').getBoundingClientRect(); return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }; })()`);
+await touch("touchStart", [[dragHandle.x, dragHandle.y, 1]]);
+await touch("touchMove", [[dragHandle.x - 58, dragHandle.y - 34, 1]]);
+await touch("touchEnd", []);
+await wait(160);
+const afterDrag = await evaluate(`(() => { const orb = document.querySelector('.mobile-orb-wrap'); const button = document.querySelector('.mobile-pencil-trigger'); return { left: orb.style.left, top: orb.style.top, expanded: button.getAttribute('aria-expanded') }; })()`);
+
+const movedOrb = beforeDrag.left !== afterDrag.left || beforeDrag.top !== afterDrag.top;
+
+console.log(JSON.stringify({ nativeScroll, tapOpenedPicker: afterTap.expanded === "true" && afterTap.pickerVisible > 0, afterTap, afterPick, fixPicker, beforeDrag, afterDrag, movedOrb }, null, 2));
 ws.close();

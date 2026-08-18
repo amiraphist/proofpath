@@ -327,3 +327,10 @@
 - [x] Compare the latest live touch and Nodes orb changes against the last user-confirmed mobile-stable checkpoint.
 - [x] Revert only the regression-causing gesture handling while preserving safe graph behavior.
 - [ ] Verify the revised Pages build on a clean session and obtain user confirmation from iPhone and Android.
+
+## Touch-Safe Nodes Picker Recovery
+
+- [x] Isolate why the Vaul-based mobile Nodes drawer does not open from iPhone and Android touch input despite state changes in automated replay.
+- [x] Replace the fragile mobile drawer trigger with a lightweight touch-safe picker independent from graph gesture handling.
+- [x] Preserve a draggable glass Nodes orb while making a tap open the picker on Build and Fix stages.
+- [ ] Verify real-device tap, node selection, close behavior, and page scroll before resuming publication.

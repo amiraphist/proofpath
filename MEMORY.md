@@ -46,6 +46,10 @@ The Stage 03 QA replay confirmed that drag-to-connect does not create an edge, w
 
 The public GitHub Pages build served the revised JavaScript and CSS assets, including `touch-action: pan-y` and the Nodes orb label. A clean 390×844 touch replay on the public URL scrolled the page by 390px, opened the Nodes drawer by tap, closed it, and moved the orb by drag. The same replay also succeeded against a cache-busted public URL query. Any stale mobile session must therefore be reloaded against the latest asset revision before it can reflect the fix.
 
+The managed `graphops-ruuyk7ys.manus.space` link redirects public visitors to Manus authentication and is not the public player link. QA and distribution must use `amiraphist.github.io/proofpath/`.
+
+The recovery branch removes the Vaul drawer from the mobile picker path. The new picker is a plain fixed overlay with an explicit sheet and close button, while the glass Nodes orb again uses pointer capture for drag and pointer-up for tap. This needs final touch replay and real-device confirmation before the issue can be closed.
+
 Player test: Stage 01 started with Start and Finish. The player added Agent from the palette, connected Start output to Agent input and Agent output to Finish input, then ran the graph. An initial validator bug incorrectly checked the last array node for Finish; this was fixed to check node presence. After reload, Build 01 returned `SYSTEM VERIFIED`, score 100, and `Next stage` appeared.
 
 Player test: Stage 09 was selected through the stage menu. `Apply safe repair` inserted the missing Check and rebuilt the route. Run returned `SYSTEM VERIFIED`, score 100, and `Nice repair. The route is safe.`

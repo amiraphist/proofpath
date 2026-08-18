@@ -208,11 +208,21 @@ button:focus-visible, [role="button"]:focus-visible { outline: 2px solid #2d66bd
 }
 
 /* AssistiveTouch-inspired mobile Nodes orb: drag to relocate, tap to open. */
+.mobile-orb-wrap { display: none; }
 @media (max-width: 850px) {
-  .mobile-pencil-trigger { right: 14px; bottom: calc(16px + env(safe-area-inset-bottom)); left: auto; top: auto; width: 64px; height: 64px; min-width: 64px; padding: 5px; flex-direction: column; justify-content: center; gap: 1px; color: #153d75; background: rgba(234, 244, 255, .58); border: 1.5px solid rgba(255,255,255,.9); border-radius: 50%; box-shadow: 0 8px 21px rgba(27, 61, 106, .24), inset 0 1px 0 rgba(255,255,255,.92); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); touch-action: manipulation; user-select: none; }
-  .mobile-pencil-trigger:hover { color: #0d315f; background: rgba(228, 241, 255, .78); transform: scale(1.04); }
+  .mobile-orb-wrap { position: fixed; z-index: 40; display: block; width: 64px; height: 64px; transform: translate(-50%, -50%); touch-action: none; }
+  .mobile-pencil-trigger { position: absolute; inset: 0; right: auto; bottom: auto; left: auto; top: auto; width: 64px; height: 64px; min-width: 64px; padding: 5px; flex-direction: column; justify-content: center; gap: 1px; color: #153d75; background: rgba(234, 244, 255, .72); border: 1.5px solid rgba(255,255,255,.9); border-radius: 50%; box-shadow: 0 8px 21px rgba(27, 61, 106, .24), inset 0 1px 0 rgba(255,255,255,.92); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); touch-action: manipulation; user-select: none; transform: none; }
+  .mobile-pencil-trigger:hover { color: #0d315f; background: rgba(228, 241, 255, .9); transform: scale(1.04); }
   .mobile-pencil-trigger:active { transform: scale(.96); }
   .mobile-pencil-trigger span { font-size: 9px; letter-spacing: .02em; }
   .mobile-pencil-trigger b { position: absolute; right: -3px; top: -3px; min-width: 19px; height: 19px; color: var(--paper); background: var(--blue); border: 1.5px solid var(--paper); font-size: 9px; }
+  .mobile-orb-drag-handle { position: absolute; z-index: 2; right: -5px; bottom: -5px; display: grid; width: 25px; height: 25px; place-items: center; padding: 0; color: var(--paper); background: var(--blue); border: 1.5px solid var(--paper); border-radius: 50%; box-shadow: 1px 2px 0 rgba(29,39,51,.18); touch-action: none; }
 }
-@media (max-width: 520px) { .mobile-pencil-trigger { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); left: auto; top: auto; } }
+@media (max-width: 520px) { .mobile-pencil-trigger { right: auto; bottom: auto; } }
+
+/* Touch-safe mobile picker: no Vaul gesture layer, only a simple fixed sheet. */
+.mobile-picker-overlay { position: fixed; inset: 0; z-index: 90; display: flex; align-items: flex-end; background: rgba(24, 34, 48, .26); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); touch-action: none; }
+.mobile-picker-sheet { width: 100%; max-height: min(74svh, 620px); padding: 15px 16px calc(12px + env(safe-area-inset-bottom)); overflow: hidden; color: var(--ink); background: #fffefb; border: 2px solid var(--ink); border-bottom: 0; border-radius: 18px 18px 0 0; box-shadow: 0 -10px 30px rgba(29,39,51,.22); }
+.mobile-picker-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; padding: 0 2px 10px; }.mobile-picker-heading strong { display: block; font: 800 19px/1.1 Arial, sans-serif; }.mobile-picker-heading span { display: block; margin-top: 4px; color: var(--ink-soft); font-size: 11px; }.mobile-picker-heading button { display: grid; width: 34px; height: 34px; place-items: center; color: var(--blue); background: var(--paper); border: 1.5px solid var(--blue); border-radius: 50%; touch-action: manipulation; }
+.mobile-picker-list { display: grid; gap: 8px; max-height: 48svh; overflow-y: auto; padding: 4px 2px 8px; overscroll-behavior: contain; touch-action: pan-y; -webkit-overflow-scrolling: touch; }.mobile-picker-list .palette-card { min-height: 54px; transform: none !important; touch-action: manipulation; }
+.mobile-picker-sheet .mobile-repair-btn, .mobile-picker-close { display: flex; width: 100%; align-items: center; justify-content: center; gap: 7px; margin: 8px 0 0; padding: 11px; color: var(--blue); background: var(--paper); border: 1.5px solid var(--blue); border-radius: 6px; font-size: 11px; font-weight: 800; touch-action: manipulation; }.mobile-picker-sheet .mobile-repair-btn { color: var(--ink); background: #fff8ce; border-color: var(--ink); }
