@@ -374,3 +374,9 @@
 - [x] Add a subtle linked `@amiraphist` creator credit to the ProofPath intro.
 - [x] Adjust the intro layout for optical centering on wide desktop viewports without shifting the mobile composition.
 - [x] Verify wide desktop and mobile composition, then publish the polish.
+
+## ProofPath X Launch Assets
+
+- [x] Write a lowercase English launch thread with each post limited to 240 characters.
+- [x] Create a social launch visual aligned with the Paper Playground ProofPath aesthetic.
+- [x] Review the final launch copy and visual for public posting.
