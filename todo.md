@@ -353,7 +353,7 @@
 - [x] Add regression coverage requiring a zero score for an empty unsafe graph.
 - [x] Review desktop board density and palette overflow, preserving intentional space for draggable nodes.
 - [x] Correct any confirmed palette clipping or layout imbalance without changing click-to-connect into drag-to-connect.
-- [ ] Re-run QA, desktop/mobile checks, and publish validated corrections.
+- [x] Re-run QA, desktop/mobile checks, and publish validated corrections.
 
 ## Tall Desktop Viewport Board Sizing
 
