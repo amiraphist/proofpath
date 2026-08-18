@@ -25,7 +25,9 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-export const playerProgress = mysqlTable("player_progress", {
+// `player_progress` is a legacy table with an incompatible per-player JSON shape.
+// Keep it untouched; the current game stores one deterministic row per stage and mode.
+export const playerStageProgress = mysqlTable("player_stage_progress", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull().references(() => users.id),
   stageId: int("stageId").notNull(),
@@ -35,8 +37,8 @@ export const playerProgress = mysqlTable("player_progress", {
   attempts: int("attempts").notNull().default(0),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 }, (table) => ({
-  userStageMode: uniqueIndex("player_progress_user_stage_mode").on(table.userId, table.stageId, table.mode),
+  userStageMode: uniqueIndex("player_stage_progress_user_stage_mode").on(table.userId, table.stageId, table.mode),
 }));
 
-export type PlayerProgress = typeof playerProgress.$inferSelect;
-export type InsertPlayerProgress = typeof playerProgress.$inferInsert;
+export type PlayerStageProgress = typeof playerStageProgress.$inferSelect;
+export type InsertPlayerStageProgress = typeof playerStageProgress.$inferInsert;

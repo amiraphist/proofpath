@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, playerProgress, users } from "../drizzle/schema";
+import { InsertUser, playerStageProgress, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -92,7 +92,7 @@ export async function getUserByOpenId(openId: string) {
 export async function getPlayerProgress(userId: number) {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(playerProgress).where(eq(playerProgress.userId, userId));
+  return db.select().from(playerStageProgress).where(eq(playerStageProgress.userId, userId));
 }
 
 export async function savePlayerProgress(input: { userId: number; stageId: number; mode: "build" | "fix"; completed: boolean; score: number; attempts: number }) {
@@ -106,7 +106,7 @@ export async function savePlayerProgress(input: { userId: number; stageId: numbe
     score: input.score,
     attempts: input.attempts,
   } as const;
-  await db.insert(playerProgress).values(values).onDuplicateKeyUpdate({
+  await db.insert(playerStageProgress).values(values).onDuplicateKeyUpdate({
     set: { completed: values.completed, score: values.score, attempts: values.attempts },
   });
   return values;

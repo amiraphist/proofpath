@@ -405,3 +405,10 @@
 - [x] Move the Ledger color picker out of the draggable node and into a glass dropdown beneath Ledger in the Pencil Case.
 - [x] Preserve simple click-to-select on Ledger while keeping drag behavior visually clean.
 - [x] Re-test drag and every color asset in desktop and mobile before publishing.
+
+## Player Progress Query Recovery
+
+- [x] Reproduce and diagnose the failed `player_progress` query for the signed-in owner.
+- [x] Align the progress table schema with its Drizzle query and ensure unavailable progress cannot break gameplay.
+- [x] Add regression coverage and verify the production runtime query no longer logs an API error.
+- [x] Confirm the reported `moz-extension://` script error is external to ProofPath and document the conclusion.
