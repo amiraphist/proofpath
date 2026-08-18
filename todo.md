@@ -353,10 +353,18 @@
 - [x] Add regression coverage requiring a zero score for an empty unsafe graph.
 - [x] Review desktop board density and palette overflow, preserving intentional space for draggable nodes.
 - [x] Correct any confirmed palette clipping or layout imbalance without changing click-to-connect into drag-to-connect.
-- [x] Re-run QA, desktop/mobile checks, and publish validated corrections.
+- [ ] Re-run QA, desktop/mobile checks, and publish validated corrections.
 
 ## Tall Desktop Viewport Board Sizing
 
 - [x] Reproduce board stretching at a 1280×1800 desktop viewport.
 - [x] Cap desktop board height with a responsive clamp while retaining the mobile working area.
 - [x] Verify normal desktop, tall desktop, and mobile layouts before publishing.
+
+## Paper Playground Intro and Success Celebration
+
+- [x] Design an opening screen with the ProofPath mark, short learning promise, paper-grid background, and a playful loading-to-start flow.
+- [x] Make the intro responsive, accessible, skippable by keyboard, and non-blocking after the player has started a session.
+- [x] Replace the dry success presentation with a paper-stamp celebration and an unambiguous Next mission action.
+- [x] Preserve the existing score, progression save, sounds, and last-stage completion behavior.
+- [x] Add regression coverage and verify intro, success, next-stage progression, desktop, and mobile before publishing.
