@@ -41,21 +41,21 @@ function trace(...events: Omit<TraceEvent, "time">[]): TraceEvent[] {
   return events.map((event, index) => ({ ...event, time: clock(index) }));
 }
 
-function followsSequence(stage: Stage, nodes: GraphNode[], edges: GraphEdge[]) {
+function readLinearRoute(nodes: GraphNode[], edges: GraphEdge[]) {
   const byId = new Map(nodes.map((node) => [node.id, node]));
   const validEdges = edges.filter((edge) => edge.state === "valid");
-  if (validEdges.length !== Math.max(0, nodes.length - 1)) return false;
+  if (validEdges.length !== Math.max(0, nodes.length - 1)) return null;
 
   const outgoing = new Map<string, GraphEdge>();
   const incoming = new Map<string, GraphEdge>();
   for (const edge of validEdges) {
-    if (!byId.has(edge.from) || !byId.has(edge.to) || outgoing.has(edge.from) || incoming.has(edge.to)) return false;
+    if (!byId.has(edge.from) || !byId.has(edge.to) || outgoing.has(edge.from) || incoming.has(edge.to)) return null;
     outgoing.set(edge.from, edge);
     incoming.set(edge.to, edge);
   }
 
   const starts = nodes.filter((node) => !incoming.has(node.id));
-  if (starts.length !== 1) return false;
+  if (starts.length !== 1) return null;
   let current: GraphNode | undefined = starts[0];
   const visited = new Set<string>();
   const route: string[] = [];
@@ -65,31 +65,37 @@ function followsSequence(stage: Stage, nodes: GraphNode[], edges: GraphEdge[]) {
     const edge = outgoing.get(current.id);
     current = edge ? byId.get(edge.to) : undefined;
   }
-  return visited.size === nodes.length && route.join(">") === stage.buildSequence.join(">");
+  return visited.size === nodes.length ? route as GraphNode["type"][] : null;
 }
 
-const hasExactNodeSet = (stage: Stage, nodes: GraphNode[]) => {
-  if (nodes.length !== stage.buildSequence.length) return false;
-  return stage.buildSequence.every((type) => nodes.filter((node) => node.type === type).length === stage.buildSequence.filter((item) => item === type).length);
-};
+const sameRoute = (first: GraphNode["type"][], second: GraphNode["type"][]) => first.join(">") === second.join(">");
+
+function hardeningForRoute(stage: Stage, route: GraphNode["type"][]) {
+  if (sameRoute(route, stage.buildSequence)) {
+    return { stars: 3 as const, label: "VERIFIED" as const, detail: "Safe baseline — the required trusted controls are in place." };
+  }
+  const matched = stage.hardeningRoutes?.find((option) => sameRoute(route, option.sequence));
+  return matched ? { stars: matched.stars, label: matched.label, detail: matched.detail } : null;
+}
 
 export function validateGraph(stage: Stage, mode: GameMode, nodes: GraphNode[], edges: GraphEdge[]): SessionResult {
   const broken = edges.some((edge) => edge.state === "broken");
   const duplicate = new Set(edges.map((edge) => `${edge.from}:${edge.to}`)).size !== edges.length;
-  const nodeSetMatch = hasExactNodeSet(stage, nodes);
-  const routeMatch = followsSequence(stage, nodes, edges);
-  const safe = nodeSetMatch && !broken && !duplicate && routeMatch;
+  const route = readLinearRoute(nodes, edges);
+  const hardening = !broken && !duplicate && route ? hardeningForRoute(stage, route) : null;
+  const safe = Boolean(hardening);
 
   if (safe) {
     return {
       ok: true,
       score: 100,
-      summary: mode === "fix" ? "Nice repair — the blue pen line is safe again." : "Great idea — the route works!",
+      summary: hardening?.stars === 5 ? "Hardened route — every extra control earns its place." : hardening?.stars === 4 ? "Strong route — you added a meaningful trusted layer." : mode === "fix" ? "Nice repair — the blue pen line is safe again." : "Great idea — the route works!",
       learning: stage.lesson,
+      hardening: hardening ?? undefined,
       trace: trace(
         { label: "ROUTE", detail: "The blue pen lines follow your plan", tone: "neutral" },
         { label: "CHECK", detail: "The safety idea is in the right place", tone: "good" },
-        { label: "DONE", detail: "You solved the story", tone: "good" },
+        { label: "HARDENING", detail: `${hardening?.stars}★ ${hardening?.label}: ${hardening?.detail}`, tone: "good" },
       ),
     };
   }
@@ -98,13 +104,11 @@ export function validateGraph(stage: Stage, mode: GameMode, nodes: GraphNode[], 
     ? `${mode === "fix" ? stage.fixFault.replace("HACK ALERT: ", "") : "The route is incomplete."} Restore this safety rule: ${stage.lesson} Reconnect the red line.`
     : duplicate
       ? `${stage.lesson} Two blue lines do the same job. Keep one clean path.`
-      : !nodeSetMatch
-        ? `This story needs: ${stage.buildSequence.map((type) => ({ agent: "AI Agent", condition: "Check payment", verify: "Verify recipient", limit: "Spending limit", slippage: "Price & slippage", preview: "Simulate preview", seal: "Seal exact action", approval: "Owner approval", quorum: "Multisig quorum", expiry: "Session expiry", wallet: "Ledger signer", tool: "Send payment", receipt: "Save receipt", dedupe: "Block duplicates", retry: "Safe retry", stop: "Stop & flag", policy: "Policy guard" } as Record<string, string>)[type]).join(" → ")}.`
-        : !routeMatch
-          ? edges.length === 0
-            ? "Start with one blue pen line: click an output dot, then click the next input dot."
-            : `${stage.lesson} The cards are in the wrong order. Keep one clear blue-pen route.`
-          : `One small piece is missing from this safety rule: ${stage.lesson}`;
+      : edges.length === 0 && nodes.length > 0
+        ? "Start with one blue pen line: click an output dot, then click the next input dot."
+        : !route
+          ? `This story needs: ${stage.buildSequence.map((type) => ({ agent: "AI Agent", condition: "Check payment", verify: "Verify recipient", limit: "Spending limit", slippage: "Price & slippage", preview: "Simulate preview", seal: "Seal exact action", approval: "Owner approval", quorum: "Multisig quorum", expiry: "Session expiry", wallet: "Ledger signer", tool: "Send payment", receipt: "Save receipt", dedupe: "Block duplicates", retry: "Safe retry", stop: "Stop & flag", policy: "Policy guard" } as Record<string, string>)[type]).join(" → ")}.`
+          : `${stage.lesson} This route is not one of the trusted paths for this story. Keep one clear blue-pen route.`;
 
   return {
     ok: false,

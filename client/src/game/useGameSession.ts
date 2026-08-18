@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { makeInitialGraph, validateGraph } from "./graphRules";
 import { stages, type GameMode, type NodeType } from "./stages";
-import type { GameSession, GraphNode, SessionResult } from "./types";
+import type { GameSession, GraphNode, LedgerColor, SessionResult } from "./types";
 
 const freshSession = (stageIndex: number, nextMode: GameMode): GameSession => {
   const stage = stages[stageIndex];
@@ -29,6 +29,7 @@ export function useGameSession() {
   const selectMode = (nextMode: GameMode) => reset(nextMode, stageIndex);
   const selectStage = (nextStage: number) => { const safeIndex = Math.min(stages.length - 1, Math.max(0, nextStage)); reset(stages[safeIndex].mode, safeIndex); };
   const selectNode = (nodeId: string | null) => setSession((current) => ({ ...current, selectedNodeId: current.selectedNodeId === nodeId ? null : nodeId }));
+  const setLedgerColor = (nodeId: string, ledgerColor: LedgerColor) => setSession((current) => ({ ...current, nodes: current.nodes.map((node) => node.id === nodeId ? { ...node, ledgerColor } : node), result: null, notice: `Ledger color set to ${ledgerColor.replace(/-/g, " ")}.` }));
   const showConnectionNotice = (notice: string) => setSession((current) => ({ ...current, notice }));
 
   const moveNode = (nodeId: string, x: number, y: number) => setSession((current) => ({ ...current, nodes: current.nodes.map((node) => node.id === nodeId ? { ...node, x, y } : node), result: null, notice: null }));
@@ -105,5 +106,5 @@ export function useGameSession() {
 
   const nextStage = () => selectStage(stageIndex + 1);
 
-  return { mode, stage, stageIndex, session, stages, totalCompleted, selectMode, selectStage, selectNode, moveNode, connectNodes, showConnectionNotice, addNode, removeNode, removeEdge, repair, undo, run, reset, nextStage };
+  return { mode, stage, stageIndex, session, stages, totalCompleted, selectMode, selectStage, selectNode, setLedgerColor, moveNode, connectNodes, showConnectionNotice, addNode, removeNode, removeEdge, repair, undo, run, reset, nextStage };
 }

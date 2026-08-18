@@ -2,10 +2,13 @@
 
 import type { GameMode, NodeType } from "./stages";
 
+export type LedgerColor = "jet-black" | "cherry-red" | "matcha-green" | "glacier-white";
+
 export type GraphNode = {
   id: string;
   type: NodeType;
   compromised?: boolean;
+  ledgerColor?: LedgerColor;
   x: number;
   y: number;
 };
@@ -30,6 +33,11 @@ export type SessionResult = {
   summary: string;
   learning: string;
   trace: TraceEvent[];
+  hardening?: {
+    stars: 3 | 4 | 5;
+    label: "VERIFIED" | "STRONG" | "HARDENED";
+    detail: string;
+  };
 };
 
 export type GameSession = {

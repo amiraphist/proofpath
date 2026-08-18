@@ -380,3 +380,16 @@
 - [x] Write a lowercase English launch thread with each post limited to 240 characters.
 - [x] Create a social launch visual aligned with the Paper Playground ProofPath aesthetic.
 - [x] Review the final launch copy and visual for public posting.
+
+## Hardening Star Rating
+
+- [x] Define stage-specific optional hardening controls without accepting unsafe bypasses as verified.
+- [x] Add a 3–5 star rating to successful simulations and explain the player’s hardening level.
+- [x] Add automated coverage for base verified routes and hardened routes.
+- [x] Verify the result card on desktop and mobile, then publish the upgraded gameplay.
+
+## Ledger Nano Gen5 Color Picker
+
+- [x] Add a four-color picker for Jet Black, Cherry Red, Matcha Green, and Glacier White when a Ledger node is selected.
+- [x] Preserve the supplied Ledger SVG file unchanged while applying the selected color as a visual device treatment.
+- [x] Verify node dragging, ports, close behavior, and color selection on desktop and mobile.

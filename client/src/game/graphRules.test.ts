@@ -9,6 +9,12 @@ function solvedGraph(stageIndex: number) {
   return { nodes, edges };
 }
 
+function routeGraph(sequence: (typeof stages)[number]["buildSequence"]) {
+  const nodes = sequence.map((type, index) => ({ id: `${type}-route-${index}`, type, x: 20 + index * 10, y: 45 }));
+  const edges = nodes.slice(0, -1).map((node, index) => ({ id: `edge-route-${index}`, from: node.id, to: nodes[index + 1].id, state: "valid" as const }));
+  return { nodes, edges };
+}
+
 describe("ProofPath payment curriculum", () => {
   it("accepts the intended safe path for all sixteen missions", () => {
     stages.forEach((stage, index) => {
@@ -17,6 +23,34 @@ describe("ProofPath payment curriculum", () => {
       expect(result.ok, `stage ${stage.id}: ${stage.title}`).toBe(true);
       expect(result.score).toBe(100);
     });
+  });
+
+  it("awards every intended safe path a three-star verified rating", () => {
+    stages.forEach((stage, index) => {
+      const graph = solvedGraph(index);
+      const result = validateGraph(stage, stage.mode, graph.nodes, graph.edges);
+      expect(result.hardening, `stage ${stage.id}`).toMatchObject({ stars: 3, label: "VERIFIED" });
+    });
+  });
+
+  it("accepts only explicit strong and hardened routes as optional upgrades", () => {
+    stages.forEach((stage) => {
+      stage.hardeningRoutes?.forEach((option) => {
+        const graph = routeGraph(option.sequence);
+        const result = validateGraph(stage, stage.mode, graph.nodes, graph.edges);
+        expect(result.ok, `stage ${stage.id} ${option.stars} star route`).toBe(true);
+        expect(result.hardening).toMatchObject({ stars: option.stars, label: option.label });
+      });
+    });
+  });
+
+  it("rejects an extra control when it is not an explicit trusted hardening route", () => {
+    const stage = stages[2];
+    const graph = routeGraph(["agent", "policy", "verify", "wallet", "tool"]);
+    const result = validateGraph(stage, stage.mode, graph.nodes, graph.edges);
+
+    expect(result.ok).toBe(false);
+    expect(result.summary).toMatch(/not one of the trusted paths/i);
   });
 
   it("starts every Fix mission with its own attack state and an explicitly broken route", () => {
