@@ -368,3 +368,9 @@
 - [x] Replace the dry success presentation with a paper-stamp celebration and an unambiguous Next mission action.
 - [x] Preserve the existing score, progression save, sounds, and last-stage completion behavior.
 - [x] Add regression coverage and verify intro, success, next-stage progression, desktop, and mobile before publishing.
+
+## Intro Credit and Optical Centering
+
+- [x] Add a subtle linked `@amiraphist` creator credit to the ProofPath intro.
+- [x] Adjust the intro layout for optical centering on wide desktop viewports without shifting the mobile composition.
+- [x] Verify wide desktop and mobile composition, then publish the polish.

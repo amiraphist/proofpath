@@ -210,6 +210,7 @@ function IntroOverlay({ phase, onStart }: { phase: Exclude<IntroPhase, "hidden">
       <div className="intro-route" aria-hidden="true"><i /><b /><i /><b /><i /></div>
       {ready ? <button className="intro-start" type="button" onClick={onStart} autoFocus><Play size={17} fill="currentColor" /> Open the notebook <ArrowRight size={17} /></button> : <div className="intro-loading" role="status" aria-live="polite"><span className="intro-loading-dots"><i /><i /><i /></span><span>Preparing your first challenge</span></div>}
       <p className="intro-footnote">16 short missions · no money moves · learn by trying</p>
+      <a className="intro-credit" href="https://x.com/amiraphist" target="_blank" rel="noreferrer">A project by <strong>@amiraphist</strong></a>
     </section>
   </div>;
 }
