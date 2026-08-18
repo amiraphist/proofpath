@@ -346,3 +346,17 @@
 - [x] Remove the visible drag grip beside the Nodes orb.
 - [x] Make a short tap open Nodes and a deliberate long-press enable orb movement without adding visual clutter.
 - [x] Verify tap, long-press drag, scroll, and node picker on mobile before publishing.
+
+## External QA Score and Layout Pass
+
+- [x] Reproduce the empty-board validation result and confirm score behavior is appropriate for zero progress.
+- [x] Add regression coverage requiring a zero score for an empty unsafe graph.
+- [x] Review desktop board density and palette overflow, preserving intentional space for draggable nodes.
+- [x] Correct any confirmed palette clipping or layout imbalance without changing click-to-connect into drag-to-connect.
+- [ ] Re-run QA, desktop/mobile checks, and publish validated corrections.
+
+## Tall Desktop Viewport Board Sizing
+
+- [x] Reproduce board stretching at a 1280×1800 desktop viewport.
+- [x] Cap desktop board height with a responsive clamp while retaining the mobile working area.
+- [x] Verify normal desktop, tall desktop, and mobile layouts before publishing.

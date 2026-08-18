@@ -52,6 +52,10 @@ The recovery branch removes the Vaul drawer from the mobile picker path. The new
 
 The plain picker regression replay now verifies native board scroll, a tap opening the picker, touch selection adding a node and closing the picker, the same picker opening on Fix 01, and a separate small drag handle moving the glass orb. Build, TypeScript, and classroom build all passed before the public deployment.
 
+Tall-viewport QA at 1280×1800 showed the former full-height board stretching to nearly the entire window. The desktop clamp now keeps the board and side panels compact at a working height, leaving ordinary page background below rather than a misleading empty graph canvas.
+
+The clamp was also checked at a standard 1280×720 desktop viewport and a 390×844 mobile viewport. Desktop keeps the board at a usable working height, while mobile retains its existing large touch working area and Nodes orb.
+
 Player test: Stage 01 started with Start and Finish. The player added Agent from the palette, connected Start output to Agent input and Agent output to Finish input, then ran the graph. An initial validator bug incorrectly checked the last array node for Finish; this was fixed to check node presence. After reload, Build 01 returned `SYSTEM VERIFIED`, score 100, and `Next stage` appeared.
 
 Player test: Stage 09 was selected through the stage menu. `Apply safe repair` inserted the missing Check and rebuilt the route. Run returned `SYSTEM VERIFIED`, score 100, and `Nice repair. The route is safe.`
