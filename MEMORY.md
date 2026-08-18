@@ -50,6 +50,8 @@ The managed `graphops-ruuyk7ys.manus.space` link redirects public visitors to Ma
 
 The recovery branch removes the Vaul drawer from the mobile picker path. The new picker is a plain fixed overlay with an explicit sheet and close button, while the glass Nodes orb again uses pointer capture for drag and pointer-up for tap. This needs final touch replay and real-device confirmation before the issue can be closed.
 
+The plain picker regression replay now verifies native board scroll, a tap opening the picker, touch selection adding a node and closing the picker, the same picker opening on Fix 01, and a separate small drag handle moving the glass orb. Build, TypeScript, and classroom build all passed before the public deployment.
+
 Player test: Stage 01 started with Start and Finish. The player added Agent from the palette, connected Start output to Agent input and Agent output to Finish input, then ran the graph. An initial validator bug incorrectly checked the last array node for Finish; this was fixed to check node presence. After reload, Build 01 returned `SYSTEM VERIFIED`, score 100, and `Next stage` appeared.
 
 Player test: Stage 09 was selected through the stage menu. `Apply safe repair` inserted the missing Check and rebuilt the route. Run returned `SYSTEM VERIFIED`, score 100, and `Nice repair. The route is safe.`

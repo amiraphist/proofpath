@@ -334,3 +334,9 @@
 - [x] Replace the fragile mobile drawer trigger with a lightweight touch-safe picker independent from graph gesture handling.
 - [x] Preserve a draggable glass Nodes orb while making a tap open the picker on Build and Fix stages.
 - [ ] Verify real-device tap, node selection, close behavior, and page scroll before resuming publication.
+
+## Nodes Orb Drag Affordance Polish
+
+- [x] Replace the prominent blue drag button beside the Nodes orb with a subtle glass-styled grab affordance.
+- [x] Preserve separate, reliable tap-to-open and drag-to-move mobile behaviors.
+- [ ] Verify the refined orb in mobile layout and publish the visual polish.
