@@ -399,3 +399,9 @@
 - [x] Inspect and use the supplied Cherry Red, Matcha Green, and Glacier White Ledger SVGs as direct device assets.
 - [x] Replace CSS color filters with simple SVG source switching from a small glass palette on the selected Ledger node.
 - [x] Verify exact asset switching and node interaction on desktop and mobile, then publish.
+
+## Ledger Picker Placement Correction
+
+- [x] Move the Ledger color picker out of the draggable node and into a glass dropdown beneath Ledger in the Pencil Case.
+- [x] Preserve simple click-to-select on Ledger while keeping drag behavior visually clean.
+- [x] Re-test drag and every color asset in desktop and mobile before publishing.

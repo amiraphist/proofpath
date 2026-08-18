@@ -56,13 +56,18 @@ const selectedLedger = await evaluate(`(() => { const device = document.querySel
 if (!selectedLedger) throw new Error("Ledger node was not added to the mobile board");
 await wait(120);
 
-const picker = await evaluate(`(() => { const button = document.querySelector('[aria-label="Select Glacier White Ledger color"]'); const rect = button?.getBoundingClientRect(); return rect ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 } : null; })()`);
+await touch("touchStart", [[orb.x, orb.y, 1]]);
+await touch("touchEnd", []);
+await wait(220);
+
+const picker = await evaluate(`(() => { const button = document.querySelector('.mobile-picker-list [aria-label="Select Glacier White Ledger color"]'); const rect = button?.getBoundingClientRect(); return rect ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 } : null; })()`);
 if (!picker) throw new Error("Mobile Ledger color picker did not open");
 await touch("touchStart", [[picker.x, picker.y, 1]]);
 await touch("touchEnd", []);
 await wait(200);
 
-const result = await evaluate(`(() => ({ pickerVisible: Boolean(document.querySelector('.ledger-color-picker')), source: document.querySelector('.ledger-vector')?.getAttribute('src') ?? '', ports: document.querySelectorAll('.graph-node--green .node-port').length, notice: document.querySelector('.notice-strip')?.textContent ?? '' }))()`);
+const result = await evaluate(`(() => ({ pickerVisible: Boolean(document.querySelector('.mobile-picker-list .ledger-color-dropdown')), pickerInsideList: Boolean(document.querySelector('.mobile-picker-list .ledger-color-dropdown')), pickerOnNode: Boolean(document.querySelector('.graph-node .ledger-color-dropdown')), source: document.querySelector('.ledger-vector')?.getAttribute('src') ?? '', ports: document.querySelectorAll('.graph-node--green .node-port').length, notice: document.querySelector('.notice-strip')?.textContent ?? '' }))()`);
 if (!result.source.includes('ledger_glacier_white')) throw new Error(`Expected the Glacier White SVG source, received: ${result.source}`);
+if (!result.pickerInsideList || result.pickerOnNode) throw new Error("Mobile color dropdown was not placed exclusively in the Nodes list");
 console.log(JSON.stringify(result, null, 2));
 ws.close();
