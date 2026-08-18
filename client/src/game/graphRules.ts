@@ -108,7 +108,7 @@ export function validateGraph(stage: Stage, mode: GameMode, nodes: GraphNode[], 
 
   return {
     ok: false,
-    score: Math.max(20, 70 - nodes.length * 3),
+    score: nodes.length === 0 ? 0 : Math.max(20, 70 - nodes.length * 3),
     summary: reason,
     learning: stage.lesson,
     trace: trace(

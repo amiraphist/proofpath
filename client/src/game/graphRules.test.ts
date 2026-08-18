@@ -87,6 +87,15 @@ describe("ProofPath payment curriculum", () => {
     expect(result.summary).toMatch(/click an output dot, then click the next input dot/i);
   });
 
+  it("gives an empty unsafe board zero progress instead of a partial score", () => {
+    const stage = stages[0];
+    const result = validateGraph(stage, "build", [], []);
+
+    expect(result.ok).toBe(false);
+    expect(result.score).toBe(0);
+    expect(result.summary).toMatch(/This story needs:/);
+  });
+
   it("keeps Policy first for untrusted approval fixes and makes Rogue Skill deletion explicit", () => {
     expect(stages[8].buildSequence.slice(0, 3)).toEqual(["agent", "policy", "condition"]);
     expect(stages[11].buildSequence.slice(0, 3)).toEqual(["agent", "policy", "condition"]);

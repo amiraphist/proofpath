@@ -317,32 +317,46 @@
 
 ## Live GitHub Pages Mobile Verification
 
-- [x] Reproduce the reported Paper Path scroll and Nodes orb failure on the public GitHub Pages build in a clean mobile session.
-- [x] Compare the deployed public asset revision and touch behavior against the local preview.
-- [x] Apply the production-specific mobile correction and verify it survives the Pages deployment path.
-- [x] Confirm the live mobile game scrolls and opens Nodes before closing the issue.
+- [ ] Reproduce the reported Paper Path scroll and Nodes orb failure on the public GitHub Pages build in a clean mobile session.
+- [ ] Compare the deployed public asset revision and touch behavior against the local preview.
+- [ ] Apply the production-specific mobile correction and verify it survives the Pages deployment path.
+- [ ] Confirm the live mobile game scrolls and opens Nodes before closing the issue.
 
 ## Real-Device Mobile Regression Recovery
 
 - [x] Compare the latest live touch and Nodes orb changes against the last user-confirmed mobile-stable checkpoint.
 - [x] Revert only the regression-causing gesture handling while preserving safe graph behavior.
-- [x] Verify the revised Pages build on a clean session and obtain user confirmation from iPhone and Android.
+- [ ] Verify the revised Pages build on a clean session and obtain user confirmation from iPhone and Android.
 
 ## Touch-Safe Nodes Picker Recovery
 
 - [x] Isolate why the Vaul-based mobile Nodes drawer does not open from iPhone and Android touch input despite state changes in automated replay.
 - [x] Replace the fragile mobile drawer trigger with a lightweight touch-safe picker independent from graph gesture handling.
 - [x] Preserve a draggable glass Nodes orb while making a tap open the picker on Build and Fix stages.
-- [x] Verify real-device tap, node selection, close behavior, and page scroll before resuming publication.
+- [ ] Verify real-device tap, node selection, close behavior, and page scroll before resuming publication.
 
 ## Nodes Orb Drag Affordance Polish
 
 - [x] Replace the prominent blue drag button beside the Nodes orb with a subtle glass-styled grab affordance.
 - [x] Preserve separate, reliable tap-to-open and drag-to-move mobile behaviors.
-- [x] Verify the refined orb in mobile layout and publish the visual polish.
+- [ ] Verify the refined orb in mobile layout and publish the visual polish.
 
 ## Invisible Nodes Orb Drag
 
 - [x] Remove the visible drag grip beside the Nodes orb.
 - [x] Make a short tap open Nodes and a deliberate long-press enable orb movement without adding visual clutter.
 - [x] Verify tap, long-press drag, scroll, and node picker on mobile before publishing.
+
+## External QA Score and Layout Pass
+
+- [x] Reproduce the empty-board validation result and confirm score behavior is appropriate for zero progress.
+- [x] Add regression coverage requiring a zero score for an empty unsafe graph.
+- [x] Review desktop board density and palette overflow, preserving intentional space for draggable nodes.
+- [x] Correct any confirmed palette clipping or layout imbalance without changing click-to-connect into drag-to-connect.
+- [x] Re-run QA, desktop/mobile checks, and publish validated corrections.
+
+## Tall Desktop Viewport Board Sizing
+
+- [x] Reproduce board stretching at a 1280×1800 desktop viewport.
+- [x] Cap desktop board height with a responsive clamp while retaining the mobile working area.
+- [x] Verify normal desktop, tall desktop, and mobile layouts before publishing.
