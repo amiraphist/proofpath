@@ -7,6 +7,7 @@ import { useGameSession } from "@/game/useGameSession";
 import { useSoundEffects } from "@/game/useSoundEffects";
 import { nodeMeta, type GameMode, type NodeType } from "@/game/stages";
 import type { GraphNode } from "@/game/types";
+import { PROOFPATH_INTRO_SESSION_KEY, shouldShowProofPathIntro } from "@/game/experienceState";
 
 const MANAGED_LEDGER_ASSET = "/manus-storage/ledger_illustrator_no_bitcoin_9f898c01.svg";
 const ledgerAsset = () => (window as Window & { __PROOFPATH_LEDGER_ASSET__?: string }).__PROOFPATH_LEDGER_ASSET__ ?? MANAGED_LEDGER_ASSET;
@@ -194,6 +195,25 @@ function ModeSwitch({ mode }: { mode: GameMode }) {
 
 export type ProgressEvent = { stageId: number; mode: GameMode; completed: boolean; score: number; attempts: number };
 
+type IntroPhase = "loading" | "ready" | "leaving" | "hidden";
+
+function IntroOverlay({ phase, onStart }: { phase: Exclude<IntroPhase, "hidden">; onStart: () => void }) {
+  const ready = phase === "ready";
+  return <div className={`intro-overlay intro-overlay--${phase}`} role="dialog" aria-modal="true" aria-labelledby="proofpath-intro-title">
+    <div className="intro-paper-scribble intro-paper-scribble--one" aria-hidden="true" />
+    <div className="intro-paper-scribble intro-paper-scribble--two" aria-hidden="true" />
+    <section className="intro-card">
+      <div className="intro-brand" aria-hidden="true"><span className="intro-brand-node" /><i /><span className="intro-brand-node" /></div>
+      <p className="intro-kicker">AGENT SYSTEMS LAB · PAPER PLAYGROUND</p>
+      <h1 id="proofpath-intro-title">PROOF<span>PATH</span></h1>
+      <p className="intro-promise">Draw the trusted path before a payment can move.</p>
+      <div className="intro-route" aria-hidden="true"><i /><b /><i /><b /><i /></div>
+      {ready ? <button className="intro-start" type="button" onClick={onStart} autoFocus><Play size={17} fill="currentColor" /> Open the notebook <ArrowRight size={17} /></button> : <div className="intro-loading" role="status" aria-live="polite"><span className="intro-loading-dots"><i /><i /><i /></span><span>Preparing your first challenge</span></div>}
+      <p className="intro-footnote">16 short missions · no money moves · learn by trying</p>
+    </section>
+  </div>;
+}
+
 export default function GameCanvas({ persistedCompleted = 0, onProgress }: { persistedCompleted?: number; onProgress?: (event: ProgressEvent) => void }) {
   const ambientRef = useRef<HTMLCanvasElement>(null);
   const { mode, stage, stageIndex, session, stages, totalCompleted, selectStage, selectNode, moveNode, connectNodes, showConnectionNotice, addNode, removeNode, removeEdge, repair, undo, run, reset, nextStage } = useGameSession();
@@ -201,6 +221,13 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
   const { muted, setMuted, play } = useSoundEffects();
   const [showHints, setShowHints] = useState(false);
   const [mobilePaletteOpen, setMobilePaletteOpen] = useState(false);
+  const [introPhase, setIntroPhase] = useState<IntroPhase>(() => {
+    try {
+      return shouldShowProofPathIntro(window.sessionStorage.getItem(PROOFPATH_INTRO_SESSION_KEY)) ? "loading" : "hidden";
+    } catch {
+      return "loading";
+    }
+  });
   const noticeIsError = Boolean(session.notice?.match(/cannot|already|one blue pen line|different blue dot|clear route/i));
   const [mobileOrbPosition, setMobileOrbPosition] = useState(() => {
     try {
@@ -254,6 +281,19 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
   }, [stage.id]);
 
   useEffect(() => {
+    if (introPhase !== "loading") return;
+    const timer = window.setTimeout(() => setIntroPhase("ready"), 820);
+    return () => window.clearTimeout(timer);
+  }, [introPhase]);
+
+  const startExperience = () => {
+    if (introPhase !== "ready") return;
+    try { window.sessionStorage.setItem(PROOFPATH_INTRO_SESSION_KEY, "1"); } catch { /* show once is still best effort */ }
+    setIntroPhase("leaving");
+    window.setTimeout(() => setIntroPhase("hidden"), 260);
+  };
+
+  useEffect(() => {
     localStorage.setItem("proofpath-mobile-nodes-position", JSON.stringify(mobileOrbPosition));
   }, [mobileOrbPosition]);
 
@@ -278,7 +318,7 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
 
   const paletteCards = stage.available.map((type) => <button key={type} className={`palette-card palette-card--${nodeMeta[type].color}`} aria-label={`Add ${nodeMeta[type].label} node`} onClick={() => addPaletteNode(type)}><span className="palette-icon">{iconFor(type)}</span><span><strong>{nodeMeta[type].label}</strong><small>{nodeMeta[type].help}</small></span><span className="palette-plus" aria-hidden="true">ADD</span></button>);
 
-  return <main className="game-shell">
+  return <><main className="game-shell">
     <canvas className="ambient-canvas" ref={ambientRef} aria-hidden="true" />
     <header className="topbar"><div className="brand" aria-label="ProofPath"><div className="brand-mark"><span /><span /></div><div><strong>PROOF<span>PATH</span></strong><small>agent systems lab</small></div></div><div className="topbar-status"><span className="status-dot" /> NOTEBOOK OPEN <span className="topbar-divider" /> <span>let's learn by trying</span></div><div className="topbar-tools"><button className="sound-toggle" onClick={() => setMuted((value) => !value)} aria-label={muted ? "Turn sounds on" : "Mute sounds"}>{muted ? <VolumeX size={17} /> : <Volume2 size={17} />}</button><button className={`help-button ${showHints ? "is-on" : ""}`} onClick={() => setShowHints((value) => !value)} aria-label={showHints ? "Hide solution hint" : "Show solution hint"}><CircleHelp size={18} /></button></div></header>
     <div className="game-layout">
@@ -286,9 +326,9 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
       <section className="play-area"><div className="play-toolbar"><div className="play-brief"><span className="play-brief__signal" /> <span>DRAW THE IDEA. THEN SEE WHAT IT DOES.</span></div><div className="play-toolbar__right"><ModeSwitch mode={mode} /><div className="toolbar-actions"><button className="ghost-btn" onClick={() => undo()}><RotateCcw size={14} /> Undo</button><button className="ghost-btn" onClick={() => reset()}><RotateCcw size={14} /> Reset</button><button className="run-btn" onClick={run}><Play size={14} fill="currentColor" /> Test my idea <ArrowRight size={14} /></button></div></div></div><GraphBoard stageId={stage.id} alert={mode === "fix"} attackEvent={stage.attackEvent} nodes={session.nodes} edges={session.edges} selectedNodeId={session.selectedNodeId} onSelect={(id) => selectNode(id)} onRemove={removeNode} onMove={moveNode} onConnect={connectNodes} onRemoveEdge={removeEdge} onConnectionUnavailable={showConnectionNotice} onSound={play} />{session.notice && !session.result && <div className={`notice-strip ${noticeIsError ? "notice-strip--error" : ""}`} role={noticeIsError ? "alert" : "status"}>{session.notice}</div>}<div className="board-foot"><span><span className="legend-dot legend-dot--cyan" /> Blue pen line</span><span><span className="legend-dot legend-dot--red" /> Needs fixing</span><span><span className="legend-dot legend-dot--amber" /> Human choice</span><span className="board-foot__shortcut">Click a blue pen line to remove it</span></div></section>
       <aside className="tools-panel glass-panel"><div className="tools-heading"><div><div className="eyebrow"><span className="eyebrow-line" /> PENCIL CASE</div><h2>Pick your nodes</h2></div><span className="tool-count">{session.nodes.length} nodes</span></div><p className="tools-copy">{mode === "fix" ? "Read the attack event, then add trusted controls that stop the unsafe route before signing or sending." : "Pick only the nodes this little story needs. Keep it simple."}</p><div className="interaction-guide"><span className="guide-step"><b>1</b> Pick a node</span><span className="guide-arrow">→</span><span className="guide-step"><b>2</b> Join blue dots</span><span className="guide-arrow">→</span><span className="guide-step"><b>3</b> Test it</span></div><div className="palette-heading"><span>AVAILABLE NODES</span><small>Click a node to add</small></div><div className="palette">{paletteCards}</div>{mode === "fix" && <button className="repair-btn" onClick={repair}><Wrench size={14} /> Show trusted repair</button>}<div className="trace-panel"><div className="trace-heading"><span><Activity size={14} /> WHAT HAPPENED</span><span className="trace-live">LIVE</span></div><div className="trace-list">{session.result?.trace.map((event) => <div key={`${event.time}-${event.label}`} className={`trace-event trace-event--${event.tone}`}><time>{event.time}</time><span><strong>{event.label}</strong>{event.detail}</span></div>) ?? <div className="trace-empty"><span className="trace-cursor" /> Awaiting simulation input...</div>}</div></div></aside>
     </div>
-    {session.result && <div className={`result-banner ${session.result.ok ? "result-banner--success" : "result-banner--danger"}`}><div className="result-symbol">{session.result.ok ? <Check size={20} /> : <X size={20} />}</div><div><strong>{session.result.ok ? "PAYMENT PLAN VERIFIED" : "PAYMENT BLOCKED"}</strong><span>{session.result.summary}</span></div><div className="result-score"><small>SCORE</small><strong>{session.result.score}</strong></div>{session.result.ok && stageIndex < stages.length - 1 && <button onClick={nextStage}>Next mission <ArrowRight size={14} /></button>}</div>}
+    {session.result && <div className={`result-banner ${session.result.ok ? "result-banner--success" : "result-banner--danger"}`} role="status" aria-live="polite">{session.result.ok ? <div className="success-stamp" aria-label="Stage passed"><span>PROOFPATH</span><strong>VERIFIED</strong><small>STAGE {String(stage.id).padStart(2, "0")}</small></div> : <div className="result-symbol"><X size={20} /></div>}<div><strong>{session.result.ok ? "PAYMENT PLAN VERIFIED" : "PAYMENT BLOCKED"}</strong><span>{session.result.summary}</span></div><div className="result-score"><small>SCORE</small><strong>{session.result.score}</strong></div>{session.result.ok && stageIndex < stages.length - 1 && <button onClick={nextStage}>Next mission <ArrowRight size={14} /></button>}</div>}
     <div className="mobile-orb-wrap" style={{ left: `${mobileOrbPosition.x}%`, top: `${mobileOrbPosition.y}%` }}><button type="button" className="mobile-pencil-trigger" aria-label="Open Nodes. Press and hold to move." aria-expanded={mobilePaletteOpen} onPointerDown={startOrbDrag} onPointerMove={moveOrbDrag} onPointerUp={endOrbDrag} onPointerCancel={() => { clearOrbPress(); orbDragRef.current = null; }} onClick={() => { if (ignoreOrbClickRef.current) { ignoreOrbClickRef.current = false; return; } setMobilePaletteOpen(true); }}><WalletCards size={18} /><span>Nodes</span><b>{session.nodes.length}</b></button></div>
     {mobilePaletteOpen && <div className="mobile-picker-overlay" role="presentation" onPointerDown={() => setMobilePaletteOpen(false)}><section className="mobile-picker-sheet" role="dialog" aria-modal="true" aria-label="Pick your nodes" onPointerDown={(event) => event.stopPropagation()}><div className="mobile-picker-heading"><div><strong>Pick your nodes</strong><span>Choose a node, then connect the blue dots.</span></div><button type="button" aria-label="Close Nodes" onClick={() => setMobilePaletteOpen(false)}><X size={17} /></button></div><div className="mobile-picker-list">{paletteCards}</div>{mode === "fix" && <button className="mobile-repair-btn" onClick={() => { repair(); setMobilePaletteOpen(false); }}><Wrench size={14} /> Show trusted repair</button>}<button type="button" className="mobile-picker-close" onClick={() => setMobilePaletteOpen(false)}>Close nodes</button></section></div>}
     <footer className="footer-bar"><span>PROOFPATH / PAPER PLAYGROUND</span><span>JUST PRACTICE · NO MONEY MOVES</span><span>Unofficial fan-made educational simulation. Not affiliated with or endorsed by Ledger.</span><span>ENGLISH PRACTICE <span className="footer-dot" /></span></footer>
-  </main>;
+  </main>{introPhase !== "hidden" && <IntroOverlay phase={introPhase} onStart={startExperience} />}</>;
 }

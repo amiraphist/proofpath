@@ -56,6 +56,10 @@ Tall-viewport QA at 1280×1800 showed the former full-height board stretching to
 
 The clamp was also checked at a standard 1280×720 desktop viewport and a 390×844 mobile viewport. Desktop keeps the board at a usable working height, while mobile retains its existing large touch working area and Nodes orb.
 
+The new ProofPath intro was visually reviewed at 1280×720. The paper-grid cover, paired-node logo, loading-to-start sequence, and final scaled wordmark fit inside the notebook card without crowding its edge.
+
+The intro was also reviewed at 390×844, where the full cover card and Start control remain visible without viewport clipping. The interaction replay confirmed the intro appears after clearing the session key, dismisses after Start, and Stage 03 success renders the VERIFIED stamp plus Next mission action.
+
 Player test: Stage 01 started with Start and Finish. The player added Agent from the palette, connected Start output to Agent input and Agent output to Finish input, then ran the graph. An initial validator bug incorrectly checked the last array node for Finish; this was fixed to check node presence. After reload, Build 01 returned `SYSTEM VERIFIED`, score 100, and `Next stage` appeared.
 
 Player test: Stage 09 was selected through the stage menu. `Apply safe repair` inserted the missing Check and rebuilt the route. Run returned `SYSTEM VERIFIED`, score 100, and `Nice repair. The route is safe.`

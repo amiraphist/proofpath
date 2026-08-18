@@ -42,8 +42,26 @@ const key = async (keyName, code, keyCode) => {
 };
 
 await send("Emulation.clearDeviceMetricsOverride");
+await evaluate(`sessionStorage.removeItem('proofpath-intro-seen')`);
 await send("Page.navigate", { url: target.url });
-await wait(700);
+for (let attempt = 0; attempt < 16; attempt += 1) {
+  await wait(180);
+  const visible = await evaluate(`Boolean(document.querySelector('.intro-start'))`);
+  if (visible) break;
+}
+
+const introReady = await evaluate(`(() => ({
+  visible: Boolean(document.querySelector('.intro-overlay')),
+  startLabel: document.querySelector('.intro-start')?.textContent?.trim() ?? null,
+}))()`);
+const introStartPoint = await evaluate(`(() => {
+  const rect = document.querySelector('.intro-start')?.getBoundingClientRect();
+  return rect ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 } : null;
+})()`);
+if (!introStartPoint) throw new Error("Intro start button could not be located");
+await click(introStartPoint);
+await wait(340);
+const introDismissed = await evaluate(`!document.querySelector('.intro-overlay')`);
 
 await evaluate(`(() => {
   const select = document.querySelector('select[aria-label="Select stage"]');
@@ -111,6 +129,21 @@ const outputState = await evaluate(`(() => {
   const port = node?.querySelector('.node-port--right');
   return { occupied: port?.classList.contains('is-occupied'), label: port?.getAttribute('aria-label') };
 })()`);
+
+const verifyOut = await portCenter("Verify recipient", "out");
+const ledgerIn = await portCenter("Ledger Nano™ Gen5", "in");
+const ledgerOut = await portCenter("Ledger Nano™ Gen5", "out");
+const paymentIn = await portCenter("Send payment", "in");
+if (!verifyOut || !ledgerIn || !ledgerOut || !paymentIn) throw new Error("Stage 03 completion ports could not be located");
+await click(verifyOut); await click(ledgerIn);
+await click(ledgerOut); await click(paymentIn);
+await wait(120);
+await evaluate(`document.querySelector('.run-btn')?.click()`);
+await wait(160);
+const successCelebration = await evaluate(`(() => ({
+  stamp: document.querySelector('.success-stamp')?.textContent?.replace(/\s+/g, ' ').trim() ?? null,
+  nextMission: document.querySelector('.result-banner button')?.textContent?.trim() ?? null,
+}))()`);
 const accessibility = await evaluate(`(() => ({
   nodeKeyboard: document.querySelector('.graph-node')?.getAttribute('aria-keyshortcuts'),
   nodeLabel: document.querySelector('.graph-node')?.getAttribute('aria-label'),
@@ -125,6 +158,8 @@ await send("Emulation.clearDeviceMetricsOverride");
 
 console.log(JSON.stringify({
   dragCreatedEdge: afterDrag > 0,
+  introReady,
+  introDismissed,
   clickCreatedEdge: afterClick === 1,
   clickNotice,
   edgeRemoved: afterEdgeRemoval === 0,
@@ -136,6 +171,7 @@ console.log(JSON.stringify({
   outputState,
   accessibility,
   guidance: await evaluate(`document.querySelector('.graph-caption__hint')?.textContent`),
+  successCelebration,
 }, null, 2));
 
 ws.close();
