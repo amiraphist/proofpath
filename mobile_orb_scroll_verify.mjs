@@ -1,5 +1,6 @@
 const targets = await fetch("http://127.0.0.1:9222/json/list").then((response) => response.json());
-const target = targets.find((item) => item.type === "page" && item.url.includes("3000-i6wqfxvul3u5oug6kfw86-e78b1efe"));
+const pageUrl = process.env.PROOFPATH_URL ?? "https://3000-i6wqfxvul3u5oug6kfw86-e78b1efe.us1.manus.computer";
+const target = targets.find((item) => item.type === "page" && item.url.startsWith(pageUrl));
 
 if (!target) throw new Error("ProofPath browser target was not found");
 
@@ -35,7 +36,7 @@ const touch = (type, points) => send("Input.dispatchTouchEvent", { type, touchPo
 
 await send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
 await send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 5 });
-await send("Page.navigate", { url: target.url });
+await send("Page.navigate", { url: pageUrl });
 await wait(850);
 
 const board = await evaluate(`(() => { const rect = document.querySelector('.graph-board').getBoundingClientRect(); return { x: rect.left + rect.width / 2, y: rect.top + 170 }; })()`);
@@ -55,12 +56,7 @@ const afterTap = await evaluate(`({ expanded: document.querySelector('.mobile-pe
 
 await evaluate(`document.querySelector('.mobile-pencil-close')?.click()`);
 await wait(520);
-const beforeDrag = await evaluate(`(() => { const button = document.querySelector('.mobile-pencil-trigger'); return { left: button.style.left, top: button.style.top, expanded: button.getAttribute('aria-expanded') }; })()`);
-await touch("touchStart", [[orb.x, orb.y, 1]]);
-await touch("touchMove", [[orb.x - 62, orb.y - 34, 1]]);
-await touch("touchEnd", []);
-await wait(180);
-const afterDrag = await evaluate(`(() => { const button = document.querySelector('.mobile-pencil-trigger'); return { left: button.style.left, top: button.style.top, expanded: button.getAttribute('aria-expanded') }; })()`);
+const fixedOrb = await evaluate(`(() => { const button = document.querySelector('.mobile-pencil-trigger'); const rect = button.getBoundingClientRect(); return { expanded: button.getAttribute('aria-expanded'), touchAction: getComputedStyle(button).touchAction, rightGap: Math.round(window.innerWidth - rect.right), bottomGap: Math.round(window.innerHeight - rect.bottom) }; })()`);
 
-console.log(JSON.stringify({ nativeScroll, tapOpenedDrawer: afterTap.expanded === "true" && afterTap.drawerVisible > 0, afterTap, beforeDrag, afterDrag, dragMovedOrb: beforeDrag.left !== afterDrag.left || beforeDrag.top !== afterDrag.top }, null, 2));
+console.log(JSON.stringify({ nativeScroll, tapOpenedDrawer: afterTap.expanded === "true" && afterTap.drawerVisible > 0, afterTap, fixedOrb }, null, 2));
 ws.close();

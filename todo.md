@@ -314,3 +314,16 @@
 - [x] Separate page scroll, graph pan/zoom, node drag, and orb tap gestures without blocking one another.
 - [x] Add or extend touch regression coverage for scroll and Nodes orb open/close behavior.
 - [x] Run mobile visual and interaction QA, then publish the correction.
+
+## Live GitHub Pages Mobile Verification
+
+- [ ] Reproduce the reported Paper Path scroll and Nodes orb failure on the public GitHub Pages build in a clean mobile session.
+- [ ] Compare the deployed public asset revision and touch behavior against the local preview.
+- [ ] Apply the production-specific mobile correction and verify it survives the Pages deployment path.
+- [ ] Confirm the live mobile game scrolls and opens Nodes before closing the issue.
+
+## Real-Device Mobile Regression Recovery
+
+- [x] Compare the latest live touch and Nodes orb changes against the last user-confirmed mobile-stable checkpoint.
+- [x] Revert only the regression-causing gesture handling while preserving safe graph behavior.
+- [ ] Verify the revised Pages build on a clean session and obtain user confirmation from iPhone and Android.
