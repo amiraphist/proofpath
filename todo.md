@@ -412,3 +412,9 @@
 - [x] Align the progress table schema with its Drizzle query and ensure unavailable progress cannot break gameplay.
 - [x] Add regression coverage and verify the production runtime query no longer logs an API error.
 - [x] Confirm the reported `moz-extension://` script error is external to ProofPath and document the conclusion.
+
+## Final X Launch Thread
+
+- [x] Rewrite the five launch posts in lowercase with a natural `over roughly 48 hours` phrasing.
+- [x] Explain that the Ledger Nano Gen5-inspired signer appears because it is the creator's favorite model.
+- [x] Add Persian translations and verify that each English post stays within 240 characters.

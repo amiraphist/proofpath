@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-const source = readFileSync(new URL("./PROOFPATH_X_LAUNCH.md", import.meta.url), "utf8");
+const source = readFileSync(new URL("./PROOFPATH_X_LAUNCH.md", import.meta.url), "utf8").split(/^## persian translation$/m)[0];
 const sections = source.split(/^## post \d+$/m).slice(1);
 
 sections.forEach((section, index) => {
