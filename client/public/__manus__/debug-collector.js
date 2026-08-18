@@ -126,6 +126,10 @@
     }
   }
 
+  function isExtensionOrigin(filename) {
+    return typeof filename === "string" && /^(moz-extension|chrome-extension|safari-web-extension):\/\//i.test(filename);
+  }
+
   // ==========================================================================
   // Semantic UI Event Logging (agent-friendly)
   // ==========================================================================
@@ -399,6 +403,10 @@
   });
 
   window.addEventListener("error", function (event) {
+    // Browser extensions inject their own scripts into the page. Their errors
+    // cannot be fixed by this app and should not be reported as ProofPath bugs.
+    if (isExtensionOrigin(event.filename)) return;
+
     store.consoleLogs.push({
       timestamp: Date.now(),
       level: "ERROR",

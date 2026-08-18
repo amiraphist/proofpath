@@ -418,3 +418,9 @@
 - [x] Rewrite the five launch posts in lowercase with a natural `over roughly 48 hours` phrasing.
 - [x] Explain that the Ledger Nano Gen5-inspired signer appears because it is the creator's favorite model.
 - [x] Add Persian translations and verify that each English post stays within 240 characters.
+
+## External Extension Error Filtering
+
+- [x] Confirm the reported `moz-extension://` script error is injected by a browser extension rather than ProofPath.
+- [x] Filter only extension-originated unhandled errors from the preview report while preserving ProofPath errors.
+- [x] Verify the page still reports a synthetic first-party error and no longer forwards the extension error.
