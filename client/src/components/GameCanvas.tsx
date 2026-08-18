@@ -41,7 +41,6 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
   const boardRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
-  const scrollDragRef = useRef<{ y: number } | null>(null);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const gestureRef = useRef<{ distance: number; centerX: number; centerY: number; scale: number; panX: number; panY: number } | null>(null);
   const [connectionSource, setConnectionSource] = useState<string | null>(null);
@@ -122,7 +121,6 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (pointersRef.current.size > 1) {
       const gesture = gestureRef.current;
-      scrollDragRef.current = null;
       const board = sceneRef.current;
       const [first, second] = Array.from(pointersRef.current.values());
       if (gesture && board && first && second) {
@@ -133,12 +131,6 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
         const centerY = (first.y + second.y) / 2;
         setViewport(clampViewport(scale, gesture.panX + ((centerX - gesture.centerX) / rect.width) * 100, gesture.panY + ((centerY - gesture.centerY) / rect.height) * 100));
       }
-      return;
-    }
-    if (scrollDragRef.current && isMobileViewport) {
-      const deltaY = scrollDragRef.current.y - event.clientY;
-      if (Math.abs(deltaY) > .5) window.scrollBy(0, deltaY);
-      scrollDragRef.current.y = event.clientY;
       return;
     }
     if (connectionSource && sceneRef.current) {
@@ -153,17 +145,11 @@ function GraphBoard({ stageId, nodes, edges, selectedNodeId, onSelect, onRemove,
   };
   const beginPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    if (pointersRef.current.size === 2) { scrollDragRef.current = null; beginViewportGesture(); return; }
-    const target = event.target as HTMLElement;
-    if (isMobileViewport && !connectionSource && !target.closest(".graph-node, .mobile-viewport-controls, .edge--valid")) {
-      scrollDragRef.current = { y: event.clientY };
-      event.currentTarget.setPointerCapture?.(event.pointerId);
-    }
+    if (pointersRef.current.size === 2) beginViewportGesture();
   };
   const stopDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     pointersRef.current.delete(event.pointerId);
     dragRef.current = null;
-    scrollDragRef.current = null;
     if (pointersRef.current.size < 2) gestureRef.current = null;
   };
   const handlePort = (nodeId: string, direction: "in" | "out") => {
@@ -228,9 +214,11 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
     return { x: 84, y: 81 };
   });
   const orbDragRef = useRef<{ pointerId: number; startX: number; startY: number; originX: number; originY: number; moved: boolean } | null>(null);
+  const orbMovedRef = useRef(false);
   const addPaletteNode = (type: NodeType) => { addNode(type); play("tap"); setMobilePaletteOpen(false); };
   const startOrbDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
     if (event.button !== 0) return;
+    orbMovedRef.current = false;
     orbDragRef.current = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, originX: mobileOrbPosition.x, originY: mobileOrbPosition.y, moved: false };
     event.currentTarget.setPointerCapture?.(event.pointerId);
   };
@@ -239,7 +227,7 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
     if (!drag || drag.pointerId !== event.pointerId) return;
     const dx = event.clientX - drag.startX;
     const dy = event.clientY - drag.startY;
-    if (Math.abs(dx) + Math.abs(dy) > 7) drag.moved = true;
+    if (Math.abs(dx) + Math.abs(dy) > 7) { drag.moved = true; orbMovedRef.current = true; }
     const x = Math.min(91, Math.max(9, drag.originX + (dx / window.innerWidth) * 100));
     const y = Math.min(92, Math.max(8, drag.originY + (dy / window.innerHeight) * 100));
     setMobileOrbPosition({ x, y });
@@ -289,7 +277,7 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
       <aside className="tools-panel glass-panel"><div className="tools-heading"><div><div className="eyebrow"><span className="eyebrow-line" /> PENCIL CASE</div><h2>Pick your nodes</h2></div><span className="tool-count">{session.nodes.length} nodes</span></div><p className="tools-copy">{mode === "fix" ? "Read the attack event, then add trusted controls that stop the unsafe route before signing or sending." : "Pick only the nodes this little story needs. Keep it simple."}</p><div className="interaction-guide"><span className="guide-step"><b>1</b> Pick a node</span><span className="guide-arrow">→</span><span className="guide-step"><b>2</b> Join blue dots</span><span className="guide-arrow">→</span><span className="guide-step"><b>3</b> Test it</span></div><div className="palette-heading"><span>AVAILABLE NODES</span><small>Click a node to add</small></div><div className="palette">{paletteCards}</div>{mode === "fix" && <button className="repair-btn" onClick={repair}><Wrench size={14} /> Show trusted repair</button>}<div className="trace-panel"><div className="trace-heading"><span><Activity size={14} /> WHAT HAPPENED</span><span className="trace-live">LIVE</span></div><div className="trace-list">{session.result?.trace.map((event) => <div key={`${event.time}-${event.label}`} className={`trace-event trace-event--${event.tone}`}><time>{event.time}</time><span><strong>{event.label}</strong>{event.detail}</span></div>) ?? <div className="trace-empty"><span className="trace-cursor" /> Awaiting simulation input...</div>}</div></div></aside>
     </div>
     {session.result && <div className={`result-banner ${session.result.ok ? "result-banner--success" : "result-banner--danger"}`}><div className="result-symbol">{session.result.ok ? <Check size={20} /> : <X size={20} />}</div><div><strong>{session.result.ok ? "PAYMENT PLAN VERIFIED" : "PAYMENT BLOCKED"}</strong><span>{session.result.summary}</span></div><div className="result-score"><small>SCORE</small><strong>{session.result.score}</strong></div>{session.result.ok && stageIndex < stages.length - 1 && <button onClick={nextStage}>Next mission <ArrowRight size={14} /></button>}</div>}
-    <button className="mobile-pencil-trigger" style={{ left: `${mobileOrbPosition.x}%`, top: `${mobileOrbPosition.y}%` }} aria-label="Open or drag Nodes" aria-expanded={mobilePaletteOpen} onPointerDown={startOrbDrag} onPointerMove={moveOrbDrag} onPointerUp={endOrbDrag} onPointerCancel={() => { orbDragRef.current = null; }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setMobilePaletteOpen(true); } }} onClick={(event) => event.preventDefault()}><WalletCards size={18} /><span>Nodes</span><b>{session.nodes.length}</b></button>
+    <button className="mobile-pencil-trigger" style={{ left: `${mobileOrbPosition.x}%`, top: `${mobileOrbPosition.y}%` }} aria-label="Open or drag Nodes" aria-expanded={mobilePaletteOpen} onPointerDown={startOrbDrag} onPointerMove={moveOrbDrag} onPointerUp={endOrbDrag} onPointerCancel={() => { orbDragRef.current = null; }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setMobilePaletteOpen(true); } }} onClick={() => { if (orbMovedRef.current) { orbMovedRef.current = false; return; } setMobilePaletteOpen(true); }}><WalletCards size={18} /><span>Nodes</span><b>{session.nodes.length}</b></button>
     <Drawer open={mobilePaletteOpen} onOpenChange={setMobilePaletteOpen}><DrawerContent className="mobile-pencil-drawer"><DrawerHeader><DrawerTitle>Pick your nodes</DrawerTitle><DrawerDescription>Choose a node, then connect the blue dots.</DrawerDescription></DrawerHeader><div className="mobile-pencil-list">{paletteCards}</div>{mode === "fix" && <button className="mobile-repair-btn" onClick={() => { repair(); setMobilePaletteOpen(false); }}><Wrench size={14} /> Show trusted repair</button>}<DrawerClose asChild><button className="mobile-pencil-close">Close nodes</button></DrawerClose></DrawerContent></Drawer>
     <footer className="footer-bar"><span>PROOFPATH / PAPER PLAYGROUND</span><span>JUST PRACTICE · NO MONEY MOVES</span><span>Unofficial fan-made educational simulation. Not affiliated with or endorsed by Ledger.</span><span>ENGLISH PRACTICE <span className="footer-dot" /></span></footer>
   </main>;
