@@ -393,3 +393,9 @@
 - [x] Add a four-color picker for Jet Black, Cherry Red, Matcha Green, and Glacier White when a Ledger node is selected.
 - [x] Preserve the supplied Ledger SVG file unchanged while applying the selected color as a visual device treatment.
 - [x] Verify node dragging, ports, close behavior, and color selection on desktop and mobile.
+
+## Ledger Color Asset Simplification
+
+- [x] Inspect and use the supplied Cherry Red, Matcha Green, and Glacier White Ledger SVGs as direct device assets.
+- [x] Replace CSS color filters with simple SVG source switching from a small glass palette on the selected Ledger node.
+- [x] Verify exact asset switching and node interaction on desktop and mobile, then publish.

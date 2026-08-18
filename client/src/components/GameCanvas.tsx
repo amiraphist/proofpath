@@ -9,8 +9,13 @@ import { nodeMeta, type GameMode, type NodeType } from "@/game/stages";
 import type { GraphNode, LedgerColor } from "@/game/types";
 import { PROOFPATH_INTRO_SESSION_KEY, shouldShowProofPathIntro } from "@/game/experienceState";
 
-const MANAGED_LEDGER_ASSET = "/manus-storage/ledger_illustrator_no_bitcoin_9f898c01.svg";
-const ledgerAsset = () => (window as Window & { __PROOFPATH_LEDGER_ASSET__?: string }).__PROOFPATH_LEDGER_ASSET__ ?? MANAGED_LEDGER_ASSET;
+const MANAGED_LEDGER_ASSETS: Record<LedgerColor, string> = {
+  "jet-black": "/manus-storage/ledger_illustrator_no_bitcoin_9f898c01.svg",
+  "cherry-red": "/manus-storage/ledger_cherry_red_d69af75e.svg",
+  "matcha-green": "/manus-storage/ledger_matcha_green_ada9c5d9.svg",
+  "glacier-white": "/manus-storage/ledger_glacier_white_7a00cfe2.svg",
+};
+const ledgerAsset = (color: LedgerColor = "jet-black") => (window as Window & { __PROOFPATH_LEDGER_ASSETS__?: Partial<Record<LedgerColor, string>> }).__PROOFPATH_LEDGER_ASSETS__?.[color] ?? MANAGED_LEDGER_ASSETS[color];
 const LedgerMini = () => <img className="ledger-mini" src={ledgerAsset()} alt="Ledger Nano™ Gen5" />;
 
 const iconFor = (type: NodeType) => {
@@ -26,7 +31,7 @@ const LEDGER_COLORS: { id: LedgerColor; label: string; swatch: string }[] = [
   { id: "glacier-white", label: "Glacier White", swatch: "#f1f3ee" },
 ];
 
-const LedgerVector = ({ color = "jet-black" }: { color?: LedgerColor }) => <img className={`ledger-vector ledger-vector--${color}`} src={ledgerAsset()} alt={`Ledger Nano™ Gen5 simulated hardware signer in ${color.replace(/-/g, " ")}`} draggable={false} onDragStart={(event) => event.preventDefault()} />;
+const LedgerVector = ({ color = "jet-black" }: { color?: LedgerColor }) => <img className="ledger-vector" src={ledgerAsset(color)} alt={`Ledger Nano™ Gen5 simulated hardware signer in ${color.replace(/-/g, " ")}`} draggable={false} onDragStart={(event) => event.preventDefault()} />;
 
 function NodeCard({ node, selected, source, target, inputOccupied, outputOccupied, onSelect, onRemove, onStartDrag, onPort, onLedgerColor }: { node: GraphNode; selected: boolean; source: boolean; target: boolean; inputOccupied: boolean; outputOccupied: boolean; onSelect: () => void; onRemove: () => void; onStartDrag: (event: ReactPointerEvent<HTMLDivElement>) => void; onPort: (direction: "in" | "out") => void; onLedgerColor: (color: LedgerColor) => void }) {
   const meta = nodeMeta[node.type];
@@ -35,7 +40,7 @@ function NodeCard({ node, selected, source, target, inputOccupied, outputOccupie
       <button className={`node-port node-port--left ${target ? "is-target" : ""} ${inputOccupied ? "is-occupied" : ""}`} aria-label={inputOccupied ? `${meta.label} input already connected` : `Connect into ${meta.label}`} aria-disabled={inputOccupied} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => { event.stopPropagation(); onPort("in"); }} />
       <span className="node-head">{node.type !== "wallet" && <span className="node-icon">{iconFor(node.type)}</span>}<span className="node-type">{meta.short}</span><button className="node-close" aria-label={`Remove ${meta.label}`} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => { event.stopPropagation(); onRemove(); }}><X size={12} /></button></span>
       <span className="node-title">{meta.label}</span>
-      {node.type === "wallet" ? <><LedgerVector color={node.ledgerColor} /><span className="hardware-label">SIMULATED SIGNER · VERIFY ON DEVICE</span>{selected && <div className="ledger-color-picker" role="group" aria-label="Choose Ledger Nano Gen5 color" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()}><span>pick a color</span><div>{LEDGER_COLORS.map((color) => <button key={color.id} type="button" className={node.ledgerColor === color.id || (!node.ledgerColor && color.id === "jet-black") ? "is-active" : ""} aria-label={`Select ${color.label} Ledger color`} aria-pressed={node.ledgerColor === color.id || (!node.ledgerColor && color.id === "jet-black")} style={{ "--ledger-swatch": color.swatch } as React.CSSProperties} onPointerDown={(event) => event.stopPropagation()} onClick={() => onLedgerColor(color.id)} />)}</div></div>}</> : <span className="node-id">{node.id.replace("-", " · ")}</span>}
+      {node.type === "wallet" ? <><LedgerVector color={node.ledgerColor} /><span className="hardware-label">SIMULATED SIGNER · VERIFY ON DEVICE</span>{selected && <div className="ledger-color-picker" role="group" aria-label="Choose Ledger Nano Gen5 color" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()}>{LEDGER_COLORS.map((color) => <button key={color.id} type="button" className={node.ledgerColor === color.id || (!node.ledgerColor && color.id === "jet-black") ? "is-active" : ""} aria-label={`Select ${color.label} Ledger color`} aria-pressed={node.ledgerColor === color.id || (!node.ledgerColor && color.id === "jet-black")} style={{ "--ledger-swatch": color.swatch } as React.CSSProperties} onPointerDown={(event) => event.stopPropagation()} onClick={() => onLedgerColor(color.id)} />)}</div>}</> : <span className="node-id">{node.id.replace("-", " · ")}</span>}
       <button className={`node-port node-port--right ${outputOccupied ? "is-occupied" : ""}`} aria-label={outputOccupied ? `${meta.label} output already connected` : `Connect from ${meta.label}`} aria-disabled={outputOccupied} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => { event.stopPropagation(); onPort("out"); }} />
     </div>
   );

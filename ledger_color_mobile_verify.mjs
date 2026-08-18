@@ -62,6 +62,7 @@ await touch("touchStart", [[picker.x, picker.y, 1]]);
 await touch("touchEnd", []);
 await wait(200);
 
-const result = await evaluate(`(() => ({ pickerVisible: Boolean(document.querySelector('.ledger-color-picker')), colorClass: document.querySelector('.ledger-vector')?.className ?? '', ports: document.querySelectorAll('.graph-node--green .node-port').length, notice: document.querySelector('.notice-strip')?.textContent ?? '' }))()`);
+const result = await evaluate(`(() => ({ pickerVisible: Boolean(document.querySelector('.ledger-color-picker')), source: document.querySelector('.ledger-vector')?.getAttribute('src') ?? '', ports: document.querySelectorAll('.graph-node--green .node-port').length, notice: document.querySelector('.notice-strip')?.textContent ?? '' }))()`);
+if (!result.source.includes('ledger_glacier_white')) throw new Error(`Expected the Glacier White SVG source, received: ${result.source}`);
 console.log(JSON.stringify(result, null, 2));
 ws.close();
