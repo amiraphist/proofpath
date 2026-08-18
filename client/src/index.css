@@ -211,12 +211,11 @@ button:focus-visible, [role="button"]:focus-visible { outline: 2px solid #2d66bd
 .mobile-orb-wrap { display: none; }
 @media (max-width: 850px) {
   .mobile-orb-wrap { position: fixed; z-index: 40; display: block; width: 64px; height: 64px; transform: translate(-50%, -50%); touch-action: none; }
-  .mobile-pencil-trigger { position: absolute; inset: 0; right: auto; bottom: auto; left: auto; top: auto; width: 64px; height: 64px; min-width: 64px; padding: 5px; flex-direction: column; justify-content: center; gap: 1px; color: #153d75; background: rgba(234, 244, 255, .72); border: 1.5px solid rgba(255,255,255,.9); border-radius: 50%; box-shadow: 0 8px 21px rgba(27, 61, 106, .24), inset 0 1px 0 rgba(255,255,255,.92); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); touch-action: manipulation; user-select: none; transform: none; }
+  .mobile-pencil-trigger { position: absolute; inset: 0; right: auto; bottom: auto; left: auto; top: auto; width: 64px; height: 64px; min-width: 64px; padding: 5px; flex-direction: column; justify-content: center; gap: 1px; color: #153d75; background: rgba(234, 244, 255, .72); border: 1.5px solid rgba(255,255,255,.9); border-radius: 50%; box-shadow: 0 8px 21px rgba(27, 61, 106, .24), inset 0 1px 0 rgba(255,255,255,.92); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); touch-action: none; user-select: none; transform: none; }
   .mobile-pencil-trigger:hover { color: #0d315f; background: rgba(228, 241, 255, .9); transform: scale(1.04); }
   .mobile-pencil-trigger:active { transform: scale(.96); }
   .mobile-pencil-trigger span { font-size: 9px; letter-spacing: .02em; }
   .mobile-pencil-trigger b { position: absolute; right: -3px; top: -3px; min-width: 19px; height: 19px; color: var(--paper); background: var(--blue); border: 1.5px solid var(--paper); font-size: 9px; }
-  .mobile-orb-drag-handle { position: absolute; z-index: 2; right: 1px; bottom: -7px; display: grid; width: 24px; height: 18px; place-items: center; padding: 0; color: rgba(21,61,117,.62); background: rgba(255,255,255,.66); border: 1px solid rgba(255,255,255,.95); border-radius: 999px; box-shadow: 0 3px 9px rgba(27,61,106,.16), inset 0 1px 0 rgba(255,255,255,.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); touch-action: none; }
 }
 @media (max-width: 520px) { .mobile-pencil-trigger { right: auto; bottom: auto; } }
 

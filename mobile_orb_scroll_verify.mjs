@@ -72,14 +72,15 @@ await evaluate(`document.querySelector('.mobile-picker-close')?.click()`);
 await wait(120);
 
 const beforeDrag = await evaluate(`(() => { const orb = document.querySelector('.mobile-orb-wrap'); const button = document.querySelector('.mobile-pencil-trigger'); return { left: orb.style.left, top: orb.style.top, expanded: button.getAttribute('aria-expanded') }; })()`);
-const dragHandle = await evaluate(`(() => { const rect = document.querySelector('.mobile-orb-drag-handle').getBoundingClientRect(); return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }; })()`);
-await touch("touchStart", [[dragHandle.x, dragHandle.y, 1]]);
-await touch("touchMove", [[dragHandle.x - 58, dragHandle.y - 34, 1]]);
+const dragOrb = await evaluate(`(() => { const rect = document.querySelector('.mobile-pencil-trigger').getBoundingClientRect(); return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }; })()`);
+await touch("touchStart", [[dragOrb.x, dragOrb.y, 1]]);
+await wait(360);
+await touch("touchMove", [[dragOrb.x - 58, dragOrb.y - 34, 1]]);
 await touch("touchEnd", []);
 await wait(160);
 const afterDrag = await evaluate(`(() => { const orb = document.querySelector('.mobile-orb-wrap'); const button = document.querySelector('.mobile-pencil-trigger'); return { left: orb.style.left, top: orb.style.top, expanded: button.getAttribute('aria-expanded') }; })()`);
 
 const movedOrb = beforeDrag.left !== afterDrag.left || beforeDrag.top !== afterDrag.top;
 
-console.log(JSON.stringify({ nativeScroll, tapOpenedPicker: afterTap.expanded === "true" && afterTap.pickerVisible > 0, afterTap, afterPick, fixPicker, beforeDrag, afterDrag, movedOrb }, null, 2));
+console.log(JSON.stringify({ nativeScroll, tapOpenedPicker: afterTap.expanded === "true" && afterTap.pickerVisible > 0, afterTap, afterPick, fixPicker, beforeDrag, afterDrag, movedOrb, longPressMs: 360 }, null, 2));
 ws.close();

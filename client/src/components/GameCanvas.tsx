@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import { Activity, ArrowRight, Bot, Check, ChevronDown, CircleHelp, CopyCheck, FileCheck2, GitBranch, GripVertical, LockKeyhole, Play, RotateCcw, ScanLine, ShieldCheck, Sparkles, Volume2, VolumeX, WalletCards, Wrench, X } from "lucide-react";
+import { Activity, ArrowRight, Bot, Check, ChevronDown, CircleHelp, CopyCheck, FileCheck2, GitBranch, LockKeyhole, Play, RotateCcw, ScanLine, ShieldCheck, Sparkles, Volume2, VolumeX, WalletCards, Wrench, X } from "lucide-react";
 import { useGameSession } from "@/game/useGameSession";
 import { useSoundEffects } from "@/game/useSoundEffects";
 import { nodeMeta, type GameMode, type NodeType } from "@/game/stages";
@@ -212,13 +212,21 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
     } catch { /* use the default mobile position */ }
     return { x: 84, y: 81 };
   });
-  const orbDragRef = useRef<{ id: number; x: number; y: number; originX: number; originY: number } | null>(null);
+  const orbDragRef = useRef<{ id: number; x: number; y: number; originX: number; originY: number; active: boolean; timer: number | null } | null>(null);
+  const ignoreOrbClickRef = useRef(false);
   const addPaletteNode = (type: NodeType) => { addNode(type); play("tap"); setMobilePaletteOpen(false); };
+  const clearOrbPress = () => {
+    const press = orbDragRef.current;
+    if (press?.timer) window.clearTimeout(press.timer);
+    if (press) press.timer = null;
+  };
   const startOrbDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    event.preventDefault();
-    event.stopPropagation();
-    orbDragRef.current = { id: event.pointerId, x: event.clientX, y: event.clientY, originX: mobileOrbPosition.x, originY: mobileOrbPosition.y };
+    const press = { id: event.pointerId, x: event.clientX, y: event.clientY, originX: mobileOrbPosition.x, originY: mobileOrbPosition.y, active: false, timer: null as number | null };
+    press.timer = window.setTimeout(() => {
+      if (orbDragRef.current?.id === event.pointerId) orbDragRef.current.active = true;
+    }, 320);
+    orbDragRef.current = press;
     event.currentTarget.setPointerCapture?.(event.pointerId);
   };
   const moveOrbDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -226,11 +234,18 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
     if (!pointer || pointer.id !== event.pointerId) return;
     const dx = event.clientX - pointer.x;
     const dy = event.clientY - pointer.y;
+    if (!pointer.active) {
+      if (Math.abs(dx) + Math.abs(dy) > 7) clearOrbPress();
+      return;
+    }
+    event.preventDefault();
     setMobileOrbPosition({ x: Math.min(90, Math.max(10, pointer.originX + (dx / window.innerWidth) * 100)), y: Math.min(91, Math.max(9, pointer.originY + (dy / window.innerHeight) * 100)) });
   };
   const endOrbDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
     const pointer = orbDragRef.current;
     if (!pointer || pointer.id !== event.pointerId) return;
+    clearOrbPress();
+    if (pointer.active) ignoreOrbClickRef.current = true;
     orbDragRef.current = null;
   };
 
@@ -272,7 +287,7 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
       <aside className="tools-panel glass-panel"><div className="tools-heading"><div><div className="eyebrow"><span className="eyebrow-line" /> PENCIL CASE</div><h2>Pick your nodes</h2></div><span className="tool-count">{session.nodes.length} nodes</span></div><p className="tools-copy">{mode === "fix" ? "Read the attack event, then add trusted controls that stop the unsafe route before signing or sending." : "Pick only the nodes this little story needs. Keep it simple."}</p><div className="interaction-guide"><span className="guide-step"><b>1</b> Pick a node</span><span className="guide-arrow">→</span><span className="guide-step"><b>2</b> Join blue dots</span><span className="guide-arrow">→</span><span className="guide-step"><b>3</b> Test it</span></div><div className="palette-heading"><span>AVAILABLE NODES</span><small>Click a node to add</small></div><div className="palette">{paletteCards}</div>{mode === "fix" && <button className="repair-btn" onClick={repair}><Wrench size={14} /> Show trusted repair</button>}<div className="trace-panel"><div className="trace-heading"><span><Activity size={14} /> WHAT HAPPENED</span><span className="trace-live">LIVE</span></div><div className="trace-list">{session.result?.trace.map((event) => <div key={`${event.time}-${event.label}`} className={`trace-event trace-event--${event.tone}`}><time>{event.time}</time><span><strong>{event.label}</strong>{event.detail}</span></div>) ?? <div className="trace-empty"><span className="trace-cursor" /> Awaiting simulation input...</div>}</div></div></aside>
     </div>
     {session.result && <div className={`result-banner ${session.result.ok ? "result-banner--success" : "result-banner--danger"}`}><div className="result-symbol">{session.result.ok ? <Check size={20} /> : <X size={20} />}</div><div><strong>{session.result.ok ? "PAYMENT PLAN VERIFIED" : "PAYMENT BLOCKED"}</strong><span>{session.result.summary}</span></div><div className="result-score"><small>SCORE</small><strong>{session.result.score}</strong></div>{session.result.ok && stageIndex < stages.length - 1 && <button onClick={nextStage}>Next mission <ArrowRight size={14} /></button>}</div>}
-    <div className="mobile-orb-wrap" style={{ left: `${mobileOrbPosition.x}%`, top: `${mobileOrbPosition.y}%` }}><button type="button" className="mobile-pencil-trigger" aria-label="Open Nodes" aria-expanded={mobilePaletteOpen} onClick={() => setMobilePaletteOpen(true)}><WalletCards size={18} /><span>Nodes</span><b>{session.nodes.length}</b></button><button type="button" className="mobile-orb-drag-handle" aria-label="Move Nodes button" onPointerDown={startOrbDrag} onPointerMove={moveOrbDrag} onPointerUp={endOrbDrag} onPointerCancel={() => { orbDragRef.current = null; }}><GripVertical size={13} strokeWidth={2.1} /></button></div>
+    <div className="mobile-orb-wrap" style={{ left: `${mobileOrbPosition.x}%`, top: `${mobileOrbPosition.y}%` }}><button type="button" className="mobile-pencil-trigger" aria-label="Open Nodes. Press and hold to move." aria-expanded={mobilePaletteOpen} onPointerDown={startOrbDrag} onPointerMove={moveOrbDrag} onPointerUp={endOrbDrag} onPointerCancel={() => { clearOrbPress(); orbDragRef.current = null; }} onClick={() => { if (ignoreOrbClickRef.current) { ignoreOrbClickRef.current = false; return; } setMobilePaletteOpen(true); }}><WalletCards size={18} /><span>Nodes</span><b>{session.nodes.length}</b></button></div>
     {mobilePaletteOpen && <div className="mobile-picker-overlay" role="presentation" onPointerDown={() => setMobilePaletteOpen(false)}><section className="mobile-picker-sheet" role="dialog" aria-modal="true" aria-label="Pick your nodes" onPointerDown={(event) => event.stopPropagation()}><div className="mobile-picker-heading"><div><strong>Pick your nodes</strong><span>Choose a node, then connect the blue dots.</span></div><button type="button" aria-label="Close Nodes" onClick={() => setMobilePaletteOpen(false)}><X size={17} /></button></div><div className="mobile-picker-list">{paletteCards}</div>{mode === "fix" && <button className="mobile-repair-btn" onClick={() => { repair(); setMobilePaletteOpen(false); }}><Wrench size={14} /> Show trusted repair</button>}<button type="button" className="mobile-picker-close" onClick={() => setMobilePaletteOpen(false)}>Close nodes</button></section></div>}
     <footer className="footer-bar"><span>PROOFPATH / PAPER PLAYGROUND</span><span>JUST PRACTICE · NO MONEY MOVES</span><span>Unofficial fan-made educational simulation. Not affiliated with or endorsed by Ledger.</span><span>ENGLISH PRACTICE <span className="footer-dot" /></span></footer>
   </main>;
