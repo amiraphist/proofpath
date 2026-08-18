@@ -306,3 +306,11 @@
 - [x] Add clear feedback for rejected connection attempts and a direct way to remove an incorrect blue pen line.
 - [x] Give each palette add control an unambiguous accessible label and verify keyboard-first connection flow.
 - [x] Add regression coverage, run desktop/mobile smoke tests, and publish the QA corrections.
+
+## Mobile Scroll and Nodes Orb Regression
+
+- [x] Reproduce page-scroll blocking or hang when swiping the Paper Path on a touch viewport.
+- [x] Reproduce the Nodes orb tap path and identify why the mobile palette does not open.
+- [x] Separate page scroll, graph pan/zoom, node drag, and orb tap gestures without blocking one another.
+- [x] Add or extend touch regression coverage for scroll and Nodes orb open/close behavior.
+- [x] Run mobile visual and interaction QA, then publish the correction.
