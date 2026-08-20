@@ -508,3 +508,9 @@ Added after the user reported that Ledger still appears fourth in the Stage 01 l
 - [ ] Copy the final ProofPath promotional banner into the public repository under a stable assets path.
 - [ ] Commit and push the banner to `amiraphist/proofpath` without changing gameplay code.
 - [ ] Verify the raw GitHub and repository links, then provide them to the user.
+
+## Build 07 Banner Stage Title
+
+- [ ] Add the exact title `BUILD 07 · DAO PROPOSAL PAYOUT` inside the upper-left area of the real gameplay viewport without covering nodes or VERIFIED state.
+- [ ] Publish the updated banner to the public GitHub repository and verify the raw image URL.
+- [ ] Deliver the updated image file for the user's Twitter/X post.
