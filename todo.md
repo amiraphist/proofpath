@@ -447,4 +447,4 @@
 - [x] Play Build 07: DAO Proposal Payout through its real five-node route.
 - [x] Capture only the cleaned real game viewport, with the verified result and five nodes centered.
 - [x] Present ProofPath branding, subtle Nodes-orb/ledger-color details, and the real blue path without inventing gameplay elements.
-- [ ] Assess Build 07 as the source workflow for a later short educational video.
+- [x] Assess Build 07 as the source workflow for a later short educational video; its five-node linear authority path is easier to follow than Build 06 and fits a concise 20–30 second replay.
