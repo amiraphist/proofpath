@@ -460,3 +460,9 @@
 - [x] Add a short, reduced-motion-safe opening and closing transition to the Ledger colour dropdown.
 - [x] Position Ledger Nano™ Gen5 second in the Stage 01 palette while retaining the third-position discovery placement in later stages.
 - [x] Add regression coverage and verify the Stage 01 desktop/mobile palette plus the animated dropdown before publishing.
+
+## Vite Preview WebSocket Recovery
+
+- [x] Diagnose the failed Vite HMR WebSocket connection in the managed preview without changing production delivery behaviour.
+- [x] Restart or minimally correct the preview configuration and confirm the preview reconnects.
+- [x] Confirm the production build still passes after the preview recovery.
