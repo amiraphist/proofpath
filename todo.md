@@ -424,3 +424,20 @@
 - [x] Confirm the reported `moz-extension://` script error is injected by a browser extension rather than ProofPath.
 - [x] Filter only extension-originated unhandled errors from the preview report while preserving ProofPath errors.
 - [x] Verify the page still reports a synthetic first-party error and no longer forwards the extension error.
+
+## ProofPath Authority Post Banner
+
+- [x] Select a fully verified stage that visibly shows AI Agent, trusted controls, final signing authority, and 4–5 connected nodes. Superseded by the richer Build 06 eight-node route.
+- [x] Create a real in-game completed-state screenshot in a horizontal X-friendly composition.
+- [x] Produce and verify one polished horizontal banner built around that game-state capture.
+
+## Verified Dense-Route Social Capture
+
+- [x] Replace the five-node candidate with a genuinely played and verified 7–8 node stage.
+- [x] Keep every blue pen line, node, result state, and verified evidence sourced from the live game UI.
+- [x] Capture one horizontal social-ready screenshot without generated or recreated gameplay elements.
+
+## Build 06 Launch Screenshot
+
+- [x] Play Build 06: Cross-Border Contractor through its real 8-node hardened route.
+- [x] Capture the verified Build 06 board with AI Agent, Policy, verification, checks, limit, Owner approval, Ledger, and payment visible.
