@@ -448,3 +448,9 @@
 - [x] Capture only the cleaned real game viewport, with the verified result and five nodes centered.
 - [x] Present ProofPath branding, subtle Nodes-orb/ledger-color details, and the real blue path without inventing gameplay elements.
 - [x] Assess Build 07 as the source workflow for a later short educational video; its five-node linear authority path is easier to follow than Build 06 and fits a concise 20–30 second replay.
+
+## Ledger Picker Interaction and Mobile Ordering
+
+- [x] Keep the Ledger colour dropdown open while the player releases a click or touch on a colour swatch, then apply the selected SVG asset reliably.
+- [x] Place Ledger Nano™ Gen5 near the top of the mobile Nodes list so its colour dropdown is visible without a discovery scroll.
+- [x] Add regression coverage and verify Ledger colour selection on desktop and a touch-sized mobile viewport before publishing.

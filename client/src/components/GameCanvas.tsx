@@ -6,6 +6,7 @@ import { Activity, ArrowRight, Bot, Check, ChevronDown, CircleHelp, CopyCheck, F
 import { useGameSession } from "@/game/useGameSession";
 import { useSoundEffects } from "@/game/useSoundEffects";
 import { nodeMeta, type GameMode, type NodeType } from "@/game/stages";
+import { orderPaletteNodes } from "@/game/paletteOrder";
 import type { GraphNode, LedgerColor } from "@/game/types";
 import { PROOFPATH_INTRO_SESSION_KEY, shouldShowProofPathIntro } from "@/game/experienceState";
 
@@ -330,8 +331,13 @@ export default function GameCanvas({ persistedCompleted = 0, onProgress }: { per
   }, []);
 
   const selectedLedger = session.nodes.find((node) => node.id === session.selectedNodeId && node.type === "wallet");
-  const ledgerColorDropdown = selectedLedger ? <div className="ledger-color-dropdown" role="group" aria-label="Choose Ledger Nano Gen5 color">{LEDGER_COLORS.map((color) => <button key={color.id} type="button" className={selectedLedger.ledgerColor === color.id || (!selectedLedger.ledgerColor && color.id === "jet-black") ? "is-active" : ""} aria-label={`Select ${color.label} Ledger color`} aria-pressed={selectedLedger.ledgerColor === color.id || (!selectedLedger.ledgerColor && color.id === "jet-black")} style={{ "--ledger-swatch": color.swatch } as React.CSSProperties} onClick={() => { setLedgerColor(selectedLedger.id, color.id); play("tap"); }} />)}</div> : null;
-  const paletteCards = stage.available.map((type) => <div key={type} className="palette-item"><button className={`palette-card palette-card--${nodeMeta[type].color}`} aria-label={`Add ${nodeMeta[type].label} node`} onClick={() => addPaletteNode(type)}><span className="palette-icon">{iconFor(type)}</span><span><strong>{nodeMeta[type].label}</strong><small>{nodeMeta[type].help}</small></span><span className="palette-plus" aria-hidden="true">ADD</span></button>{type === "wallet" && ledgerColorDropdown}</div>);
+  const applyLedgerColor = (color: LedgerColor) => {
+    if (!selectedLedger) return;
+    setLedgerColor(selectedLedger.id, color);
+    play("tap");
+  };
+  const ledgerColorDropdown = selectedLedger ? <div className="ledger-color-dropdown" role="group" aria-label="Choose Ledger Nano Gen5 color">{LEDGER_COLORS.map((color) => <button key={color.id} type="button" className={selectedLedger.ledgerColor === color.id || (!selectedLedger.ledgerColor && color.id === "jet-black") ? "is-active" : ""} aria-label={`Select ${color.label} Ledger color`} aria-pressed={selectedLedger.ledgerColor === color.id || (!selectedLedger.ledgerColor && color.id === "jet-black")} style={{ "--ledger-swatch": color.swatch } as React.CSSProperties} onPointerDown={(event) => { event.preventDefault(); event.stopPropagation(); applyLedgerColor(color.id); }} onPointerUp={(event) => event.stopPropagation()} onClick={(event) => { event.preventDefault(); event.stopPropagation(); if (event.detail === 0) applyLedgerColor(color.id); }} />)}</div> : null;
+  const paletteCards = orderPaletteNodes(stage.available).map((type) => <div key={type} className="palette-item"><button className={`palette-card palette-card--${nodeMeta[type].color}`} aria-label={`Add ${nodeMeta[type].label} node`} onClick={() => addPaletteNode(type)}><span className="palette-icon">{iconFor(type)}</span><span><strong>{nodeMeta[type].label}</strong><small>{nodeMeta[type].help}</small></span><span className="palette-plus" aria-hidden="true">ADD</span></button>{type === "wallet" && ledgerColorDropdown}</div>);
   const hardening = session.result?.hardening;
 
   return <><main className="game-shell">
