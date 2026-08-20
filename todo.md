@@ -441,3 +441,10 @@
 
 - [x] Play Build 06: Cross-Border Contractor through its real 8-node hardened route.
 - [x] Capture the verified Build 06 board with AI Agent, Policy, verification, checks, limit, Owner approval, Ledger, and payment visible.
+
+## Build 07 Verified Banner
+
+- [x] Play Build 07: DAO Proposal Payout through its real five-node route.
+- [x] Capture only the cleaned real game viewport, with the verified result and five nodes centered.
+- [x] Present ProofPath branding, subtle Nodes-orb/ledger-color details, and the real blue path without inventing gameplay elements.
+- [ ] Assess Build 07 as the source workflow for a later short educational video.
