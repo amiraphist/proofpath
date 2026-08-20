@@ -490,3 +490,21 @@
 - [x] Add a DOM-level regression and visual verification for the final Stage 01 palette order before publishing.
 
 Added after the user reported that Ledger still appears fourth in the Stage 01 list.
+
+## Fix Mission Ledger Threat Model Audit
+
+- [x] Audit every Fix mission's attack graph, safe route, available nodes, and Ledger presence.
+- [x] Determine whether a compromised Ledger is represented correctly or whether the attack should occur before signing, in the transaction preview, or at the device verification boundary.
+- [x] Identify educational gaps and recommend any curriculum changes without modifying code until the audit is complete.
+
+## ProofPath Promotional Banner
+
+- [x] Use the supplied real Build 07 screenshot as the gameplay source without inventing or redrawing nodes, paths, or VERIFIED state.
+- [x] Create a clean horizontal promotional composition with ProofPath branding and readable game focus.
+- [x] Review the final banner for legibility, authenticity, and social-post readiness.
+
+## GitHub Promotional Banner Asset
+
+- [ ] Copy the final ProofPath promotional banner into the public repository under a stable assets path.
+- [ ] Commit and push the banner to `amiraphist/proofpath` without changing gameplay code.
+- [ ] Verify the raw GitHub and repository links, then provide them to the user.
