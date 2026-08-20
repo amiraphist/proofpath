@@ -472,3 +472,21 @@
 - [x] Inspect the managed preview proxy contract and select an HMR configuration that does not emit a localhost:5173 browser target.
 - [x] Apply the explicit compatible Vite HMR configuration and restart the preview server.
 - [x] Verify a new preview session has a working HMR connection and no Vite WebSocket error, then re-check the production build.
+
+## Stage 01 Ledger Position Verification
+
+- [x] Verify the rendered Stage 01 desktop and mobile palettes show Ledger Nano™ Gen5 in the second visible position, not merely in the ordering helper output.
+- [x] Trace and correct any later sorting, filtering, or separate mobile render that moves Ledger to fourth position.
+- [x] Add a DOM-level regression and visual verification for the final Stage 01 palette order before publishing.
+
+افروده شد پس از گزارش مغایرت کاربر دربارهٔ دیده‌شدن Ledger در جایگاه چهارم فهرست مرحلهٔ اول.
+
+---
+
+## Stage 01 Ledger Position Verification (English audit)
+
+- [x] Verify the rendered Stage 01 desktop and mobile palettes show Ledger Nano™ Gen5 in the second visible position, not merely in the ordering helper output.
+- [x] Trace and correct any later sorting, filtering, or separate mobile render that moves Ledger to fourth position.
+- [x] Add a DOM-level regression and visual verification for the final Stage 01 palette order before publishing.
+
+Added after the user reported that Ledger still appears fourth in the Stage 01 list.
