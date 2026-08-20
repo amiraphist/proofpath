@@ -9,7 +9,10 @@ import viteConfig from "../../vite.config";
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
     middlewareMode: true,
-    hmr: { server },
+    // The public preview is HTTPS behind a reverse proxy. Keep the HMR client
+    // on the browser's current hostname over WSS/443 instead of Vite's default
+    // localhost:5173 fallback, while routing the upgrade through this server.
+    hmr: { server, protocol: "wss" as const, clientPort: 443 },
     allowedHosts: true as const,
   };
 

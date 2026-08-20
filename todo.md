@@ -466,3 +466,9 @@
 - [x] Diagnose the failed Vite HMR WebSocket connection in the managed preview without changing production delivery behaviour.
 - [x] Restart or minimally correct the preview configuration and confirm the preview reconnects.
 - [x] Confirm the production build still passes after the preview recovery.
+
+## Vite HMR Proxy Configuration Fix
+
+- [x] Inspect the managed preview proxy contract and select an HMR configuration that does not emit a localhost:5173 browser target.
+- [x] Apply the explicit compatible Vite HMR configuration and restart the preview server.
+- [x] Verify a new preview session has a working HMR connection and no Vite WebSocket error, then re-check the production build.
