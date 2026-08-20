@@ -454,3 +454,9 @@
 - [x] Keep the Ledger colour dropdown open while the player releases a click or touch on a colour swatch, then apply the selected SVG asset reliably.
 - [x] Place Ledger Nano™ Gen5 near the top of the mobile Nodes list so its colour dropdown is visible without a discovery scroll.
 - [x] Add regression coverage and verify Ledger colour selection on desktop and a touch-sized mobile viewport before publishing.
+
+## Ledger Picker Motion and Stage 01 Placement
+
+- [x] Add a short, reduced-motion-safe opening and closing transition to the Ledger colour dropdown.
+- [x] Position Ledger Nano™ Gen5 second in the Stage 01 palette while retaining the third-position discovery placement in later stages.
+- [x] Add regression coverage and verify the Stage 01 desktop/mobile palette plus the animated dropdown before publishing.

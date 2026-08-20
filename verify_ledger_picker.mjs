@@ -71,6 +71,7 @@ await wait(160);
 const desktopBefore = await evaluate(`(() => ({
   swatches: document.querySelectorAll('.tools-panel .ledger-color-dropdown button').length,
   dropdownVisible: Boolean(document.querySelector('.tools-panel .ledger-color-dropdown')),
+  opening: document.querySelector('.tools-panel .ledger-color-dropdown')?.classList.contains('is-opening') ?? false,
 }))()`);
 await evaluate(`(() => {
   const swatch = document.querySelector('.tools-panel [aria-label="Select Matcha Green Ledger color"]');
@@ -85,10 +86,15 @@ const desktopAfter = await evaluate(`(() => ({
   selectedMatcha: document.querySelector('.tools-panel [aria-label="Select Matcha Green Ledger color"]')?.getAttribute('aria-pressed'),
   deviceSource: document.querySelector('.graph-node--ledger-matcha-green img.ledger-vector')?.getAttribute('src') ?? null,
 }))()`);
+await evaluate(`document.querySelector('.graph-node--ledger-matcha-green')?.click()`);
+await wait(30);
+const desktopClosing = await evaluate(`document.querySelector('.tools-panel .ledger-color-dropdown')?.classList.contains('is-closing') ?? false`);
+await wait(200);
+const desktopClosed = await evaluate(`Boolean(document.querySelector('.tools-panel .ledger-color-dropdown'))`);
 
-if (before.walletPosition !== 3 || !before.pickerOpen || before.swatches !== 4 || !after.pickerOpen || after.swatches !== 4 || after.selectedCherry !== "true" || !after.deviceSource?.includes("ledger_cherry_red") || !desktopBefore.dropdownVisible || desktopBefore.swatches !== 4 || desktopAfter.swatches !== 4 || desktopAfter.selectedMatcha !== "true" || !desktopAfter.deviceSource?.includes("ledger_matcha_green")) {
-  throw new Error(`Ledger picker regression failed: ${JSON.stringify({ before, after, desktopBefore, desktopAfter })}`);
+if (before.walletPosition !== 2 || !before.pickerOpen || before.swatches !== 4 || !after.pickerOpen || after.swatches !== 4 || after.selectedCherry !== "true" || !after.deviceSource?.includes("ledger_cherry_red") || !desktopBefore.dropdownVisible || !desktopBefore.opening || desktopBefore.swatches !== 4 || desktopAfter.swatches !== 4 || desktopAfter.selectedMatcha !== "true" || !desktopAfter.deviceSource?.includes("ledger_matcha_green") || !desktopClosing || desktopClosed) {
+  throw new Error(`Ledger picker regression failed: ${JSON.stringify({ before, after, desktopBefore, desktopAfter, desktopClosing, desktopClosed })}`);
 }
 
-console.log(JSON.stringify({ before, after, desktopBefore, desktopAfter }, null, 2));
+console.log(JSON.stringify({ before, after, desktopBefore, desktopAfter, desktopClosing, desktopClosed }, null, 2));
 ws.close();

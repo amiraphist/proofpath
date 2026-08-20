@@ -12,6 +12,10 @@ describe("orderPaletteNodes", () => {
     ]);
   });
 
+  it("places Ledger second in Stage 01 for immediate first-mission discoverability", () => {
+    expect(orderPaletteNodes(["agent", "tool", "wallet"], 1)).toEqual(["agent", "wallet", "tool"]);
+  });
+
   it("preserves the original order when the stage does not offer a Ledger signer", () => {
     expect(orderPaletteNodes(["agent", "condition", "tool"])).toEqual(["agent", "condition", "tool"]);
   });
